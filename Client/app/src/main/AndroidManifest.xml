@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CuteCatDog">
         <activity
-            android:name=".LoginActivity"
+            android:name=".src.login.LoginActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".src.main.MainActivity"
             android:exported="true">
         </activity>
     </application>
