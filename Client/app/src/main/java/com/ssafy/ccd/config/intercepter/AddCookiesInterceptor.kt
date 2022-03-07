@@ -1,6 +1,6 @@
 package com.ssafy.ccd.config.intercepter
 
-import com.ssafy.groute.config.ApplicationClass
+import com.ssafy.ccd.config.ApplicationClass
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
