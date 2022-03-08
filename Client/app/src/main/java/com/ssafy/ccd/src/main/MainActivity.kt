@@ -12,7 +12,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
-
+        binding.activityMainBottomNavigationView.background = null
+        binding.activityMainBottomNavigationView.menu.getItem(2).isEnabled = false
         // 네비게이션 호스트
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.activity_main_navHost) as NavHostFragment
 
