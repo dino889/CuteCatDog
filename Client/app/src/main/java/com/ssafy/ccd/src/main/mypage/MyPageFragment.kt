@@ -5,41 +5,60 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentMyPageBinding
+import com.ssafy.ccd.src.dto.Pet
 
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var petListRecyclerView: PetListRecyclerviewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        initRecyclerAdapter()
+        initTabAdapter()
     }
 
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyPageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun initRecyclerAdapter() {
+        val petList = mutableListOf<Pet>()
+        petList.add(Pet(1, "1"))
+        petList.add(Pet(2, "2"))
+        petListRecyclerView = PetListRecyclerviewAdapter(petList = petList)
+        petListRecyclerView.setItemClickListener(object : PetListRecyclerviewAdapter.ItemClickListener {
+            override fun onClick(view: View, position: Int, pet: Pet) {
+                // recyclerview 하단 pet 정보 변경 함수 호출
+                showCustomToast(pet.photo)
             }
+        })
+        binding.myPageFragmentRvPetList.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = petListRecyclerView
+            adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        }
+    }
+
+    private fun initTabAdapter() {
+        val viewPagerAdapter = MyTabPageAdapter(this)
+        val tabList = listOf("내 일정", "내가 쓴 글")
+
+        viewPagerAdapter.addFragment(MyScheduleFragment())
+        viewPagerAdapter.addFragment(MyPostFragment())
+
+        binding.myPageFragmentVp.adapter = viewPagerAdapter
+        TabLayoutMediator(binding.myPageFragmentTabLayout, binding.myPageFragmentVp) { tab, position ->
+            tab.text = tabList[position]
+        }.attach()
     }
 }
