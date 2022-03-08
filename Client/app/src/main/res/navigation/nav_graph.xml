@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ssafy.ccd.src.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+<!--        <action-->
+<!--            android:id="@+id/action_showDetail"-->
+<!--            app:destination="@id/detailFragment" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/diaryFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryFragment"
+        android:label="fragment_diary"
+        tools:layout="@layout/fragment_diary">
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderFragment"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender">
+    </fragment>
+
+    <fragment
+        android:id="@+id/calenderFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderFragment"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender">
+    </fragment>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.MyPageFragment"
+        android:label="fragment_mypage"
+        tools:layout="@layout/fragment_my_page">
+    </fragment>
+
+</navigation>

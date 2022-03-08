@@ -8,10 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
-import com.ssafy.ccd.databinding.FragmentLoginBinding
+import com.ssafy.ccd.databinding.FragmentJoinBinding
 
-class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::bind, R.layout.fragment_login) {
+class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind, R.layout.fragment_join) {
     private lateinit var loginActivity: LoginActivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -24,14 +25,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.fragmentLoginSignup.setOnClickListener {
-            loginActivity.openFragment(3)
+        binding.fragmentJoinBtnJoin.setOnClickListener {
+            loginActivity.openFragment(2)
         }
     }
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
+            JoinFragment().apply {
                 arguments = Bundle().apply {
                 }
             }
