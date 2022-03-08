@@ -29,7 +29,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             2->{
                 transaction.replace(R.id.frame_login_layout, LoginFragment())
                     .addToBackStack(null)
-
+            }
+            3->{
+                transaction.replace(R.id.frame_login_layout, JoinFragment())
+                    .addToBackStack(null)
             }
         }
         transaction.commit()
