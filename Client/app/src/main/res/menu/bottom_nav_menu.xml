@@ -12,7 +12,7 @@
 
     <item android:title=""
         android:id="@+id/cameraFragment"
-        android:icon="@drawable/ic_baseline_home_24">
+        android:enabled="false">
     </item>
 
     <item android:title="캘린더"
