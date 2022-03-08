@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="main">#FFC700</color>
+    <color name="main_30p">#4DFFC700</color>
     <color name="main_500">#FF990D</color>
     <color name="main_700">#E8A20C</color>
     <color name="grey">#BFBFBF</color>
