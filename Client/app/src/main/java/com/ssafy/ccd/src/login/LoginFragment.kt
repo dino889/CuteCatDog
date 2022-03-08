@@ -27,6 +27,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
         binding.fragmentLoginSignup.setOnClickListener {
             loginActivity.openFragment(3)
         }
+
+        binding.fragmentLoginBtnLogin.setOnClickListener {
+            loginActivity.openFragment(1)
+        }
     }
     companion object {
         @JvmStatic
