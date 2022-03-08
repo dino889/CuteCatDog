@@ -4,12 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/et_background_normal.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/home_button_back_image.xml" value="0.325" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/ic_launcher_background.xml" value="0.33240740740740743" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/font/font_family_ccd.xml" value="0.371875" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_join.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_login.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_calender_todaynoti.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_commu_know.xml" value="1.0" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_commu_local.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_pets.xml" value="0.75" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_pets_footer.xml" value="0.67" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_home_pets_list.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_mypage_pets.xml" value="0.26403985507246375" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/menu/bottom_nav_menu.xml" value="0.24010416666666667" />
       </map>
     </option>
