@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
-import com.ssafy.ccd.databinding.RecyclerviewPetListItemBinding
+import com.ssafy.ccd.databinding.ItemPetListBinding
 import com.ssafy.ccd.src.dto.Pet
 
 class PetListRecyclerviewAdapter(private val petList: List<Pet>) : RecyclerView.Adapter<PetListRecyclerviewAdapter.PetListViewHolder>() {
 
 
-    inner class PetListViewHolder(private val binding: RecyclerviewPetListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class PetListViewHolder(private val binding: ItemPetListBinding) : RecyclerView.ViewHolder(binding.root) {
         val petImage = binding.itemCvPetImage
 
         fun bind(pet: Pet, position: Int) {
@@ -22,7 +22,7 @@ class PetListRecyclerviewAdapter(private val petList: List<Pet>) : RecyclerView.
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetListViewHolder {
-        return PetListViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recyclerview_pet_list_item, parent, false))
+        return PetListViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_pet_list, parent, false))
     }
 
     override fun onBindViewHolder(holder: PetListViewHolder, position: Int) {

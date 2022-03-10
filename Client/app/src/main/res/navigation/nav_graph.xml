@@ -41,6 +41,16 @@
         android:name="com.ssafy.ccd.src.main.mypage.MyPageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_my_page">
+        <action
+            android:id="@+id/action_myPageFragment_to_addPetFragment"
+            app:destination="@id/addPetFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addPetFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.AddPetFragment"
+        android:label="fragment_mypage_addPet"
+        tools:layout="@layout/fragment_add_pet">
     </fragment>
 
 </navigation>

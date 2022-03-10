@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -39,7 +41,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         petListRecyclerView.setItemClickListener(object : PetListRecyclerviewAdapter.ItemClickListener {
             override fun onClick(view: View, position: Int, pet: Pet) {
                 // recyclerview 하단 pet 정보 변경 함수 호출
-                showCustomToast(pet.photo)
+//                showCustomToast(pet.photo)
+                this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment)
             }
         })
         binding.myPageFragmentRvPetList.apply {
@@ -61,4 +64,5 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             tab.text = tabList[position]
         }.attach()
     }
+
 }
