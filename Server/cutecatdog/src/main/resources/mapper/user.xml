@@ -3,12 +3,12 @@
 
 <mapper namespace="com.cutecatdog.mapper.UserMapper">
 	
-	<insert id="signup" parameterType="userDto">
+	<insert id="insertUser" parameterType="userDto">
 		insert into user (email, password, nickname, profile_image)
 		values (#{email}, #{password}, #{nickname}, #{profile_image})
 	</insert>
 	
-	<select id="userInfo" parameterType="int" resultType="userDto">
+	<select id="selectUser" parameterType="int" resultType="userDto">
 		select id, email, password, nickname, profile_image
 		from user
 		where id = #{userid}
@@ -20,10 +20,11 @@
 		where id = #{userid}
 	</update>
 	
-	<delete id="withdrawal" parameterType="int">
-		delete from user
+	<update id="deleteUser" parameterType="int">
+		update user
+		set is_withdrawal = 1
 		where id = #{userid}
-	</delete>
+	</update>
 
     <select id="checkEmail" parameterType="String" resultType="userDto">
         select email
@@ -37,13 +38,13 @@
         where nickname=#{nickname}
     </select>
 
-	<select id="login" parameterType="userDto" resultType="userDto">
+	<select id="loginUser" parameterType="userDto" resultType="userDto">
 		select id, email, nickname, profile_image
 		from user
 		where email = #{email} and password = #{password}
 	</select>
 	
-	<update id= "resetPw" parameterType="userDto">
+	<update id= "resetPassword" parameterType="userDto">
 		update user
 		set password = #{password}
 		where id = #{userid}
