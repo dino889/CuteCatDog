@@ -12,38 +12,36 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
 
-    @Bean
-    public Docket swaggerApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .consumes(getConsumeContentTypes())
-                .produces(getProduceContentTypes())
-                .apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("com.cutecatdog.controller"))
-                .paths(PathSelectors.any())
-                .build()
-                .useDefaultResponseMessages(true);
-    }
+  @Bean
+  public Docket swaggerApi() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .consumes(getConsumeContentTypes())
+        .produces(getProduceContentTypes())
+        .apiInfo(swaggerInfo()).select()
+        .apis(RequestHandlerSelectors.basePackage("com.cutecatdog.controller"))
+        .paths(PathSelectors.any())
+        .build()
+        .useDefaultResponseMessages(true);
+  }
 
-    private ApiInfo swaggerInfo(){
-        return new ApiInfoBuilder().title("Spring Boot Api Docs").description("큣캣독").version("1.0.0").build();
-    }
+  private ApiInfo swaggerInfo() {
+    return new ApiInfoBuilder().title("Spring Boot Api Docs").description("큣캣독").version("1.0.0").build();
+  }
 
-    private Set<String> getConsumeContentTypes() {
-        Set<String> consumes = new HashSet<>();
-        consumes.add("application/json;charset=UTF-8");
-        consumes.add("application/x-www-form-urlencoded");
-        return consumes;
-    }
+  private Set<String> getConsumeContentTypes() {
+    Set<String> consumes = new HashSet<>();
+    consumes.add("application/json;charset=UTF-8");
+    consumes.add("application/x-www-form-urlencoded");
+    return consumes;
+  }
 
-    private Set<String> getProduceContentTypes() {
-        Set<String> produces = new HashSet<>();
-        produces.add("application/json;charset=UTF-8");
-        return produces;
-    }
+  private Set<String> getProduceContentTypes() {
+    Set<String> produces = new HashSet<>();
+    produces.add("application/json;charset=UTF-8");
+    return produces;
+  }
 }
