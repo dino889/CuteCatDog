@@ -1,6 +1,6 @@
 package com.cutecatdog.service;
 
-import com.cutecatdog.cutecatdog.mapper.UserMapper;
+import com.cutecatdog.mapper.UserMapper;
 import com.cutecatdog.model.UserDto;
 
 import org.apache.ibatis.session.SqlSession;
@@ -18,12 +18,12 @@ public class UserServiceImpl implements UserService {
         if (userDto.getId() == 0 || userDto.getPassword() == null) {
             throw new Exception();
         }
-        return sqlSession.getMapper(UserMapper.class).insertUser(userDto) == 1;
+        return sqlSession.getMapper(UserMapper.class).signup(userDto) == 1;
     }
 
     @Override
     public UserDto findUser(int userId) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).selectUser(userId);
+        return sqlSession.getMapper(UserMapper.class).userInfo(userId);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean removeUser(int userId) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).deleteUser(userId) == 1;
+        return sqlSession.getMapper(UserMapper.class).withdrawal(userId) == 1;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getId() == 0 || userDto.getPassword() == null) {
             return null;
         }
-        return sqlSession.getMapper(UserMapper.class).loginUser(userDto);
+        return sqlSession.getMapper(UserMapper.class).login(userDto);
     }
 
     @Override
@@ -63,19 +63,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean resetPassword(UserDto userDto) throws Exception {
         userDto.setPassword(makePw());
-        return sqlSession.getMapper(UserMapper.class).resetPassword(userDto) == 1;
+        return sqlSession.getMapper(UserMapper.class).resetPw(userDto) == 1;
     }
 
-    public String makePw(){
-        char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    public String makePw() {
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 10; i++) {
-            int idx = (int)(charSet.length*Math.random());
+            int idx = (int) (charSet.length * Math.random());
             sb.append(charSet[idx]);
         }
 
         return sb.toString();
     }
-    
+
 }
