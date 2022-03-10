@@ -12,6 +12,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/font/font_family_ccd.xml" value="0.371875" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_sortbottom_sheet.xml" value="0.5" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.22" />
@@ -20,6 +21,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_know_board.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_local_board.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_login.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_my_schedule.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_qna_board.xml" value="0.5" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_share_board.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_diary_list.xml" value="0.5" />
