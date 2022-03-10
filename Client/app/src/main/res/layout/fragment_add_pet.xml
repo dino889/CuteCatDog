@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+<!--        <variable-->
+<!--            name=""-->
+<!--            type="" />-->
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/addPetFragment_cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".src.main.mypage.AddPetFragment">
+
+        <LinearLayout
+            android:id="@+id/addPetFragment_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/addPetFragment_iBtnBack"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back" />
+<!--            back left 버튼으로 이미지 변경-->
+
+            <TextView
+                android:id="@+id/addPetFragment_tvAddPet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="가족 구성원 추가"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addPetFragment_ll">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/addPetFragment_cvPetImage"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                android:backgroundTint="@android:color/transparent"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/addPEtFragment_ivPetImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@color/main_30p"
+                    android:scaleType="fitCenter" />
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageButton
+                android:id="@+id/addPetFragment_ibSelectImg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right|bottom"
+                android:background="@drawable/ib_shape_oval_white"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_camera_white_512px" />
+        </FrameLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addPetFragment_tilName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:boxBackgroundMode="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addPetFragment_tietName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_background_normal"
+                android:hint="이름" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addPetFragment_tilBirth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:boxBackgroundMode="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addPetFragment_tilName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addPetFragment_tietBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_background_normal"
+                android:hint="생일" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <Button-->
+<!--            android:id="@+id/addPetFragment_btnBirth"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:text="생일"-->
+<!--            android:textAlignment="viewStart"-->
+<!--            android:backgroundTint="@drawable/et_background_normal"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/addPetFragment_tilName" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addPetFragment_tilBreed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@null"
+            app:boxBackgroundMode="none"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addPetFragment_tilBirth">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addPetFragment_tietBreed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_background_normal"
+                android:hint="품종" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addPetFragment_tilBreed">
+
+            <TextView
+                android:id="@+id/addPetFragment_tvNeutering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:text="중성화 여부"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/addPetFragment_rgNeutering"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RadioGroup
+                android:id="@+id/addPetFragment_rgNeutering"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/addPetFragment_tvNeutering"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioButton
+                    android:id="@+id/addPetFragment_rbNeuteringO"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="O" />
+
+                <RadioButton
+                    android:id="@+id/addPetFragment_rbNeuteringX"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="X" />
+            </RadioGroup>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/fragment_login_btnLogin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/main_500"
+            android:text="등록"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

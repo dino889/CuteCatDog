@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
-import com.ssafy.ccd.databinding.RecyclerviewMypostListItemBinding
+import com.ssafy.ccd.databinding.ItemMypostListBinding
 import com.ssafy.ccd.src.dto.Pet
 
 class MyPostRecyclerviewAdapter(private val postList: List<Pet>): RecyclerView.Adapter<MyPostRecyclerviewAdapter.MyPostViewHolder>() {
 
-    inner class MyPostViewHolder(private val binding: RecyclerviewMypostListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyPostViewHolder(private val binding: ItemMypostListBinding) : RecyclerView.ViewHolder(binding.root) {
         val postLayout = binding.myPostItemLl
 
         fun bind(post: Pet, position: Int) {
@@ -21,7 +21,7 @@ class MyPostRecyclerviewAdapter(private val postList: List<Pet>): RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup,viewType: Int): MyPostRecyclerviewAdapter.MyPostViewHolder {
-        return MyPostViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recyclerview_mypost_list_item, parent, false))
+        return MyPostViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_mypost_list, parent, false))
     }
 
     override fun onBindViewHolder(holder: MyPostRecyclerviewAdapter.MyPostViewHolder, position: Int) {
