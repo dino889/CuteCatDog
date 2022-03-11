@@ -18,12 +18,12 @@ public class UserServiceImpl implements UserService {
         if (userDto.getId() == 0 || userDto.getPassword() == null) {
             throw new Exception();
         }
-        return sqlSession.getMapper(UserMapper.class).signup(userDto) == 1;
+        return sqlSession.getMapper(UserMapper.class).insertUser(userDto) == 1;
     }
 
     @Override
     public UserDto findUser(int userId) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).userInfo(userId);
+        return sqlSession.getMapper(UserMapper.class).selectUser(userId);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean removeUser(int userId) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).withdrawal(userId) == 1;
+        return sqlSession.getMapper(UserMapper.class).deleteUser(userId) == 1;
     }
 
     @Override
@@ -47,11 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto loginUser(UserDto userDto) throws Exception {
-        if (userDto.getId() == 0 || userDto.getPassword() == null) {
+    public UserDto loginUser(String email, String password) throws Exception {
+        if (email == null || password == null) {
             return null;
         }
-        return sqlSession.getMapper(UserMapper.class).login(userDto);
+        return sqlSession.getMapper(UserMapper.class).loginUser(email, password);
     }
 
     @Override
@@ -61,9 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean resetPassword(UserDto userDto) throws Exception {
-        userDto.setPassword(makePw());
-        return sqlSession.getMapper(UserMapper.class).resetPw(userDto) == 1;
+    public boolean resetPassword(String email) throws Exception {
+        return sqlSession.getMapper(UserMapper.class).resetPassword(email, makePw()) == 1;
     }
 
     public String makePw() {

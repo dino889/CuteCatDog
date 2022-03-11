@@ -10,8 +10,8 @@ public interface UserService {
     boolean removeUser(int userId) throws Exception;
     boolean checkEmail(String userEmail) throws Exception;
     boolean checkNickname(String nickname) throws Exception;
-    UserDto loginUser(UserDto userDto) throws Exception;
+    UserDto loginUser(String email, String password) throws Exception;
     boolean logoutUser(int userId) throws Exception;
-    boolean resetPassword(UserDto userDto) throws Exception;
+    boolean resetPassword(String email) throws Exception;
 
 }

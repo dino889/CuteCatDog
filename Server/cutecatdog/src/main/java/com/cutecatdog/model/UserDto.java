@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-@ApiModel(value="UserDto: 회원 정보", description="회원 정보 CRUD")
+@ApiModel(value="User", description="회원 정보")
 @Data
 public class UserDto {
     @ApiModelProperty(value="ID")
