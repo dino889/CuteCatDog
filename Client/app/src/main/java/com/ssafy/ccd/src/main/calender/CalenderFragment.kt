@@ -25,10 +25,10 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
         initCalendar()
 
-        binding.fragmentCalenderWrite.setOnClickListener {
-            val intent = Intent(requireContext(),CalenderWriteFragment::class.java)
-            startActivity(intent)
-        }
+//        binding.fragmentCalenderWrite.setOnClickListener {
+//            val intent = Intent(requireContext(),CalenderWriteFragment::class.java)
+//            startActivity(intent)
+//        }
 
     }
     fun initCalendar(){
