@@ -17,7 +17,7 @@
 	<update id= "modifyUser" parameterType="userDto">
 		update tbl_user
 		set email = #{email}, password = #{password}, nickname = #{nickname}, profile_image=#{profile_image}
-		where id = #{userid}
+		where id = #{id}
 	</update>
 	
 	<update id="deleteUser" parameterType="int">
@@ -44,10 +44,10 @@
 		where email = #{email} and password = #{password}
 	</select>
 	
-	<update id= "resetPassword" parameterType="userDto">
+	<update id= "resetPassword" parameterType="String">
 		update tbl_user
 		set password = #{password}
-		where id = #{userid}
+		where email = #{email}
 	</update>
 	
 </mapper>

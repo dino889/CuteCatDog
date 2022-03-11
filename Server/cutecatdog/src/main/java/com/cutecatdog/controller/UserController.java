@@ -190,6 +190,6 @@ public class UserController {
             response.setMessage("비밀번호 초기화 실패");
             response.setData(false);
         }
-        return null;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
