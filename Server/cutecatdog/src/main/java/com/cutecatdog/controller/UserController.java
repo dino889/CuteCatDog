@@ -39,14 +39,14 @@ public class UserController {
             @RequestBody @ApiParam(value = "회원정보(이메일, 비밀번호, 닉네임, 프로필 사진)", required = true) UserDto userDto)
             throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         if (userService.addUser(userDto)) {
-            response.setSuccess(true);
             response.setMessage("회원가입 성공");
+            response.setData(true);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-
-        response.setSuccess(false);
         response.setMessage("회원가입 실패");
+        response.setData(false);
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
@@ -55,13 +55,15 @@ public class UserController {
     public ResponseEntity<Message> userDetail(@RequestParam(value = "id", required = true) int user_id)
             throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         UserDto userDto = userService.findUser(user_id);
         if (userDto != null) {
-            response.setData(userDto);
-            response.setSuccess(true);
+            HashMap<String, UserDto> data = new HashMap<>();
+            data.put("user", userDto);
+            response.setData(data);
             response.setMessage("회원 정보 조회 성공");
         } else {
-            response.setSuccess(false);
+            response.setData(false);
             response.setMessage("회원 정보 조회 실패");
         }
 
@@ -73,12 +75,13 @@ public class UserController {
     public ResponseEntity<Message> userModify(
             @RequestBody @ApiParam(value = "회원 정보", required = true) UserDto userDto) throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         if (userService.modifyUser(userDto)) {
-            response.setSuccess(true);
             response.setMessage("회원 정보 수정 성공");
+            response.setData(true);
         } else {
-            response.setSuccess(false);
             response.setMessage("회원 정보 수정 실패");
+            response.setData(false);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -89,12 +92,13 @@ public class UserController {
     public ResponseEntity<Message> userRemove(@PathVariable(name = "id") int user_id)
             throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         if (userService.removeUser(user_id)) {
-            response.setSuccess(true);
             response.setMessage("회원 탈퇴 성공");
+            response.setData(true);
         } else {
-            response.setSuccess(false);
             response.setMessage("회원 탈퇴 실패");
+            response.setData(false);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -105,13 +109,12 @@ public class UserController {
     public ResponseEntity<Message> userEmailExist(
             @RequestParam(value = "email") String val) throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         HashMap<String, Boolean> result = new HashMap<>();
         if (userService.checkEmail(val)) {
-            response.setSuccess(true);
             response.setMessage("이미 존재하는 이메일");
             result.put("isExisted", true);
         } else {
-            response.setSuccess(true);
             response.setMessage("중복된 이메일 없음");
             result.put("isExisted", false);
         }
@@ -139,28 +142,29 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Message> login(@RequestParam(value = "이메일", required = true) String email,
             @RequestParam(value = "비밀번호", required = true) String password) {
-        Message result = new Message();
+        Message response = new Message();
+        response.setSuccess(true);
         HttpStatus status = null;
         try {
             UserDto loginUser = userService.loginUser(email, password);
             if (loginUser != null) {
-                result.setSuccess(true);
-                result.setMessage("로그인 성공");
-                result.setData(loginUser);
+                HashMap<String, UserDto> data = new HashMap<>();
+                data.put("user", loginUser);
+                response.setMessage("로그인 성공");
+                response.setData(data);
                 status = HttpStatus.ACCEPTED;
             } else {
-                result.setSuccess(false);
-                ;
-                result.setMessage("로그인 실패");
+                response.setMessage("로그인 실패");
+                response.setData(false);
                 status = HttpStatus.ACCEPTED;
             }
         } catch (Exception e) {
-            result.setSuccess(false);
-            result.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(result, status);
+        return new ResponseEntity<>(response, status);
     }
 
     // @ApiOperation(value = "로그아웃", notes = "", response = Map.class)
@@ -176,12 +180,13 @@ public class UserController {
     public ResponseEntity<Message> resetPassword(@RequestParam(value = "email", required = true) String email)
             throws Exception {
         Message response = new Message();
+        response.setSuccess(true);
         if (userService.resetPassword(email)) {
-            response.setSuccess(true);
             response.setMessage("비밀번호 초기화 성공");
+            response.setData(true);
         } else {
-            response.setSuccess(false);
             response.setMessage("비밀번호 초기화 실패");
+            response.setData(false);
         }
         return null;
     }

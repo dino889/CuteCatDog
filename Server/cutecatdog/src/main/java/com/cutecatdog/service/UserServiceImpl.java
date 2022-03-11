@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addUser(UserDto userDto) throws Exception {
-        if (userDto.getId() == 0 || userDto.getPassword() == null) {
+        if (userDto.getEmail() == null || userDto.getPassword() == null) {
             throw new Exception();
         }
         return sqlSession.getMapper(UserMapper.class).insertUser(userDto) == 1;
