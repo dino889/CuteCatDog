@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
     private SqlSession sqlSession;
 
     @Override
-    public boolean signupUser(UserDto userDto) throws Exception {
+    public boolean addUser(UserDto userDto) throws Exception {
         if (userDto.getId() == 0 || userDto.getPassword() == null) {
             throw new Exception();
         }
@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
         return sqlSession.getMapper(UserMapper.class).checkEmail(email) != null;
     }
 
-    @Override
-    public boolean checkNickname(String nickname) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) != null;
-    }
+    // @Override
+    // public boolean checkNickname(String nickname) throws Exception {
+    //     return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) != null;
+    // }
 
     @Override
     public UserDto loginUser(String email, String password) throws Exception {
@@ -54,11 +54,11 @@ public class UserServiceImpl implements UserService {
         return sqlSession.getMapper(UserMapper.class).loginUser(email, password);
     }
 
-    @Override
-    public boolean logoutUser(int userId) throws Exception {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    // @Override
+    // public boolean logoutUser(int userId) throws Exception {
+    //     // TODO Auto-generated method stub
+    //     return false;
+    // }
 
     @Override
     public boolean resetPassword(String email) throws Exception {
