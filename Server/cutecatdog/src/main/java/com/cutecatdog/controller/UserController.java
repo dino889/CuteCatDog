@@ -114,9 +114,11 @@ public class UserController {
         if (userService.checkEmail(val)) {
             response.setMessage("이미 존재하는 이메일");
             result.put("isExisted", true);
+            response.setData(result);
         } else {
             response.setMessage("중복된 이메일 없음");
             result.put("isExisted", false);
+            response.setData(result);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
