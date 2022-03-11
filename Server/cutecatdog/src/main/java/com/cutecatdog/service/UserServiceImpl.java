@@ -43,7 +43,8 @@ public class UserServiceImpl implements UserService {
 
     // @Override
     // public boolean checkNickname(String nickname) throws Exception {
-    //     return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) != null;
+    // return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) !=
+    // null;
     // }
 
     @Override
@@ -56,8 +57,8 @@ public class UserServiceImpl implements UserService {
 
     // @Override
     // public boolean logoutUser(int userId) throws Exception {
-    //     // TODO Auto-generated method stub
-    //     return false;
+    // // TODO Auto-generated method stub
+    // return false;
     // }
 
     @Override

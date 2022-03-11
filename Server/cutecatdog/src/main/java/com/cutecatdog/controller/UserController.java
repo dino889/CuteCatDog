@@ -165,9 +165,10 @@ public class UserController {
 
     // @ApiOperation(value = "로그아웃", notes = "", response = Map.class)
     // @PostMapping("/logout")
-    // public ResponseEntity<Message> logout(@ApiParam(value = "ID", required = true) int user_id) {
+    // public ResponseEntity<Message> logout(@ApiParam(value = "ID", required =
+    // true) int user_id) {
 
-    //     return null;
+    // return null;
     // }
 
     @ApiOperation(value = "비밀번호 초기화", notes = "", response = Map.class)
