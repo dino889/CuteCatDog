@@ -4,48 +4,48 @@
 <mapper namespace="com.cutecatdog.mapper.UserMapper">
 	
 	<insert id="insertUser" parameterType="userDto">
-		insert into user (email, password, nickname, profile_image)
+		insert into tbl_user (email, password, nickname, profile_image)
 		values (#{email}, #{password}, #{nickname}, #{profile_image})
 	</insert>
 	
 	<select id="selectUser" parameterType="int" resultType="userDto">
 		select id, email, password, nickname, profile_image
-		from user
+		from tbl_user
 		where id = #{userid}
 	</select>
 	
 	<update id= "modifyUser" parameterType="userDto">
-		update user
+		update tbl_user
 		set email = #{email}, password = #{password}, nickname = #{nickname}, profile_image=#{profile_image}
 		where id = #{userid}
 	</update>
 	
 	<update id="deleteUser" parameterType="int">
-		update user
+		update tbl_user
 		set is_withdrawal = 1
 		where id = #{userid}
 	</update>
 
     <select id="checkEmail" parameterType="String" resultType="userDto">
         select email
-        from user
+        from tbl_user
         where email=#{email}
     </select>
 
     <select id="checkNickname" parameterType="String" resultType="userDto">
         select nickname
-        from user
+        from tbl_user
         where nickname=#{nickname}
     </select>
 
 	<select id="loginUser" parameterType="userDto" resultType="userDto">
 		select id, email, nickname, profile_image
-		from user
+		from tbl_user
 		where email = #{email} and password = #{password}
 	</select>
 	
 	<update id= "resetPassword" parameterType="userDto">
-		update user
+		update tbl_user
 		set password = #{password}
 		where id = #{userid}
 	</update>
