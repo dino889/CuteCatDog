@@ -52,7 +52,7 @@
         WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
 	</select>
 
-	<select id="selectDiaryDetail" parameterType="int" resultType="DiaryDto">
+	<select id="selectDiaryDetali" parameterType="int" resultType="DiaryDto">
 		SELECT id, title, content, datetime
 		FROM tbl_diary
         WHERE id = #{id}
