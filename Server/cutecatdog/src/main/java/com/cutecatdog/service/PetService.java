@@ -13,4 +13,8 @@ public interface PetService {
   public List<PetDto> findPetDetail(int id) throws Exception;
 
   public boolean modifyPet(PetDto petDto) throws Exception;
+
+  public boolean removePet(int id) throws Exception;
+
+  public List<PetDto> findMyPetDetail(int userId) throws Exception;
 }
