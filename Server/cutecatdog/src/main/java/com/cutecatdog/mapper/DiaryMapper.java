@@ -15,6 +15,10 @@ public interface DiaryMapper {
     public boolean updateDiary(DiaryDto diaryDto) throws SQLException;
 
     public boolean deleteDiary(int id) throws SQLException;
+    
+    public boolean deletePhoto(int id) throws SQLException;
+    
+    public boolean deleteHashtag(int id) throws SQLException;
 
     public List<DiaryDto> selectDiaryAsc(int user_id) throws SQLException;
 
@@ -23,5 +27,7 @@ public interface DiaryMapper {
     public List<DiaryDto> selectDiaryByDate(int user_id, String date) throws SQLException;
 
     public List<DiaryDto> selectDiaryByPeriod(int user_id, String start_date, String end_date) throws SQLException;
+
+    public List<DiaryDto> selectDiaryDetali(int user_id) throws SQLException;
 
 }

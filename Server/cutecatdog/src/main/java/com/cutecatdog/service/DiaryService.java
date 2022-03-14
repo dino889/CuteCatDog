@@ -18,6 +18,8 @@ public interface DiaryService {
 
     public List<DiaryDto> findDiaryByPeriod(int user_id, String start_date, String end_date) throws Exception;
 
+    public DiaryDto findDiaryDetail(int id) throws Exception;
+
     public boolean removeDiary(int id) throws Exception;
     
 }

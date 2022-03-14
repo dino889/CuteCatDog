@@ -47,6 +47,8 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public boolean removeDiary(int id) throws Exception {
+        sqlSession.getMapper(DiaryMapper.class).deletePhoto(id);
+        sqlSession.getMapper(DiaryMapper.class).deleteHashtag(id);
         return sqlSession.getMapper(DiaryMapper.class).deleteDiary(id);
     }
 
