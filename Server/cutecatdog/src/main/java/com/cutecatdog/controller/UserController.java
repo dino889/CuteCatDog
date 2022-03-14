@@ -55,7 +55,7 @@ public class UserController {
                     response.setMessage("회원가입 실패");
                     data.put("isSignup", false);
                     response.setData(data);
-                    status = HttpStatus.NO_CONTENT;
+                    status = HttpStatus.OK;
                 }
             } else {
                 response.setMessage("회원가입 실패");
@@ -90,7 +90,7 @@ public class UserController {
                 data.put("user", null);
                 response.setData(data);
                 response.setMessage("회원 정보 조회 실패");
-                status = HttpStatus.NO_CONTENT;
+                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -177,7 +177,7 @@ public class UserController {
                 response.setMessage("중복된 이메일 없음");
                 data.put("isExisted", false);
                 response.setData(data);
-                status = HttpStatus.NOT_FOUND;
+                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -188,42 +188,26 @@ public class UserController {
         return new ResponseEntity<>(response, status);
     }
 
-    // @ApiOperation(value = "닉네임 중복 확인", notes = "", response = Map.class)
-    // @GetMapping("/exists/nickname?")
-    // public ResponseEntity<Message> checkNickname(@RequestParam(value =
-    // "nickname", required = true) String nickname) throws Exception{
-    // Message response = new Message();
-    // if (userService.checkNickname(nickname)) {
-    // response.setSuccess(true);
-    // response.setMessage(S);
-    // }else{
-    // response.setSuccess(false);
-    // response.setMessage(F);
-    // }
-
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-    // }
-
     @ApiOperation(value = "로그인", notes = "", response = Map.class)
     @PostMapping("/login")
-    public ResponseEntity<Message> login(@RequestParam(value = "이메일", required = true) String email,
-            @RequestParam(value = "비밀번호", required = true) String password) {
+    public ResponseEntity<Message> login(@RequestBody AccountDto account) {
+        System.out.println(account.getEmail());
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            UserDto loginUser = userService.loginUser(email, password);
+            UserDto loginUser = userService.loginUser(account);
             HashMap<String, UserDto> data = new HashMap<>();
             if (loginUser != null) {
                 data.put("user", loginUser);
                 response.setMessage("로그인 성공");
                 response.setData(data);
-                status = HttpStatus.ACCEPTED;
+                status = HttpStatus.OK;
             } else {
                 response.setMessage("로그인 실패");
                 data.put("user", null);
                 response.setData(data);
-                status = HttpStatus.NOT_ACCEPTABLE;
+                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -233,14 +217,6 @@ public class UserController {
 
         return new ResponseEntity<>(response, status);
     }
-
-    // @ApiOperation(value = "로그아웃", notes = "", response = Map.class)
-    // @PostMapping("/logout")
-    // public ResponseEntity<Message> logout(@ApiParam(value = "ID", required =
-    // true) int user_id) {
-
-    // return null;
-    // }
 
     @ApiOperation(value = "비밀번호 변경", notes = "", response = Map.class)
     @PutMapping("/reset-password")
@@ -265,7 +241,7 @@ public class UserController {
                 message.setMessage("비밀번호 초기화 실패");
                 data.put("isSuccess", false);
                 message.setData(data);
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
+                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             message.setSuccess(false);
@@ -302,7 +278,7 @@ public class UserController {
                 data.put("code", null);
                 data.put("isExisted", false);
                 response.setData(data);
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
+                status = HttpStatus.OK;
             }
 
         } catch (Exception e) {

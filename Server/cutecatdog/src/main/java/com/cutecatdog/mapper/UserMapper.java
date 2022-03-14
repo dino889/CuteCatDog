@@ -22,7 +22,7 @@ public interface UserMapper {
 
     UserDto checkNickname(String nickname) throws SQLException;
 
-    UserDto loginUser(String email, String password) throws SQLException;
+    UserDto loginUser(AccountDto account) throws SQLException;
 
     int resetPassword(AccountDto account) throws SQLException;
 
