@@ -50,7 +50,6 @@ private const val TAG = "AddPetFragment_ccd"
 class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding::bind, R.layout.fragment_add_pet) {
     var curDate = Date() // 현재
     private lateinit var mainActivity : MainActivity
-    private val mainViewModel: MainViewModels by activityViewModels()
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
     var kindId = 0
     var gender = -1
@@ -124,14 +123,14 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     private fun initKinds(){
         var kinds = mutableListOf<String>()
         for(item in 0..mainViewModel.kinds.value!!.size){
-            var name = mainViewModel.kinds.value!![item].name
-            kinds.add(name)
+//            var name = mainViewModel.kinds.value!![item].name
+//            kinds.add(name)
         }
         var adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_dropdown_item_1line,kinds)
         binding.addPetFragmentAutoKind.setAdapter(adapter)
 
         binding.addPetFragmentAutoKind.setOnItemClickListener { parent, view, position, id ->
-            kindId = mainViewModel.kinds.value!![position].id
+//            kindId = mainViewModel.kinds.value!![position].id
         }
     }
     private fun selectedGender() {
