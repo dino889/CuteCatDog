@@ -80,7 +80,7 @@ public class DiaryController {
             response.setSuccess(true);
             List<DiaryDto> diarys = diaryService.findDiaryDesc(user_id);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
-            if (diarys != null) {
+            if (diarys.size()>0) {
                 for (DiaryDto diaryDto : diarys) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
@@ -92,7 +92,7 @@ public class DiaryController {
             } else {
                 data.put("diarys", diarys);
                 response.setData(data);
-                response.setMessage("일기 목록 조회 실패");
+                response.setMessage("일기 목록 없음");
                 status = HttpStatus.OK;
             }
         } catch (Exception e) {

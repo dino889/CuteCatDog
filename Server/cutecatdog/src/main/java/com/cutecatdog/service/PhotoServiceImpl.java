@@ -27,7 +27,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<PhotoDto> findPhoto(int diary_id) throws Exception {
-        return sqlSession.getMapper(PhotoMapper.class).selectHashtag(diary_id);
+        return sqlSession.getMapper(PhotoMapper.class).selectPhoto(diary_id);
     }
     
 }

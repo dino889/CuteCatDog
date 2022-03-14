@@ -14,6 +14,6 @@ public interface PhotoMapper {
 
     public boolean deletePhoto(int id) throws SQLException;
 
-    public List<PhotoDto> selectHashtag(int diary_id) throws SQLException;
+    public List<PhotoDto> selectPhoto(int diary_id) throws SQLException;
 
 }
