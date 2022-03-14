@@ -44,10 +44,10 @@
 		where email = #{email} and password = #{password}
 	</select>
 	
-	<update id= "resetPassword" parameterType="String">
-		update tbl_user
-		set password = #{password}
-		where email = #{email}
+	<update id="resetPassword" parameterType="accountDto">
+		UPDATE tbl_user
+		SET password = #{password}
+		WHERE email = #{email} AND is_withdrawal = 0
 	</update>
 	
 </mapper>
