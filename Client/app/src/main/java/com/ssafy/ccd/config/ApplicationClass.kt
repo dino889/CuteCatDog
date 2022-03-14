@@ -35,8 +35,8 @@ class ApplicationClass : Application() {
         sharedPreferencesUtil = SharedPreferencesUtil(applicationContext)
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AddCookiesInterceptor())
-            .addInterceptor(ReceivedCookiesInterceptor())
+//            .addInterceptor(AddCookiesInterceptor())
+//            .addInterceptor(ReceivedCookiesInterceptor())
             .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
             .connectTimeout(30, TimeUnit.SECONDS).build()
 
