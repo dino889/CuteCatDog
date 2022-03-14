@@ -14,6 +14,7 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentMyPageBinding
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
+import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
 
@@ -47,7 +48,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
 
     fun initPetAdapter(){
-        mainViewModel.petsList.observe(viewLifecycleOwner, {
+        mainViewModel.myPetsList.observe(viewLifecycleOwner, {
             petAdapter = PetListRecyclerviewAdapter()
             petAdapter.petList = it
 
@@ -56,6 +57,23 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 adapter = petAdapter
                 adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
+
+            petAdapter.setAddClickListener(object: PetListRecyclerviewAdapter.AddClickListener {
+                override fun onClick(view: View, position: Int) {
+                    //AddPetFragment로 넘기기
+                    this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment)
+                }
+            })
+
+            petAdapter.setItemClickListener(object : PetListRecyclerviewAdapter.ItemClickListener {
+                override fun onClick(view: View, position: Int, pet: Pet) {
+                    //해당 반려동물 정보 불러오기
+                    runBlocking{
+                        mainViewModel.getPetDetailList(pet.id)
+                    }
+                }
+
+            })
         })
     }
 

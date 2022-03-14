@@ -35,4 +35,9 @@ class PetService {
     suspend fun petsDeleteService(id:Int):Response<Message>{
         return RetrofitUtil.petService.petsDelete(id)
     }
+
+    //반려동물 품종 전체조회
+    suspend fun kindsAllListService():Response<Message>{
+        return RetrofitUtil.petService.kindsAllList()
+    }
 }
