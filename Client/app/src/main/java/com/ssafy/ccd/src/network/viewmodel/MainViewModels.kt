@@ -8,10 +8,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.reflect.TypeToken
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
-import com.ssafy.ccd.src.dto.User
 import com.ssafy.ccd.src.dto.PetKind
+import com.ssafy.ccd.src.dto.User
 import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
 import kotlinx.coroutines.launch
@@ -19,6 +20,8 @@ import kotlinx.coroutines.launch
 private const val TAG = "MainViewModels_ccd"
 class MainViewModels : ViewModel() {
 
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     /**
      * USER ViewModel
      */
@@ -59,34 +62,25 @@ class MainViewModels : ViewModel() {
 //        }
 //    }
 
-    private var _loginInfo = Message()
-
-    val loginInfo : Message
-        get() = _loginInfo
-
-    private fun setChkLogin(message: Message) = viewModelScope.launch {
-        _loginInfo = message
-    }
-
-    suspend fun login(user: User) {
+    suspend fun login(user: User) : Message {
+        var result = Message()
         val response = UserService().loginUser(user)
 
         viewModelScope.launch {
             val res = response.body()
             if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
-                    setChkLogin(res)
+                    result = res
                 }
             }
-//            else if(response.code() == 500) {
-//                setChkLogin(res)
-//            }
         }
+        return result
     }
 
 
 
-
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     /**
      * PET VIEW MODEL
      * */
