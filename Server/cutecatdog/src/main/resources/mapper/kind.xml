@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.KindMapper">
+	
+	<select id="selectKind" resultType="KindDto">
+		SELECT id, name
+		FROM tbl_kind
+	</select>
+
+  <select id="selectKindName" resultType="int">
+		SELECT *
+		FROM tbl_kind
+    WHERE name = #{name}
+	</select>
+
+  <insert id="insertKind" parameterType="String">
+		INSERT INTO tbl_kind (name)
+		VALUES (#{name})
+  </insert>
+
+  <update id="updateKind" parameterType="KindDto">
+    UPDATE tbl_kind
+    SET name = #{name}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteKind" parameterType="int">
+		DELETE FROM tbl_kind WHERE id = #{id}
+	</delete>
+
+</mapper>
