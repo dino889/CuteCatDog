@@ -21,8 +21,6 @@ import android.widget.DatePicker
 
 
 class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding::bind, R.layout.fragment_add_pet) {
-
-
     var curDate = Date() // 현재
 
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")

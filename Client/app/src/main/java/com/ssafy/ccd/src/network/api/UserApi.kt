@@ -1,4 +1,4 @@
-package com.ssafy.ccd.src.api
+package com.ssafy.ccd.src.network.api
 
 import com.ssafy.ccd.src.dto.User
 import retrofit2.Call
