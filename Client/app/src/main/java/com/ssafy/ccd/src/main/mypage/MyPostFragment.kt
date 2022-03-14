@@ -1,10 +1,7 @@
 package com.ssafy.ccd.src.main.mypage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
@@ -30,8 +27,8 @@ class MyPostFragment : BaseFragment<FragmentMyPostBinding>(FragmentMyPostBinding
 
     private fun initRecyclerviewAdapter() {
         val postList = mutableListOf<Pet>()
-        postList.add(Pet(1, "1"))
-        postList.add(Pet(2, "2"))
+//        postList.add(Pet(1, "1"))
+//        postList.add(Pet(2, "2"))
         myPostRecyclerviewAdapter = MyPostRecyclerviewAdapter(postList = postList)
         myPostRecyclerviewAdapter.setItemClickListener(object : MyPostRecyclerviewAdapter.ItemClickListener {
             override fun onClick(view: View, position: Int, id: Int) {

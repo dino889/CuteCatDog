@@ -42,14 +42,24 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            if (userService.addUser(userDto)) {
-                response.setMessage("회원가입 성공");
-                response.setData(true);
-                status = HttpStatus.OK;
-            } else {
+            HashMap<String, Boolean> data = new HashMap<>();
+            if (!userService.checkEmail(userDto.getEmail())) {
+                if (userService.addUser(userDto)) {
+                    response.setMessage("회원가입 성공");
+                    data.put("isSignup", true);
+                    response.setData(data);
+                    status = HttpStatus.OK;
+                } else {
+                    response.setMessage("회원가입 실패");
+                    data.put("isSignup", false);
+                    response.setData(data);
+                    status = HttpStatus.NO_CONTENT;
+                }
+            }else{
                 response.setMessage("회원가입 실패");
-                response.setData(false);
-                status = HttpStatus.NO_CONTENT;
+                data.put("isExist", false);
+                response.setData(data);
+                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -68,14 +78,15 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
+            HashMap<String, UserDto> data = new HashMap<>();
             if (userDto != null) {
-                HashMap<String, UserDto> data = new HashMap<>();
                 data.put("user", userDto);
                 response.setData(data);
                 response.setMessage("회원 정보 조회 성공");
                 status = HttpStatus.OK;
             } else {
-                response.setData(false);
+                data.put("user", null);
+                response.setData(data);
                 response.setMessage("회원 정보 조회 실패");
                 status = HttpStatus.NO_CONTENT;
             }
@@ -96,13 +107,16 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
+            HashMap<String, Boolean> data = new HashMap<>();
             if (userService.modifyUser(userDto)) {
                 response.setMessage("회원 정보 수정 성공");
-                response.setData(true);
+                data.put("isModify", true);
+                response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("회원 정보 수정 실패");
-                response.setData(false);
+                data.put("isModify", false);
+                response.setData(data);
                 status = HttpStatus.NOT_MODIFIED;
             }
         } catch (Exception e) {
@@ -122,13 +136,16 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
+            HashMap<String, Boolean> data = new HashMap<>();
             if (userService.removeUser(user_id)) {
                 response.setMessage("회원 탈퇴 성공");
-                response.setData(true);
+                data.put("isDelete", true);
+                response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("회원 탈퇴 실패");
-                response.setData(false);
+                data.put("isDelete", false);
+                response.setData(data);
                 status = HttpStatus.NOT_MODIFIED;
             }
         } catch (Exception e) {
@@ -145,19 +162,19 @@ public class UserController {
     public ResponseEntity<Message> userEmailExist(
             @RequestParam(value = "email") String val) throws Exception {
         Message response = new Message();
-        HashMap<String, Boolean> result = new HashMap<>();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
+            HashMap<String, Boolean> data= new HashMap<>();
             if (userService.checkEmail(val)) {
                 response.setMessage("이미 존재하는 이메일");
-                result.put("isExisted", true);
-                response.setData(result);
+                data.put("isExisted", true);
+                response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("중복된 이메일 없음");
-                result.put("isExisted", false);
-                response.setData(result);
+                data.put("isExisted", false);
+                response.setData(data);
                 status = HttpStatus.NOT_FOUND;
             }
         } catch (Exception e) {
@@ -194,15 +211,16 @@ public class UserController {
         try {
             response.setSuccess(true);
             UserDto loginUser = userService.loginUser(email, password);
+            HashMap<String, UserDto> data = new HashMap<>();
             if (loginUser != null) {
-                HashMap<String, UserDto> data = new HashMap<>();
                 data.put("user", loginUser);
                 response.setMessage("로그인 성공");
                 response.setData(data);
                 status = HttpStatus.ACCEPTED;
             } else {
                 response.setMessage("로그인 실패");
-                response.setData(false);
+                data.put("user", null);
+                response.setData(data);
                 status = HttpStatus.NOT_ACCEPTABLE;
             }
         } catch (Exception e) {
@@ -230,13 +248,16 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
+            HashMap<String, Boolean> data = new HashMap<>();
             if (userService.resetPassword(email)) {
                 response.setMessage("비밀번호 초기화 성공");
-                response.setData(true);
+                data.put("isReset", true);
+                response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("비밀번호 초기화 실패");
-                response.setData(false);
+                data.put("isReset", false);
+                response.setData(data);
                 status = HttpStatus.NOT_MODIFIED;
             }
         } catch (Exception e) {
@@ -252,19 +273,21 @@ public class UserController {
     public ResponseEntity<Message> userEmailVerify(
             @RequestParam(value = "email") String email) throws Exception {
         Message response = new Message();
-        HashMap<String, String> data = new HashMap<>();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             String code = userService.veryfyEmail(email);
             if (code != null) {
+                HashMap<String, String> data = new HashMap<>();
                 response.setMessage("이메일 인증 요청 성공");
                 data.put("code", code);
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
+                HashMap<String, Boolean> data = new HashMap<>();
                 response.setMessage("이메일 인증 요청 실패");
-                response.setData(false);
+                data.put("isVerify", false);
+                response.setData(data);
                 status = HttpStatus.NOT_FOUND;
             }
         } catch (Exception e) {

@@ -29,25 +29,25 @@
     <select id="checkEmail" parameterType="String" resultType="userDto">
         select email
         from tbl_user
-        where email=#{email}
+        where email=#{email} and is_withdrawal = 0
     </select>
 
-    <select id="checkNickname" parameterType="String" resultType="userDto">
+    <!-- <select id="checkNickname" parameterType="String" resultType="userDto">
         select nickname
         from tbl_user
         where nickname=#{nickname}
-    </select>
+    </select> -->
 
 	<select id="loginUser" parameterType="userDto" resultType="userDto">
 		select id, email, password, nickname, profile_image
 		from tbl_user
-		where email = #{email} and password = #{password}
+		where email = #{email} and password = #{password} and is_withdrawal = 0
 	</select>
 	
 	<update id= "resetPassword" parameterType="String">
 		update tbl_user
 		set password = #{password}
-		where email = #{email}
+		where email = #{email} and is_withdrawal = 0
 	</update>
 	
 </mapper>

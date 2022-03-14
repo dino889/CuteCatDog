@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="pet"
-            type="com.ssafy.ccd.src.dto.Pet" />
+            name="viewModel"
+            type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
         <variable
             name="user"
             type="com.ssafy.ccd.src.dto.User" />
@@ -24,7 +24,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="15dp"/>
+            android:layout_margin="15dp"
+            app:petListData="@{viewModel.myPetsList}"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/myPageFragment_cvPetImage"

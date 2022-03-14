@@ -1,16 +1,13 @@
 package com.ssafy.ccd.src.dto
 
 data class User(
-    val id: String,
-    val password: String,
-    val nickname: String,
-    val phone: String,
     val email: String,
-    val birth: String,
-    val gender: String?,
-    val type: String,
-    val token: String,
-    val img: String
-) {
-    constructor() : this("", "", "", "", "", "", "", "", "", "")
+    val id: Int,
+    val nickname: String,
+    val password: String,
+    val profile_image: String
+){
+    constructor() : this("",0,"","","")
+    constructor(id:Int) : this("",id,"","","")
+    constructor(email: String, password: String):this(email, 0, "", password, "")
 }
