@@ -1,5 +1,8 @@
 package com.cutecatdog.controller;
 
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.cutecatdog.common.message.Message;
@@ -36,7 +39,12 @@ public class KindController {
   public ResponseEntity<Message> kindList() throws Exception{
     HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(kindService.findKind());
+
+    List<KindDto> kinds = new ArrayList<>();
+		kinds = kindService.findKind();
+		HashMap<String,List<KindDto>> map = new HashMap<>();
+		map.put("kinds", kinds);
+		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
   }

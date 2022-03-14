@@ -1,5 +1,7 @@
 package com.cutecatdog.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.cutecatdog.common.message.Message;
@@ -35,7 +37,11 @@ public class PetController {
 	public ResponseEntity<Message> petList() throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(petService.findPet());
+		List<PetDto> pets = new ArrayList<>();
+		pets = petService.findPet();
+		HashMap<String,List<PetDto>> map = new HashMap<>();
+		map.put("pets", pets);
+		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
 	}
@@ -75,7 +81,11 @@ public class PetController {
 	public ResponseEntity<Message> petDetails(@PathVariable("id") int id) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(petService.findPetDetail(id));
+		List<PetDto> pets = new ArrayList<>();
+		pets = petService.findPetDetail(id);
+		HashMap<String,List<PetDto>> map = new HashMap<>();
+		map.put("pet", pets);
+		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
 	}
@@ -95,7 +105,11 @@ public class PetController {
 	public ResponseEntity<Message> mypetDetails(@PathVariable("userId") int userId) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(petService.findMyPetDetail(userId));
+		List<PetDto> pets = new ArrayList<>();
+		HashMap<String,List<PetDto>> map = new HashMap<>();
+ 		pets = petService.findMyPetDetail(userId);
+		map.put("pet", pets);
+		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
 	}
