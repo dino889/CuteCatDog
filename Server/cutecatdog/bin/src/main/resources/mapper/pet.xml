@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.PetMapper">
+	
+	<select id="selectPet" resultType="PetDto">
+		SELECT user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+	</select>
+
+	<select id="selectPetDetail" parameterType="int" resultType="PetDto">
+		SELECT user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+    WHERE id = #{id}
+	</select>
+
+  <insert id="insertPet" parameterType="PetDto">
+		INSERT INTO tbl_pet (user_id, kind_id, name, birth, photo_path,gender,is_neutered)
+		VALUES (#{userId},#{kindId},#{name},#{birth},#{photoPath},#{gender},#{isNeutered})
+	</insert>
+
+  <update id="updatePet" parameterType="PetDto">
+    UPDATE tbl_pet
+    SET kind_id = #{kindId}, name = #{name}, birth = #{birth}, photo_path = #{photoPath}, gender = #{gender}, is_neutered = #{isNeutered}
+    WHERE id = #{id}
+  </update>
+
+</mapper>
