@@ -1,11 +1,8 @@
 package com.ssafy.ccd.src.network.viewmodel
 
-<<<<<<< Updated upstream
 import android.provider.ContactsContract
-=======
 import android.graphics.Bitmap
 import android.net.Uri
->>>>>>> Stashed changes
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -156,7 +153,6 @@ class MainViewModels : ViewModel() {
         }
     }
 
-<<<<<<< Updated upstream
     suspend fun getPetDetailList(petId:Int){
         val response = PetService().petsDetailListService(petId)
         viewModelScope.launch {
@@ -192,7 +188,7 @@ class MainViewModels : ViewModel() {
             }
         }
     }
-=======
+
     /**
      * AI View Model
      * @Author Jueun
@@ -201,5 +197,5 @@ class MainViewModels : ViewModel() {
     lateinit var uploadedImage : Bitmap
     var uploadedImageUri : Uri? = null
     var aiType = 0
->>>>>>> Stashed changes
+
 }
