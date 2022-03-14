@@ -4,12 +4,12 @@
 <mapper namespace="com.cutecatdog.mapper.PetMapper">
 	
 	<select id="selectPet" resultType="PetDto">
-		SELECT user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		SELECT id, user_id, kind_id, name, birth, photo_path,gender,is_neutered
 		FROM tbl_pet
 	</select>
 
 	<select id="selectPetDetail" parameterType="int" resultType="PetDto">
-		SELECT user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		SELECT id,user_id, kind_id, name, birth, photo_path,gender,is_neutered
 		FROM tbl_pet
     WHERE id = #{id}
 	</select>
@@ -24,5 +24,15 @@
     SET kind_id = #{kindId}, name = #{name}, birth = #{birth}, photo_path = #{photoPath}, gender = #{gender}, is_neutered = #{isNeutered}
     WHERE id = #{id}
   </update>
+
+	<delete id="deletePet" parameterType="int">
+		DELETE FROM tbl_pet WHERE id = #{id}
+	</delete>
+
+	<select id="selectMyPetDetail" parameterType="int" resultType="PetDto">
+		SELECT id, user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+    WHERE user_id = #{userId}
+	</select>
 
 </mapper>

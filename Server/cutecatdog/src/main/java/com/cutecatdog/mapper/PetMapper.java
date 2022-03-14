@@ -17,4 +17,8 @@ public interface PetMapper {
 
   public boolean updatePet(PetDto petDto) throws SQLException;
 
+  public int deletePet(int id) throws SQLException;
+
+  public List<PetDto> selectMyPetDetail(int userId) throws SQLException;
+
 }

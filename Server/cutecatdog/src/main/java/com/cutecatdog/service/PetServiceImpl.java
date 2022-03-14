@@ -33,6 +33,16 @@ public class PetServiceImpl implements PetService{
   public boolean modifyPet(PetDto petDto) throws Exception {
     return sqlSession.getMapper(PetMapper.class).updatePet(petDto);
   }
+
+  @Override
+  public boolean removePet(int id) throws Exception {
+    return sqlSession.getMapper(PetMapper.class).deletePet(id) == 1;
+  }
+
+  @Override
+  public List<PetDto> findMyPetDetail(int userId) throws Exception {
+    return sqlSession.getMapper(PetMapper.class).selectMyPetDetail(userId);
+  }
   
   
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,4 +80,23 @@ public class PetController {
 		return new ResponseEntity<Message>(message, status);
 	}
 
+  @ApiOperation(value = "반려동물 삭제", notes = "반려 동물의 id 값으로 삭제한다.", response = List.class)
+	@DeleteMapping("{id}")
+	public ResponseEntity<Message> petRemove(@PathVariable("id") int id) throws Exception{
+		HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+		message.setData(petService.removePet(id));
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+	}
+
+  @ApiOperation(value = "반려동물 조회", notes = "반려 동물의 userId 값으로 조회한다.(내 아이만 볼 수 있다)", response = List.class)
+	@GetMapping("my/{userId}")
+	public ResponseEntity<Message> mypetDetails(@PathVariable("userId") int userId) throws Exception {
+		HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+		message.setData(petService.findMyPetDetail(userId));
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+	}
 }
