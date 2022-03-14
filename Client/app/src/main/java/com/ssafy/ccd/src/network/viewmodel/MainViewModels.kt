@@ -71,12 +71,14 @@ class MainViewModels : ViewModel() {
 
         viewModelScope.launch {
             val res = response.body()
-            if(response.code() == 200) {
+            if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
                     setChkLogin(res)
-                    Log.d("loginBtnClickEvent", "login: $res")
                 }
             }
+//            else if(response.code() == 500) {
+//                setChkLogin(res)
+//            }
         }
     }
 

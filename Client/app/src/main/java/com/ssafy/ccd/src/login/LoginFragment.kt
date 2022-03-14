@@ -20,6 +20,7 @@ import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
 import com.google.gson.reflect.TypeToken
+import com.ssafy.ccd.util.CommonUtils
 import java.lang.reflect.Type
 
 
@@ -29,8 +30,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onAttach(context: Context) {
@@ -53,23 +52,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
             val loginRes = mainViewModel.loginInfo
 
-            if(loginRes.data.get("user") != null && loginRes.message.equals("로그인 성공")) {
-                val loginUser = loginRes.data.get("user")
+            if(loginRes.data.get("user") != null && loginRes.message == "로그인 성공") {
+                val loginUser = loginRes.data["user"]
 
-                /**
-                 * 코드 수정해야 함.
-                 */
                 val type: Type = object : TypeToken<User>() {}.type
-                val jsonResult: String = Gson().toJson(loginUser)
-                val user: User = Gson().fromJson(jsonResult, type)
+                val user = CommonUtils.parseDto<User>(loginUser!!, type)
 
                 ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.device_token))
                 showCustomToast("로그인 되었습니다.")
                 loginActivity.openFragment(1)
+
+            } else if(loginRes.message == "로그인 실패") {
+                showCustomToast("ID와 PW를 확인해 주세요.")
+
             } else if(loginRes.success == false) {
                 showCustomToast("서버 통신에 실패했습니다.")
-            } else {
-                showCustomToast(loginRes.message)
+                Log.d(TAG, "loginBtnClickEvent: ${loginRes.message}")
+
             }
         }
     }
@@ -79,7 +78,5 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             mainViewModel.login(User(email, password))
         }
     }
-
-
 
 }

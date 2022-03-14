@@ -1,6 +1,13 @@
 package com.ssafy.ccd.util
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import com.ssafy.ccd.src.dto.User
+import java.lang.reflect.Type
 import java.text.DecimalFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 object CommonUtils {
 
@@ -74,4 +81,11 @@ object CommonUtils {
         }
         return ""
     }
+
+
+    inline fun <reified T> parseDto(data: Any, typeToken: Type): T {
+        val jsonResult: String = Gson().toJson(data)
+        return Gson().fromJson<T>(jsonResult, typeToken)
+    }
+
 }
