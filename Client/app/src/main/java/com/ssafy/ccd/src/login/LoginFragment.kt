@@ -20,6 +20,7 @@ import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
 import com.google.gson.reflect.TypeToken
+import com.ssafy.ccd.util.CommonUtils
 import java.lang.reflect.Type
 
 
@@ -56,12 +57,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             if(loginRes.data.get("user") != null && loginRes.message.equals("로그인 성공")) {
                 val loginUser = loginRes.data.get("user")
 
-                /**
-                 * 코드 수정해야 함.
-                 */
                 val type: Type = object : TypeToken<User>() {}.type
-                val jsonResult: String = Gson().toJson(loginUser)
-                val user: User = Gson().fromJson(jsonResult, type)
+                val user = CommonUtils.parseDto<User>(loginUser!!, type)
 
                 ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.device_token))
                 showCustomToast("로그인 되었습니다.")
