@@ -24,16 +24,18 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     private lateinit var mainActivity : MainActivity
 
-    private val mainViewModel:MainViewModels by activityViewModels()
+//    private val mainViewModel:MainViewModels by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
+    
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         runBlocking {
@@ -43,6 +45,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         initPetAdapter()
         initTabAdapter()
     }
+
     fun initPetAdapter(){
         mainViewModel.petsList.observe(viewLifecycleOwner, {
             petAdapter = PetListRecyclerviewAdapter()
