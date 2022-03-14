@@ -61,7 +61,7 @@ public class KindController {
   public ResponseEntity<Message> kindModify(@RequestBody KindDto kindDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
-		if (kindService.modifyPet(kindDto)) {
+		if (kindService.modifyKind(kindDto)) {
 			status = HttpStatus.OK;
 			message.setSuccess(true);
 			return new ResponseEntity<Message>(message, status);

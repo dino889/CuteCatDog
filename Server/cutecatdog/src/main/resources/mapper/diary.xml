@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.DiaryMapper">
+	
+	<select id="selectDiaryAsc" parameterType="int" resultType="DiaryDto">
+		SELECT id, title, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId}
+        order by datetime
+	</select>
+
+	<select id="selectDiaryDesc" parameterType="int" resultType="DiaryDto">
+		SELECT id, title, content, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId}
+        order by datetime desc
+	</select>
+
+    <insert id="insertDiary" parameterType="DiaryDto">
+		INSERT INTO tbl_diary (user_id, title, content, datetime)
+		VALUES (#{userId},#{title},#{content},#{datetime})
+	</insert>
+
+    <update id="updateDiary" parameterType="DiaryDto">
+        UPDATE tbl_diary
+        SET user_id = #{userId}, title = #{title}, content = #{content}, datetime = #{datetime}
+        WHERE id = #{id}
+    </update>
+
+	<delete id="deleteDiary" parameterType="int">
+		DELETE FROM tbl_diary WHERE id = #{id}
+	</delete>
+
+	<select id="selectDiaryByDate" parameterType="String" resultType="DiaryDto">
+		SELECT id, user_id, title, content, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId} and datetime = #{datetime}
+	</select>
+
+    <select id="selectDiaryByPeriod" parameterType="String" resultType="DiaryDto">
+		SELECT id, user_id, title, content, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+	</select>
+
+</mapper>

@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewbinding.ViewBinding
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 
 
 // Fragment의 기본을 작성, 뷰 바인딩 활용
@@ -18,6 +20,8 @@ abstract class BaseFragment<B : ViewBinding>(
 ) : Fragment(layoutResId) {
     private var _binding: B? = null
     protected val binding get() = _binding!!
+
+    protected val mainViewModel: MainViewModels by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

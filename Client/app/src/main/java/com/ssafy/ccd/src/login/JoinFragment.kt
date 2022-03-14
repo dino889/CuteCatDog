@@ -18,23 +18,28 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         arguments?.let {
         }
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         loginActivity = context as LoginActivity
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fragmentJoinBtnJoin.setOnClickListener {
             loginActivity.openFragment(2)
         }
+
+
     }
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            JoinFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+
+    private fun joinBtnClickEvent() {
+        binding.fragmentJoinBtnJoin.setOnClickListener {
+
+        }
     }
+
+
+
 }
