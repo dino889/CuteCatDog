@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.main.mypage
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,7 @@ import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
 
-
+private const val TAG = "MyPageFragment_ccd"
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
 
     private lateinit var petAdapter: PetListRecyclerviewAdapter
@@ -39,16 +40,18 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         runBlocking {
             mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
         }
-
+        binding.viewModel = mainViewModel
         initPetAdapter()
         initTabAdapter()
     }
 
     fun initPetAdapter(){
         mainViewModel.myPetsList.observe(viewLifecycleOwner, {
+            Log.d(TAG, "initPetAdapter: ${it}")
             petAdapter = PetListRecyclerviewAdapter()
             petAdapter.petList = it
 

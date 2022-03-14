@@ -8,12 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.reflect.TypeToken
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.dto.User
 import com.ssafy.ccd.src.dto.PetKind
 import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
+import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.launch
 
 private const val TAG = "MainViewModels_ccd"
@@ -124,7 +126,10 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200){
                 if(res != null){
                     if(res.success){
-                        setPetList(res.data as MutableList<Pet>)
+                        Log.d(TAG, "getPetsAllList: ${res.data}")
+                        var type = object : TypeToken<MutableList<Pet?>?>() {}.type
+                        var pet:MutableList<Pet> = CommonUtils.parseDto(res.data.get("pets")!!,type)
+                        setPetList(pet)
                     }else{
                         Log.d(TAG, "getPetsAllList: ${res.message}")
                     }
@@ -142,7 +147,13 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        setMyPetList(res.data as MutableList<Pet>)
+                        if(res.data.get("pets")!=null){
+                            var type = object : TypeToken<MutableList<Pet?>?>() {}.type
+                            var pet:MutableList<Pet> = CommonUtils.parseDto<MutableList<Pet>>(res.data.get("pets")!!, type)
+                            setMyPetList(pet)
+                            Log.d(TAG, "getMyPetsAllList: ${pet}")
+                            Log.d(TAG, "getMyPetsAllList: ${pet.size}")
+                        }
                     }else{
                         Log.d(TAG, "getMyPetsAllList: ${res.message}")
                     }
@@ -160,7 +171,9 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        setPet(res.data as Pet)
+                        var type = object:TypeToken<Pet?>() {}.type
+                        var pet = CommonUtils.parseDto<Pet>(res.data.get("pet")!!,type)
+                        setPet(pet)
                     }else{
                         Log.d(TAG, "getMyPetsAllList: ${res.message}")
                     }
@@ -178,7 +191,9 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        setKinds(res.data as MutableList<PetKind>)
+                        var type = object :TypeToken<MutableList<PetKind>?>() {}.type
+                        var kinds = CommonUtils.parseDto<MutableList<PetKind>>(res.data.get("kinds")!!,type)
+                        setKinds(kinds)
                     }else{
                         Log.d(TAG, "getPetKindsAllList: ${res.message}")
                     }

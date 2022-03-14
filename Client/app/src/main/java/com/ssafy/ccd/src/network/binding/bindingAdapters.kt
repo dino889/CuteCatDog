@@ -16,7 +16,7 @@ fun bindImagePets(imgView: ImageView, imgUrl:String?){
 }
 
 @BindingAdapter("petListData")
-fun bindPetRecyclerView(recyclerView: RecyclerView, data:MutableList<Pet>?){
+fun bindPetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     var adapter = recyclerView.adapter as PetListRecyclerviewAdapter
     if(recyclerView.adapter == null){
         adapter.setHasStableIds(true)
