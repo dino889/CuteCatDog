@@ -38,7 +38,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout"
+                    android:id="@+id/fragment_join_tilNick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="outline">
@@ -52,7 +52,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout4"
+                    android:id="@+id/fragment_join_tilPw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -73,7 +73,7 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout2"
+                        android:id="@+id/fragment_join_tilEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -97,21 +97,38 @@
                         android:text="@" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout6"
+                        android:id="@+id/fragment_join_tilDomain"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         app:boxBackgroundMode="outline">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                             android:id="@+id/fragment_join_etDomain"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@drawable/et_background_normal"
-                            android:hint="DOMAIN" />
+                            android:hint="DOMAIN"
+                            android:completionThreshold="1">
+                        </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
+
+<!--                        <com.google.android.material.textfield.TextInputEditText-->
+<!--                            android:id="@+id/fragment_join_etDomain"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@drawable/et_background_normal"-->
+<!--                            android:hint="DOMAIN" />-->
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/fragment_join_btnDupChkEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:backgroundTint="#99FF8A00"
+                    android:text="이메일 중복 체크" />
 
                 <Button
                     android:id="@+id/fragment_join_btnAuthOk"
@@ -119,17 +136,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:backgroundTint="#99FF8A00"
-                    android:text="인증번호 받기" />
+                    android:text="인증번호 받기"
+                    android:visibility="gone" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout5"
+                    android:id="@+id/joinFragment_clCertNum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout5"
+                        android:id="@+id/joinFragment_tilCertNum"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
@@ -140,7 +158,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/fragment_join_etAuthNum"
+                            android:id="@+id/fragment_join_etCertNum"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/et_background_normal"

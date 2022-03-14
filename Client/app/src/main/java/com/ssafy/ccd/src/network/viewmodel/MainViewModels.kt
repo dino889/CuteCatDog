@@ -93,7 +93,36 @@ class MainViewModels : ViewModel() {
         return result
     }
 
+    suspend fun existsChkUserEmail(email: String) : Message {
+        var result = Message()
+        val response = UserService().existsUserEmail(email)
 
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    result = res
+                }
+            }
+        }
+        return result
+    }
+
+    suspend fun sendCodeToEmail(email: String) : Message {
+        var result = Message()
+        val response = UserService().verifyUserEmail(email)
+
+        viewModelScope.launch {
+            val res = response.body()
+            Log.d(TAG, "JoinFragment_ccd: $res")
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    result = res
+                }
+            }
+        }
+        return result
+    }
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------

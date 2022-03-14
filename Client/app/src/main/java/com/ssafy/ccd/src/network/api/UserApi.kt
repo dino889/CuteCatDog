@@ -33,11 +33,11 @@ interface UserApi {
     suspend fun loginUser(@Body account: User) : Response<Message>
 
     // 비밀번호 초기화
-    @GET("/users/reset-password")
-    suspend fun resetUserPw(@Query("email") email: String) : Response<Message>
+    @PUT("/users/reset-password")
+    suspend fun resetUserPw(@Body account: User, @Query("email") email: String) : Response<Message>
 
     // 이메일 인증
-    @GET("/users/verify")
+    @GET("/users/send-code")
     suspend fun verifyUserEmail(@Query("email") email: String) : Response<Message>
 
 }

@@ -62,11 +62,12 @@ class UserService {
 
     /**
      * 비밀번호 초기화
+     * @param account
      * @param email
      * @return Response<Message>
      */
-    suspend fun resetUserPw(email : String) : Response<Message> {
-        return RetrofitUtil.userService.resetUserPw(email)
+    suspend fun resetUserPw(account: User, email : String) : Response<Message> {
+        return RetrofitUtil.userService.resetUserPw(account, email)
     }
 
     /**
@@ -74,7 +75,7 @@ class UserService {
      * @param email
      * @return Response<Message>
      */
-    suspend fun deleteUser(email: String) : Response<Message> {
+    suspend fun verifyUserEmail(email: String) : Response<Message> {
         return RetrofitUtil.userService.verifyUserEmail(email)
     }
 }
