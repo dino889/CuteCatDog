@@ -9,9 +9,9 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.databinding.ItemPetListBinding
 import com.ssafy.ccd.src.dto.Pet
 
-class PetListRecyclerviewAdapter(private val petList: List<Pet>) : RecyclerView.Adapter<PetListRecyclerviewAdapter.PetListViewHolder>() {
+class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAdapter.PetListViewHolder>() {
 
-
+    var petList = mutableListOf<Pet>()
     inner class PetListViewHolder(private val binding: ItemPetListBinding) : RecyclerView.ViewHolder(binding.root) {
         val petImage = binding.itemCvPetImage
 

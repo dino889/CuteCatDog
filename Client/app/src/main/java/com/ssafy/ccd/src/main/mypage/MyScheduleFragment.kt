@@ -1,10 +1,7 @@
 package com.ssafy.ccd.src.main.mypage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
@@ -29,8 +26,8 @@ class MyScheduleFragment : BaseFragment<FragmentMyScheduleBinding>(FragmentMySch
 
     private fun initRecyclerviewAdapter() {
         val scheduleList = mutableListOf<Pet>()
-        scheduleList.add(Pet(1, "1"))
-        scheduleList.add(Pet(2, "2"))
+//        scheduleList.add(Pet(1, "1"))
+//        scheduleList.add(Pet(2, "2"))
         myScheduleRecyclerviewAdapter = MyScheduleRecyclerviewAdapter(scheduleList)
         myScheduleRecyclerviewAdapter.setItemClickListener(object : MyScheduleRecyclerviewAdapter.ItemClickListener {
             override fun onClick(view: View, position: Int, id: Int) {

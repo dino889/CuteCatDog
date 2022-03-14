@@ -34,9 +34,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
-                android:background="@color/grey" />
-<!--                android:background="@android:color/transparent" />-->
-<!--            bindingAdapter로 이미지 넣기-->
+                app:imageUrlPet="@{pet.photoPath}"/>
 
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
