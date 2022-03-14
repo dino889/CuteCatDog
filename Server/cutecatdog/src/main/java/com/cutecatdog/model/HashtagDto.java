@@ -13,4 +13,5 @@ public class HashtagDto {
     
     @ApiModelProperty(value = "해시태그")
     private String hashtag;
+
 }
