@@ -39,15 +39,24 @@ public class UserController {
             @RequestBody @ApiParam(value = "회원정보(이메일, 비밀번호, 닉네임, 프로필 사진)", required = true) UserDto userDto)
             throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
-        if (userService.addUser(userDto)) {
-            response.setMessage("회원가입 성공");
-            response.setData(true);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userService.addUser(userDto)) {
+                response.setMessage("회원가입 성공");
+                response.setData(true);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("회원가입 실패");
+                response.setData(false);
+                status = HttpStatus.NO_CONTENT;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        response.setMessage("회원가입 실패");
-        response.setData(false);
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, status);
     }
 
     @ApiOperation(value = "회원 정보 조회", notes = "", response = Map.class)
@@ -55,19 +64,28 @@ public class UserController {
     public ResponseEntity<Message> userDetail(@RequestParam(value = "id", required = true) int user_id)
             throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
         UserDto userDto = userService.findUser(user_id);
-        if (userDto != null) {
-            HashMap<String, UserDto> data = new HashMap<>();
-            data.put("user", userDto);
-            response.setData(data);
-            response.setMessage("회원 정보 조회 성공");
-        } else {
-            response.setData(false);
-            response.setMessage("회원 정보 조회 실패");
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userDto != null) {
+                HashMap<String, UserDto> data = new HashMap<>();
+                data.put("user", userDto);
+                response.setData(data);
+                response.setMessage("회원 정보 조회 성공");
+                status = HttpStatus.OK;
+            } else {
+                response.setData(false);
+                response.setMessage("회원 정보 조회 실패");
+                status = HttpStatus.NO_CONTENT;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, status);
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "", response = Map.class)
@@ -75,16 +93,25 @@ public class UserController {
     public ResponseEntity<Message> userModify(
             @RequestBody @ApiParam(value = "회원 정보", required = true) UserDto userDto) throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
-        if (userService.modifyUser(userDto)) {
-            response.setMessage("회원 정보 수정 성공");
-            response.setData(true);
-        } else {
-            response.setMessage("회원 정보 수정 실패");
-            response.setData(false);
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userService.modifyUser(userDto)) {
+                response.setMessage("회원 정보 수정 성공");
+                response.setData(true);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("회원 정보 수정 실패");
+                response.setData(false);
+                status = HttpStatus.NOT_MODIFIED;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, status);
     }
 
     @ApiOperation(value = "회원 탈퇴", notes = "", response = Map.class)
@@ -92,16 +119,25 @@ public class UserController {
     public ResponseEntity<Message> userRemove(@PathVariable(name = "id") int user_id)
             throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
-        if (userService.removeUser(user_id)) {
-            response.setMessage("회원 탈퇴 성공");
-            response.setData(true);
-        } else {
-            response.setMessage("회원 탈퇴 실패");
-            response.setData(false);
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userService.removeUser(user_id)) {
+                response.setMessage("회원 탈퇴 성공");
+                response.setData(true);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("회원 탈퇴 실패");
+                response.setData(false);
+                status = HttpStatus.NOT_MODIFIED;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, status);
     }
 
     @ApiOperation(value = "이메일 중복 검사", notes = "", response = Map.class)
@@ -109,19 +145,28 @@ public class UserController {
     public ResponseEntity<Message> userEmailExist(
             @RequestParam(value = "email") String val) throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
         HashMap<String, Boolean> result = new HashMap<>();
-        if (userService.checkEmail(val)) {
-            response.setMessage("이미 존재하는 이메일");
-            result.put("isExisted", true);
-            response.setData(result);
-        } else {
-            response.setMessage("중복된 이메일 없음");
-            result.put("isExisted", false);
-            response.setData(result);
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userService.checkEmail(val)) {
+                response.setMessage("이미 존재하는 이메일");
+                result.put("isExisted", true);
+                response.setData(result);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("중복된 이메일 없음");
+                result.put("isExisted", false);
+                response.setData(result);
+                status = HttpStatus.NOT_FOUND;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, status);
     }
 
     // @ApiOperation(value = "닉네임 중복 확인", notes = "", response = Map.class)
@@ -145,9 +190,9 @@ public class UserController {
     public ResponseEntity<Message> login(@RequestParam(value = "이메일", required = true) String email,
             @RequestParam(value = "비밀번호", required = true) String password) {
         Message response = new Message();
-        response.setSuccess(true);
         HttpStatus status = null;
         try {
+            response.setSuccess(true);
             UserDto loginUser = userService.loginUser(email, password);
             if (loginUser != null) {
                 HashMap<String, UserDto> data = new HashMap<>();
@@ -158,7 +203,7 @@ public class UserController {
             } else {
                 response.setMessage("로그인 실패");
                 response.setData(false);
-                status = HttpStatus.ACCEPTED;
+                status = HttpStatus.NOT_ACCEPTABLE;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -182,14 +227,53 @@ public class UserController {
     public ResponseEntity<Message> resetPassword(@RequestParam(value = "email", required = true) String email)
             throws Exception {
         Message response = new Message();
-        response.setSuccess(true);
-        if (userService.resetPassword(email)) {
-            response.setMessage("비밀번호 초기화 성공");
-            response.setData(true);
-        } else {
-            response.setMessage("비밀번호 초기화 실패");
-            response.setData(false);
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            if (userService.resetPassword(email)) {
+                response.setMessage("비밀번호 초기화 성공");
+                response.setData(true);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("비밀번호 초기화 실패");
+                response.setData(false);
+                status = HttpStatus.NOT_MODIFIED;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, status);
     }
+
+    @ApiOperation(value = "이메일 인증", notes = "", response = Map.class)
+    @GetMapping("/verify")
+    public ResponseEntity<Message> userEmailVerify(
+            @RequestParam(value = "email") String email) throws Exception {
+        Message response = new Message();
+        HashMap<String, String> data = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            String code = userService.veryfyEmail(email);
+            if (code != null) {
+                response.setMessage("이메일 인증 요청 성공");
+                data.put("code", code);
+                response.setData(data);
+                status = HttpStatus.OK;
+            } else {
+                response.setMessage("이메일 인증 요청 실패");
+                response.setData(false);
+                status = HttpStatus.NOT_FOUND;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
 }

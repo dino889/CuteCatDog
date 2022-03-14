@@ -79,4 +79,10 @@ public class UserServiceImpl implements UserService {
         return sb.toString();
     }
 
+    @Override
+    public String veryfyEmail(String email) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
