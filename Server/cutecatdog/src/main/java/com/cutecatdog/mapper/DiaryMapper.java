@@ -28,6 +28,6 @@ public interface DiaryMapper {
 
     public List<DiaryDto> selectDiaryByPeriod(int user_id, String start_date, String end_date) throws SQLException;
 
-    public List<DiaryDto> selectDiaryDetali(int user_id) throws SQLException;
+    public DiaryDto selectDiaryDetali(int user_id) throws SQLException;
 
 }

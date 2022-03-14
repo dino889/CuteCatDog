@@ -9,6 +9,7 @@ import lombok.Data;
 @ApiModel(value = "Diary", description = "일기 정보")
 @Data
 public class DiaryDto {
+
     @ApiModelProperty(value = "ID")
     private int id;
     @ApiModelProperty(value = "작성자 ID")
@@ -23,4 +24,5 @@ public class DiaryDto {
     private List<HashtagDto> hashtag;
     @ApiModelProperty(value = "사진")
     private List<PhotoDto> photo;
+    
 }

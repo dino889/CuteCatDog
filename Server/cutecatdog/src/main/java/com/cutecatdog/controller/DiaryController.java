@@ -72,7 +72,7 @@ public class DiaryController {
 
     @ApiOperation(value = "전체 일기 조회-최신순", notes = "", response = Map.class)
     @GetMapping
-    public ResponseEntity<Message> diaryListDesc(@RequestParam(value = "일기 id", required = true) int user_id)
+    public ResponseEntity<Message> diaryListDesc(@RequestParam(value = "사용자 id", required = true) int user_id)
             throws Exception {
         Message response = new Message();
         HttpStatus status = null;
@@ -134,7 +134,7 @@ public class DiaryController {
     }
 
     @ApiOperation(value = "일기 상세 조회", notes = "", response = Map.class)
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Message> diaryDetail(@PathVariable(name = "일기 id") int id)
             throws Exception {
         Message response = new Message();

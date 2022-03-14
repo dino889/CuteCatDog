@@ -52,4 +52,9 @@ public class DiaryServiceImpl implements DiaryService {
         return sqlSession.getMapper(DiaryMapper.class).deleteDiary(id);
     }
 
+    @Override
+    public DiaryDto findDiaryDetail(int id) throws Exception {
+        return sqlSession.getMapper(DiaryMapper.class).selectDiaryDetali(id);
+    }
+
 }
