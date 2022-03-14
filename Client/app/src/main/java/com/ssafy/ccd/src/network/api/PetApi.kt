@@ -30,4 +30,6 @@ interface PetApi {
     @DELETE("/pets/{id}")
     suspend fun petsDelete(@Path("id")id:Int):Response<Message>
 
+    @GET("/kinds")
+    suspend fun kindsAllList() : Response<Message>
 }
