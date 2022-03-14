@@ -12,7 +12,7 @@ public class DiaryDto {
     @ApiModelProperty(value = "ID")
     private int id;
     @ApiModelProperty(value = "작성자 ID")
-    private int user_id;
+    private int userId;
     @ApiModelProperty(value = "작성 시간")
     private String datetime;
     @ApiModelProperty(value = "제목")
