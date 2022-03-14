@@ -3,41 +3,57 @@ package com.ssafy.ccd.src.main.mypage
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ssafy.ccd.R
-import com.ssafy.ccd.databinding.ItemPetListBinding
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Pet
+import java.lang.Exception
 
-class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAdapter.PetListViewHolder>() {
+class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAdapter.BaseViewHolder>() {
+    val FOOTER = 2
+    val ITEM = 1
 
     var petList = mutableListOf<Pet>()
-    inner class PetListViewHolder(private val binding: ItemPetListBinding) : RecyclerView.ViewHolder(binding.root) {
-        val petImage = binding.itemCvPetImage
 
-        fun bind(pet: Pet, position: Int) {
-            binding.pet = pet
-            binding.executePendingBindings()
+    open class BaseViewHolder(itemView:View):RecyclerView.ViewHolder(itemView)
+    class FooterViewHolder(itemView:View) : BaseViewHolder(itemView)
+    class ItemViewHolder(itemView: View): BaseViewHolder(itemView){
+        fun bind(data:Pet){
+            Glide.with(itemView)
+                .load("${ApplicationClass.IMGS_URL}${data.photoPath}")
+                .into(itemView.findViewById(R.id.fragment_calender_pets_item))
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetListViewHolder {
-        return PetListViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_pet_list, parent, false))
-    }
-
-    override fun onBindViewHolder(holder: PetListViewHolder, position: Int) {
-        val pet = petList[position]
-        holder.apply {
-            bind(pet, position)
-            petImage.setOnClickListener {
-                itemClickListener.onClick(it, position, pet)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
+        when(viewType){
+            FOOTER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_calender_pets_footer,parent,false)
+                FooterViewHolder(view)
             }
+            ITEM -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_calender_pets,parent,false)
+                ItemViewHolder(view)
+            }
+            else -> throw Exception("Unknow viewType ${viewType}")
+        }
+
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        if(holder is ItemViewHolder){
+            holder.bind(petList[position])
         }
     }
 
     override fun getItemCount(): Int {
-        return petList.size
+        return petList.size+1
     }
+
+    override fun getItemViewType(position: Int): Int =
+        when(position){
+            petList.size+1 -> FOOTER
+            else -> ITEM
+        }
 
     interface ItemClickListener{
         fun onClick(view: View, position: Int, pet: Pet)
@@ -48,4 +64,6 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
     fun setItemClickListener(itemClickListener: ItemClickListener){
         this.itemClickListener = itemClickListener
     }
+
+
 }

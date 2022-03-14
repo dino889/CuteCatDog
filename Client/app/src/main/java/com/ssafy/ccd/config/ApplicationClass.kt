@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class ApplicationClass : Application() {
     companion object{
         //by
-        const val SERVER_URL = "http://192.168.0.19:8888/"
+        const val SERVER_URL = "http://61.85.38.39:8889/"
         //AWS server
 //        const val SERVER_URL = "http://i6d109.p.ssafy.io:8888/"
         const val IMGS_URL = "${SERVER_URL}imgs/"

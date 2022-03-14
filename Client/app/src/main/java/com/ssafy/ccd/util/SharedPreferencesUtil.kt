@@ -14,15 +14,15 @@ class SharedPreferencesUtil (context: Context) {
     //사용자 정보 저장
     fun addUser(user: User){
         val editor = preferences.edit()
-        editor.putString("id", user.id)
-        editor.putString("token", user.token)
+        editor.putInt("id", user.id)
+//        editor.putString("token", user.token)
         editor.apply()
     }
 
     fun getUser(): User{
-        val id = preferences.getString("id", "")
-        if (id != ""){
-            return User(id!!,"", "", "", "", "", "", "", "", "")
+        val id = preferences.getInt("id", 0)
+        if (id == 0){
+            return User(id!!)
         }else{
             return User()
         }

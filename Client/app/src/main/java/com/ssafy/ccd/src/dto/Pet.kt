@@ -9,4 +9,6 @@ data class Pet(
     val name: String,
     val photoPath: String,
     val userId: Int
-)
+){
+    constructor():this("",0,0,0,0,"","",0)
+}

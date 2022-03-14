@@ -46,4 +46,22 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+
+    suspend fun getMyPetsAllList(userId:Int){
+        val response = PetService().myPetsAllListService(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        setMyPetList(res.data as MutableList<Pet>)
+                    }else{
+                        Log.d(TAG, "getMyPetsAllList: ${res.message}")
+                    }
+                }else{
+                    Log.d(TAG, "getMyPetsAllList: ${response.message()}")
+                }
+            }
+        }
+    }
 }
