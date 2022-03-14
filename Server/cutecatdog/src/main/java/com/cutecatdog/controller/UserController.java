@@ -11,6 +11,8 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.UserDto;
+import com.cutecatdog.model.mail.SendCodeByMailResultDto;
+import com.cutecatdog.model.user.AccountDto;
 import com.cutecatdog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,7 @@ public class UserController {
                     response.setData(data);
                     status = HttpStatus.NO_CONTENT;
                 }
-            }else{
+            } else {
                 response.setMessage("회원가입 실패");
                 data.put("isExist", false);
                 response.setData(data);
@@ -165,7 +167,7 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            HashMap<String, Boolean> data= new HashMap<>();
+            HashMap<String, Boolean> data = new HashMap<>();
             if (userService.checkEmail(val)) {
                 response.setMessage("이미 존재하는 이메일");
                 data.put("isExisted", true);
@@ -240,63 +242,76 @@ public class UserController {
     // return null;
     // }
 
-    @ApiOperation(value = "비밀번호 초기화", notes = "", response = Map.class)
-    @GetMapping("/reset-password")
-    public ResponseEntity<Message> resetPassword(@RequestParam(value = "email", required = true) String email)
+    @ApiOperation(value = "비밀번호 변경", notes = "", response = Map.class)
+    @PutMapping("/reset-password")
+    public ResponseEntity<Message> resetPassword(@RequestParam(value = "email", required = true) String email,
+            @RequestBody(required = true) AccountDto account)
             throws Exception {
-        Message response = new Message();
+        Message message = new Message();
+        HashMap<String, Object> data = new HashMap<>();
         HttpStatus status = null;
+
         try {
-            response.setSuccess(true);
-            HashMap<String, Boolean> data = new HashMap<>();
-            if (userService.resetPassword(email)) {
-                response.setMessage("비밀번호 초기화 성공");
-                data.put("isReset", true);
-                response.setData(data);
+            if (account.getEmail() == null)
+                account.setEmail(email);
+
+            message.setSuccess(true);
+            if (userService.resetPassword(account)) {
+                message.setMessage("비밀번호 초기화 성공");
+                data.put("isSuccess", true);
+                message.setData(data);
                 status = HttpStatus.OK;
             } else {
-                response.setMessage("비밀번호 초기화 실패");
-                data.put("isReset", false);
-                response.setData(data);
-                status = HttpStatus.NOT_MODIFIED;
+                message.setMessage("비밀번호 초기화 실패");
+                data.put("isSuccess", false);
+                message.setData(data);
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
         } catch (Exception e) {
-            response.setSuccess(false);
-            response.setMessage(e.getMessage());
+            message.setSuccess(false);
+            message.setMessage(e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<>(response, status);
+        return new ResponseEntity<Message>(message, status);
     }
 
-    @ApiOperation(value = "이메일 인증", notes = "", response = Map.class)
-    @GetMapping("/verify")
-    public ResponseEntity<Message> userEmailVerify(
-            @RequestParam(value = "email") String email) throws Exception {
+    @ApiOperation(value = "인증 코드 요청", notes = "해당 이메일로 인증 코드 전송, 전송 성공 - code : value, 전송 실패 code : null, isExisted(이메일 존재 유무) : T/F", response = Map.class)
+    @GetMapping("/send-code")
+    public ResponseEntity<Message> sendCodeByEmail(@RequestParam(value = "email") String email) throws Exception {
         Message response = new Message();
+        HashMap<String, Object> data = new HashMap<>();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            String code = userService.veryfyEmail(email);
-            if (code != null) {
-                HashMap<String, String> data = new HashMap<>();
-                response.setMessage("이메일 인증 요청 성공");
-                data.put("code", code);
-                response.setData(data);
-                status = HttpStatus.OK;
+            if (userService.checkEmail(email)) {
+                SendCodeByMailResultDto result = userService.sendCodeByMail(email);
+                if (result.isSuccess()) {
+                    response.setMessage("이메일 인증 요청 성공");
+                    data.put("code", result.getCode());
+                    response.setData(data);
+                    status = HttpStatus.OK;
+                } else {
+                    response.setMessage("이메일 인증 요청 실패");
+                    data.put("code", null);
+                    data.put("isExisted", true);
+                    response.setData(data);
+                    status = HttpStatus.INTERNAL_SERVER_ERROR;
+                }
             } else {
-                HashMap<String, Boolean> data = new HashMap<>();
-                response.setMessage("이메일 인증 요청 실패");
-                data.put("isVerify", false);
+                response.setMessage("존재하지 않는 Email");
+                data.put("code", null);
+                data.put("isExisted", false);
                 response.setData(data);
-                status = HttpStatus.NOT_FOUND;
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
+
         } catch (Exception e) {
             response.setSuccess(false);
             response.setMessage(e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<>(response, status);
+        return new ResponseEntity<Message>(response, status);
     }
 
 }

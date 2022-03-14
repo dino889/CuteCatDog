@@ -1,6 +1,8 @@
 package com.cutecatdog.service;
 
 import com.cutecatdog.model.UserDto;
+import com.cutecatdog.model.mail.SendCodeByMailResultDto;
+import com.cutecatdog.model.user.AccountDto;
 
 public interface UserService {
 
@@ -20,7 +22,9 @@ public interface UserService {
 
     // boolean logoutUser(int userId) throws Exception;
 
-    boolean resetPassword(String email) throws Exception;
+    SendCodeByMailResultDto sendCodeByMail(String email) throws Exception;
+
+    boolean resetPassword(AccountDto account) throws Exception;
 
     String veryfyEmail(String email) throws Exception;
 
