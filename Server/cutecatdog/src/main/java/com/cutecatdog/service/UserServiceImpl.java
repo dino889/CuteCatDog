@@ -48,25 +48,13 @@ public class UserServiceImpl implements UserService {
         return sqlSession.getMapper(UserMapper.class).checkEmail(email) != null;
     }
 
-    // @Override
-    // public boolean checkNickname(String nickname) throws Exception {
-    // return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) !=
-    // null;
-    // }
-
     @Override
-    public UserDto loginUser(String email, String password) throws Exception {
-        if (email == null || password == null) {
+    public UserDto loginUser(AccountDto account) throws Exception {
+        if (account.getEmail() == null || account.getPassword() == null) {
             return null;
         }
-        return sqlSession.getMapper(UserMapper.class).loginUser(email, password);
+        return sqlSession.getMapper(UserMapper.class).loginUser(account);
     }
-
-    // @Override
-    // public boolean logoutUser(int userId) throws Exception {
-    // 
-    // return false;
-    // }
 
     @Override
     public SendCodeByMailResultDto sendCodeByMail(String email) throws Exception {
@@ -85,14 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String veryfyEmail(String email) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public boolean resetPassword(AccountDto account) throws Exception {
-        System.out.println(account.getEmail() + ", " + account.getPassword());
         return sqlSession.getMapper(UserMapper.class).resetPassword(account) == 1;
     }
 }

@@ -16,16 +16,10 @@ public interface UserService {
 
     boolean checkEmail(String userEmail) throws Exception;
 
-    // boolean checkNickname(String nickname) throws Exception;
-
-    UserDto loginUser(String email, String password) throws Exception;
-
-    // boolean logoutUser(int userId) throws Exception;
+    UserDto loginUser(AccountDto account) throws Exception;
 
     SendCodeByMailResultDto sendCodeByMail(String email) throws Exception;
 
     boolean resetPassword(AccountDto account) throws Exception;
-
-    String veryfyEmail(String email) throws Exception;
 
 }
