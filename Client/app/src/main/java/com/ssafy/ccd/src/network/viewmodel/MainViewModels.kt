@@ -62,6 +62,21 @@ class MainViewModels : ViewModel() {
 //        }
 //    }
 
+    suspend fun join(user: User) : Message {
+        var result = Message()
+        val response = UserService().createUser(user)
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    result = res
+                }
+            }
+        }
+        return result
+    }
+
     suspend fun login(user: User) : Message {
         var result = Message()
         val response = UserService().loginUser(user)

@@ -49,14 +49,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
     private fun loginBtnClickEvent() {
         binding.fragmentLoginBtnLogin.setOnClickListener {
             val loginRes = login(binding.fragmentLoginEmail.text.toString(), binding.fragmentLoginPw.text.toString())
-            
+
             if(loginRes.data.get("user") != null && loginRes.message == "로그인 성공") {
                 val loginUser = loginRes.data["user"]
 
                 val type: Type = object : TypeToken<User>() {}.type
                 val user = CommonUtils.parseDto<User>(loginUser!!, type)
 
-                ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.device_token))
+                ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.deviceToken))
                 showCustomToast("로그인 되었습니다.")
                 loginActivity.openFragment(1)
 
