@@ -9,6 +9,8 @@ data class User(
     val device_token: String
 ) {
     constructor() : this(0, "", "", "", "", "")
+    constructor(id: Int) : this(id, "", "", "", "", "")
     constructor(id: Int, device_token: String) : this(id, "", "", "", "", device_token)
-    constructor(id:Int, email: String, nickname: String, password: String) : this(0, email, nickname, password, "", "")
+    constructor(email: String, password: String) : this(0, email, "", password, "", "")
+    constructor(id:Int, email: String, nickname: String, password: String, profile_image: String) : this(0, email, nickname, password, profile_image, "")
 }
