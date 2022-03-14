@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.ssafy.ccd.src.dto.User
 
 class SharedPreferencesUtil (context: Context) {
-    val SHARED_PREFERENCES_NAME = "groute_preference"
+    val SHARED_PREFERENCES_NAME = "ccd_preference"
     val COOKIES_KEY_NAME = "cookies"
 
     var preferences: SharedPreferences =
@@ -15,15 +15,15 @@ class SharedPreferencesUtil (context: Context) {
     fun addUser(user: User){
         val editor = preferences.edit()
         editor.putInt("id", user.id)
-//        editor.putString("token", user.token)
+        editor.putString("token", user.device_token)
         editor.apply()
     }
 
     fun getUser(): User{
         val id = preferences.getInt("id", 0)
-        if (id == 0){
-            return User(id!!)
-        }else{
+        if (id != 0) {
+            return User(id)
+        } else {
             return User()
         }
     }

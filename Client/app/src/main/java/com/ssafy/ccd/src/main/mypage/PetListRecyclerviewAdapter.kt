@@ -3,6 +3,8 @@ package com.ssafy.ccd.src.main.mypage
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ssafy.ccd.R
@@ -42,6 +44,14 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if(holder is ItemViewHolder){
             holder.bind(petList[position])
+            holder.itemView.findViewById<ImageView>(R.id.fragment_calender_pets_item).setOnClickListener {
+                itemClickListener.onClick(it,position, petList[position])
+            }
+        }
+        if(holder is FooterViewHolder){
+            holder.itemView.findViewById<ImageButton>(R.id.fragment_calender_add_petsBtn).setOnClickListener {
+                addClickListener.onClick(it,position)
+            }
         }
     }
 
@@ -64,6 +74,12 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
     fun setItemClickListener(itemClickListener: ItemClickListener){
         this.itemClickListener = itemClickListener
     }
-
+    interface  AddClickListener{
+        fun onClick(view:View, position:Int)
+    }
+    private lateinit var addClickListener: AddClickListener
+    fun setAddClickListener(addClickListener: AddClickListener){
+        this.addClickListener = addClickListener
+    }
 
 }

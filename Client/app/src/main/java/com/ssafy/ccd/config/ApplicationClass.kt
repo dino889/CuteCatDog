@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
     companion object{
-        //by
+        // jiwoo
         const val SERVER_URL = "http://61.85.38.39:8889/"
-        //AWS server
-//        const val SERVER_URL = "http://i6d109.p.ssafy.io:8888/"
+        // AWS Server
+//        const val SERVER_URL = "http://j6d103.p.ssafy.io:8080/"
         const val IMGS_URL = "${SERVER_URL}imgs/"
 
         lateinit var sharedPreferencesUtil: SharedPreferencesUtil

@@ -1,7 +1,11 @@
 package com.cutecatdog.service;
 
+import com.cutecatdog.common.Random.RandomCode;
+import com.cutecatdog.common.mail.SendMailHelper;
 import com.cutecatdog.mapper.UserMapper;
 import com.cutecatdog.model.UserDto;
+import com.cutecatdog.model.mail.SendCodeByMailResultDto;
+import com.cutecatdog.model.user.AccountDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SqlSession sqlSession;
+
+    @Autowired
+    private SendMailHelper mailHelper;
 
     @Override
     public boolean addUser(UserDto userDto) throws Exception {
@@ -41,48 +48,32 @@ public class UserServiceImpl implements UserService {
         return sqlSession.getMapper(UserMapper.class).checkEmail(email) != null;
     }
 
-    // @Override
-    // public boolean checkNickname(String nickname) throws Exception {
-    // return sqlSession.getMapper(UserMapper.class).checkNickname(nickname) !=
-    // null;
-    // }
-
     @Override
-    public UserDto loginUser(String email, String password) throws Exception {
-        if (email == null || password == null) {
+    public UserDto loginUser(AccountDto account) throws Exception {
+        if (account.getEmail() == null || account.getPassword() == null) {
             return null;
         }
-        return sqlSession.getMapper(UserMapper.class).loginUser(email, password);
+        return sqlSession.getMapper(UserMapper.class).loginUser(account);
     }
-
-    // @Override
-    // public boolean logoutUser(int userId) throws Exception {
-    // 
-    // return false;
-    // }
 
     @Override
-    public boolean resetPassword(String email) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).resetPassword(email, makePw()) == 1;
-    }
+    public SendCodeByMailResultDto sendCodeByMail(String email) throws Exception {
+        RandomCode rp = new RandomCode();
+        String code = rp.getRandomCode(5);
 
-    public String makePw() {
-        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+        SendCodeByMailResultDto result = new SendCodeByMailResultDto();
+        boolean isSuccess = mailHelper.SendMail(email, code);
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
-            int idx = (int) (charSet.length * Math.random());
-            sb.append(charSet[idx]);
+        if (isSuccess) {
+            result.setSuccess(true);
+            result.setCode(code);
         }
 
-        return sb.toString();
+        return result;
     }
 
     @Override
-    public String veryfyEmail(String email) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    public boolean resetPassword(AccountDto account) throws Exception {
+        return sqlSession.getMapper(UserMapper.class).resetPassword(account) == 1;
     }
-
 }

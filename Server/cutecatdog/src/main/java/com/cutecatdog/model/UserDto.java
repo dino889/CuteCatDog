@@ -17,6 +17,9 @@ public class UserDto {
     @ApiModelProperty(value = "닉네임", required = true)
     private String nickname;
     @ApiModelProperty(value = "프로필 사진", required = true)
-    private String profile_image;
-
+    private String profileImage;
+    @ApiModelProperty(value = "SNS 토큰", required = true)
+    private String SNSToken;
+    @ApiModelProperty(value = "디바이스 토큰", required = true)
+    private String deviceToken;
 }
