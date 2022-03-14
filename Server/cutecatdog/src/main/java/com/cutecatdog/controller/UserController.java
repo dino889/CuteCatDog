@@ -43,16 +43,23 @@ public class UserController {
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
-            if (userService.addUser(userDto)) {
-                response.setMessage("회원가입 성공");
-                data.put("isSignup", true);
+            if (!userService.checkEmail(userDto.getEmail())) {
+                if (userService.addUser(userDto)) {
+                    response.setMessage("회원가입 성공");
+                    data.put("isSignup", true);
+                    response.setData(data);
+                    status = HttpStatus.OK;
+                } else {
+                    response.setMessage("회원가입 실패");
+                    data.put("isSignup", false);
+                    response.setData(data);
+                    status = HttpStatus.NO_CONTENT;
+                }
+            }else{
+                response.setMessage("회원가입 실패");
+                data.put("isExist", false);
                 response.setData(data);
                 status = HttpStatus.OK;
-            } else {
-                response.setMessage("회원가입 실패");
-                data.put("isSignup", false);
-                response.setData(data);
-                status = HttpStatus.NO_CONTENT;
             }
         } catch (Exception e) {
             response.setSuccess(false);
