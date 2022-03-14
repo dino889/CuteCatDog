@@ -108,7 +108,7 @@ public class PetController {
 		List<PetDto> pets = new ArrayList<>();
 		HashMap<String,List<PetDto>> map = new HashMap<>();
  		pets = petService.findMyPetDetail(userId);
-		map.put("pet", pets);
+		map.put("pets", pets);
 		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
