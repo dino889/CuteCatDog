@@ -1,25 +1,76 @@
 package com.ssafy.ccd.src.main
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
+import android.content.ContentValues
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.WindowManager
+import android.view.View
 import android.widget.ImageButton
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
+import com.ssafy.ccd.src.main.ai.aiFragment
+import com.ssafy.ccd.src.main.ai.aiSelectFragment
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 
 class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+    val TAG = "SSAFY"
+
+    // 카메라, 저장장소 권한
+    private val CAMERA = arrayOf(Manifest.permission.CAMERA)
+    private val STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val CAMERA_CODE = 98
+    private val STORAGE_CODE = 99
+
+    // Dialog
+    private lateinit var photoDialog:Dialog
+    private lateinit var photoDialogView: View
+
+    // viewModel
+    lateinit var mainViewModels: MainViewModels
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
+
+        setInit()
+        setNavigation()
+        setInstance()
+        setListener()
+    }
+
+    /**
+     * 초기작업이 필요한 부분
+     */
+    private fun setInit() {
         binding.activityMainBottomNavigationView.background = null
         binding.activityMainBottomNavigationView.menu.getItem(2).isEnabled = false
+    }
+
+    /**
+     * BottomNavigation 관련 설정
+     */
+    private fun setNavigation() {
         // 네비게이션 호스트
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.activity_main_navHost) as NavHostFragment
 
@@ -28,19 +79,230 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
         // 바인딩
         NavigationUI.setupWithNavController(binding.activityMainBottomNavigationView, navController)
+    }
 
+    /**
+     * 인스턴스를 정의하는 함수
+     */
+    @SuppressLint("InflateParams")
+    private fun setInstance() {
+        // photoDialog
+        photoDialogView = LayoutInflater.from(this).inflate(R.layout.fragment_ai_dialog,null)
+        photoDialog = Dialog(this)
+        photoDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        photoDialog.setContentView(photoDialogView)
+
+        // mainViewModel
+        mainViewModels = ViewModelProvider(this).get(MainViewModels::class.java)
+    }
+
+    /**
+     * 리스너를 정의하는 함수
+     */
+    private fun setListener() {
+        // AI Dialog
         binding.activityMainFabCam.setOnClickListener {
-            showAiDialog()
+            photoDialog.show()
+        }
+
+        photoDialogView.findViewById<ImageButton>(R.id.fragment_ai_dialog_cancle).setOnClickListener {
+            photoDialog.dismiss()
+        }
+
+        photoDialog.findViewById<ConstraintLayout>(R.id.dialog_ai_BtnCam).setOnClickListener {
+            callCamera()
+        }
+
+        photoDialog.findViewById<ConstraintLayout>(R.id.dialog_ai_BtnUpload).setOnClickListener {
+            getAlbum()
         }
     }
-    fun showAiDialog(){
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.fragment_ai_dialog,null)
-        val dialog = Dialog(this)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(dialogView)
-        dialogView.findViewById<ImageButton>(R.id.fragment_ai_dialog_cancle).setOnClickListener {
-            dialog.dismiss()
+
+
+    /**
+     * @author Jueun
+     * @param permissions 권한 목록
+     * @param type 권한 코드
+     * @return Boolean 허용/거부
+     * 권한을 확인하는 함수
+     */
+    private fun checkPermission(permissions: Array<out String>, type: Int): Boolean
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for (permission in permissions) {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        permission
+                    ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, permissions, type)
+                    return false
+                }
+            }
         }
-        dialog.show()
+        return true
+    }
+
+    /**
+     * @author Jueun
+     * @param permissions 권한 목록
+     * @param requestCode 요청 코드
+     * 권한 요청 후 결과값을 표시하는 함수
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            CAMERA_CODE -> {
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("카메라 권한을 승인해 주세요.")
+                    }
+                }
+            }
+
+            STORAGE_CODE -> {
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("저장소 권한을 승인해 주세요.")
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                CAMERA_CODE -> {
+                    if (data?.extras?.get("data") != null) {
+                        mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
+                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
+
+                        // 이미지 검사
+                        if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                        else {
+                            // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.activity_main_navHost, aiSelectFragment())
+                                .addToBackStack(null)
+                                .commit()
+                            photoDialog.dismiss()
+                        }
+                    }
+                }
+
+                STORAGE_CODE -> {
+                    mainViewModels.uploadedImageUri = data?.data
+
+                    // 이미지 검사
+                    if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                    else {
+                        val source = ImageDecoder.createSource(this.contentResolver, mainViewModels.uploadedImageUri!!)
+                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+
+                        // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.activity_main_navHost, aiSelectFragment())
+                            .addToBackStack(null)
+                            .commit()
+                        photoDialog.dismiss()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @author Jueun
+     * 카메라 요청을 하였을 때 사용하는 함수
+     * 권한을 확인 한 후 권한이 없다면 카메라와
+     * 저장공간에 대한 허용을 요청한다
+     */
+    private fun callCamera()
+    {
+        if (checkPermission(CAMERA, CAMERA_CODE) && checkPermission(STORAGE, STORAGE_CODE)) {
+            val itt = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(itt, CAMERA_CODE)
+        }
+    }
+
+    /**
+     * @author Jueun
+     * @param FileName 저장할 파일 이름
+     * @param mimeType 타입 설정
+     * @param bitmap 저장할 사진 비트맵
+     * @return Uri 정보를 리턴한다.
+     * 사진을 디바이스에 저장하고 해당 이미지의 Uri를 반환한다.
+     */
+    private fun saveFile(FileName: String, mimeType: String, bitmap: Bitmap): Uri?
+    {
+        val CV = ContentValues()
+        CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
+        CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            CV.put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+
+
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+
+        if (uri != null) {
+            val scriptor = contentResolver.openFileDescriptor(uri, "w")
+
+            if (scriptor != null) {
+                val fos = FileOutputStream(scriptor.fileDescriptor)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                fos.close()
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    CV.clear()
+                    CV.put(MediaStore.Images.Media.IS_PENDING, 0)
+                    contentResolver.update(uri, CV, null, null)
+                }
+            }
+        }
+
+        return uri
+    }
+
+    /**
+     * @author Jueun
+     * 랜덤한 사진명 생성하는 함수
+     */
+    @SuppressLint("SimpleDateFormat")
+    private fun randomFileName(): String {
+        return SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())
+    }
+
+    /**
+     * @author Jueun
+     * 앨범에서 사진을 가져오는 함수
+     */
+    fun getAlbum()
+    {
+        if (checkPermission(STORAGE, STORAGE_CODE)) {
+            val itt = Intent(Intent.ACTION_PICK)
+            itt.type = MediaStore.Images.Media.CONTENT_TYPE
+            startActivityForResult(itt, STORAGE_CODE)
+        }
+    }
+
+    fun hideBottomAppBar(){
+        binding.bottomAppBar.visibility = View.GONE
+        binding.activityMainFabCam.visibility = View.GONE
+    }
+
+    fun showBottomAppBar(){
+        binding.bottomAppBar.visibility = View.VISIBLE
+        binding.activityMainFabCam.visibility = View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showBottomAppBar()
     }
 }
