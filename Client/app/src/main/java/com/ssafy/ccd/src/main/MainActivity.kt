@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -123,7 +124,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
 
         photoDialog.findViewById<ConstraintLayout>(R.id.dialog_ai_BtnUpload).setOnClickListener {
-            getAlbum()
+            getAlbum(STORAGE_CODE)
         }
     }
 
@@ -176,6 +177,14 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
             }
+
+            GALLERY_CODE -> {
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("저장소 권한을 승인해 주세요.")
+                    }
+                }
+            }
         }
     }
 
@@ -221,17 +230,17 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
                 GALLERY_CODE -> {
-                    if (data?.extras?.get("data") != null) {
-                        mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
-                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
-
+                    mainViewModels.uploadedImageUri = randomFileName().toUri()
                         // 이미지 검사
-                        if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                        if (mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                         else {
-                            showCustomToast("이미지가 정상적으로 로드 되었습니다.")
+                            val source = ImageDecoder.createSource(
+                                this.contentResolver,
+                                mainViewModels.uploadedImageUri!!
+                            )
+                            mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
                         }
                     }
-                }
 
             }
         }
@@ -304,12 +313,12 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
      * @author Jueun
      * 앨범에서 사진을 가져오는 함수
      */
-    fun getAlbum()
+    fun getAlbum(code:Int)
     {
         if (checkPermission(STORAGE, STORAGE_CODE)) {
             val itt = Intent(Intent.ACTION_PICK)
             itt.type = MediaStore.Images.Media.CONTENT_TYPE
-            startActivityForResult(itt, STORAGE_CODE)
+            startActivityForResult(itt, code)
         }
     }
 

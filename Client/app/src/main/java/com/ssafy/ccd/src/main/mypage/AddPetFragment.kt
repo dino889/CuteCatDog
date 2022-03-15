@@ -66,6 +66,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     //firebase
     private var storageReference: StorageReference? = null
     private lateinit var contentResolver : ContentResolver
+    private val GALLERY_CODE = 10
 
     // SimpleDateFormat 으로 포맷 결정
     var result: String = dataFormat.format(curDate)
@@ -86,7 +87,8 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         initListener()
 
         binding.addPetFragmentIbSelectImg.setOnClickListener {
-            mainActivity.getAlbum()
+            mainActivity.getAlbum(GALLERY_CODE)
+            loadImage()
         }
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
             var pet = Pet(
@@ -96,7 +98,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 isNeutered = isNeutered,
                 kindId = kindId,
                 name = binding.addPetFragmentTietName.text.toString(),
-                photoPath = mainViewModel.uploadedImageUri.toString(),
+                photoPath ="${ApplicationClass.sharedPreferencesUtil.getUser().id}/${mainViewModel.uploadedImageUri}",
                 userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             )
             addFireBase()
@@ -104,14 +106,29 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         }
 
     }
+    fun loadImage(){
+        Log.d(TAG, "loadImage: ${mainViewModel.uploadedImageUri}")
+        binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
+
+    }
     fun addFireBase(){
-        val storageReferenceChild = storageReference!!.child("${ApplicationClass.sharedPreferencesUtil.getUser().id}/${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
+//        if(storageReference == null) {
+//            Log.e("ERROR", "Firebase에서 문제가 발생하였습니다.")
+//            showCustomToast("Firebase에서 문제가 발생하였습니다.")
+//            childFragmentManager.popBackStack()
+//        }
+
+        if(mainViewModel.uploadedImageUri == null){
+            Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
+            showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
+            childFragmentManager.popBackStack()
+        }
+        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child("${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
         storageReferenceChild.putFile(mainViewModel.uploadedImageUri!!)
             .addOnSuccessListener{
                 storageReferenceChild.downloadUrl
                     .addOnSuccessListener {
                         Log.d(TAG, "addFireBase: ${it}")
-                        binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
                     }
             }
     }
@@ -120,6 +137,8 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         initKinds()
         selectedGender()
         selectedNeutered()
+//        storageReference = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}")
+//        storageReference = storage.reference
         binding.addPetFragmentTietBirth.setText(result)
         binding.addPetFragmentTietBirth.setOnClickListener {
             setBirth()
