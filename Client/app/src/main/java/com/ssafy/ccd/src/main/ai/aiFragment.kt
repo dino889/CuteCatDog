@@ -18,6 +18,7 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiBinding
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import kotlinx.coroutines.runBlocking
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
@@ -59,7 +60,6 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private lateinit var bitmap: Bitmap
 
     // TnesorFlow 관련 객체
-    private val mimeTypeMap = MimeTypeMap.getSingleton()
     private lateinit var tflite: Interpreter
     private lateinit var inputImageBuffer: TensorImage
     private lateinit var probabilityProcessor: TensorProcessor
@@ -72,7 +72,9 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setInstance()
+        runBlocking {
+            setInstance()
+        }
 
         progressDialog.show()
         setInit()
@@ -114,8 +116,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         // Bitmap 설정
         bitmap = mainViewModels.uploadedImage
         val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
     }
 
     private fun setInit() {
@@ -133,61 +135,118 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             childFragmentManager.popBackStack()
         }
 
-        // Firebase Storage Child를 만들고 사용
-        val storageReferenceChild = storageReference!!.child(System.currentTimeMillis().toString() + "." + GetFileExtension(mainViewModels.uploadedImageUri))
+//        // Firebase Storage Child를 만들고 사용
+//        val storageReferenceChild = storageReference!!.child(System.currentTimeMillis().toString() + "." + GetFileExtension(mainViewModels.uploadedImageUri))
+//
+//        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
+//            .addOnSuccessListener {
+//                storageReferenceChild.downloadUrl
+//                    .addOnSuccessListener {
+//                        val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
+//                        imageSizeY = imageShape[1]
+//                        imageSizeX = imageShape[2]
+//                        val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
+//                        val probabilityTensorIndex = 0
+//                        val probabilityShape: IntArray = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
+//                        val probabilityDataType: DataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
+//
+//                        inputImageBuffer = TensorImage(imageDataType)
+//                        outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
+//                        probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
+//
+//                        inputImageBuffer = loadImage(bitmap)
+//                        tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
+//
+//                        // 결과 출력
+//                        val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
+//                        val maxValueInMap = Collections.max(labeledProbability.values)
+//
+//                        labeledProbability.entries.forEach { entry ->
+//                            if (entry.value == maxValueInMap) {
+//                                result = entry.key
+//                                tvEmotion.text = result
+//                                Log.d("SSAFY", entry.toString())
+//                                Log.d("SSAFY", maxValueInMap.toString())
+//                                Log.d("SSAFY", (entry.value == maxValueInMap).toString() + "\n")
+//                            }
+//                        }
+//
+//                        progressDialog.dismiss()
+//                    }
+//            }
 
-        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
-            .addOnSuccessListener {
-                storageReferenceChild.downloadUrl
-                    .addOnSuccessListener {
-                        val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
-                        imageSizeY = imageShape[1]
-                        imageSizeX = imageShape[2]
-                        val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
-                        val probabilityTensorIndex = 0
-                        val probabilityShape: IntArray = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
-                        val probabilityDataType: DataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
+        runBlocking {
+            val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
+            imageSizeY = imageShape[1]
+            imageSizeX = imageShape[2]
+            Log.d("SSAFY-2", "imageShape : $imageShape")
+            Log.d("SSAFY-2", "imageSizeY : $imageSizeY")
+            Log.d("SSAFY-2", "imageSizeX : $imageSizeX")
 
-                        inputImageBuffer = TensorImage(imageDataType)
-                        outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
-                        probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
+            val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
+            val probabilityTensorIndex = 0
+            val probabilityShape = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
+            val probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
+            Log.d("SSAFY-3", "imageDataType : $imageDataType")
+            Log.d("SSAFY-3", "probabilityShape : $probabilityShape")
+            Log.d("SSAFY-3", "probabilityDataType : $probabilityDataType")
 
-                        inputImageBuffer = loadImage(bitmap)
-                        tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
 
-                        // 결과 출력
-                        val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
-                        val maxValueInMap = Collections.max(labeledProbability.values)
+            inputImageBuffer = TensorImage(imageDataType)
+            outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
+            probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
+            Log.d("SSAFY-4", "inputImageBuffer : $inputImageBuffer")
+            Log.d("SSAFY-4", "outputProbabilityBuffer : $outputProbabilityBuffer")
+            Log.d("SSAFY-4", "probabilityProcessor : $probabilityProcessor")
 
-                        labeledProbability.entries.forEach { entry ->
-                            if (entry.value == maxValueInMap) {
-                                result = entry.key
-                                tvEmotion.text = result
-                                Log.d("SSAFY", entry.toString())
-                                Log.d("SSAFY", maxValueInMap.toString())
-                                Log.d("SSAFY", (entry.value == maxValueInMap).toString() + "\n")
-                            }
-                        }
+            inputImageBuffer = loadImage(bitmap)
+            tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
+            Log.d("SSAFY-5", "inputImageBuffer : $inputImageBuffer")
+            Log.d("SSAFY-5", "outputProbabilityBuffer : $outputProbabilityBuffer")
+            Log.d("SSAFY-5", "probabilityProcessor : $probabilityProcessor")
 
-                        progressDialog.dismiss()
-                    }
+            // 결과 출력
+            val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
+            val maxValueInMap = Collections.max(labeledProbability.values)
+            Log.d("SSAFY-6", "labeledProbability : $labeledProbability")
+            Log.d("SSAFY-6", "maxValueInMap : $maxValueInMap")
+
+            labeledProbability.entries.forEach { entry ->
+                if (entry.value == maxValueInMap) {
+                    result = entry.key
+                    tvEmotion.text = result
+                    Log.d("SSAFY", entry.toString())
+                    Log.d("SSAFY", maxValueInMap.toString())
+                    Log.d("SSAFY", (entry.value == maxValueInMap).toString() + "\n")
+                }
             }
+        }
+
+        progressDialog.dismiss()
     }
 
 
-
-    @Throws(IOException::class)
     private fun loadmodelfile(activity: Activity): MappedByteBuffer {
-        val fileDescriptor = if(mainViewModel.aiType == 0 ) activity.assets.openFd("model.tflite") else activity.assets.openFd("model2.tflite")
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channel
-        val startoffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength)
-    }
+        // 개인지 고양인지에 따라서 AI 모델을 달리 가져온다.
+        val fileDescriptor = if(mainViewModel.aiType == 0 )
+            activity.assets.openFd("model.tflite")
+        else activity.assets.openFd("model2.tflite")
+        Log.d("SSAFY-load", "fileDescriptor : $fileDescriptor")
 
-    fun GetFileExtension(uri: Uri?): String? {
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
+        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        Log.d("SSAFY-load", "inputStream : $inputStream")
+
+        val fileChannel = inputStream.channel
+        Log.d("SSAFY-load", "fileChannel : $fileChannel")
+
+        val startoffset = fileDescriptor.startOffset
+        Log.d("SSAFY-load", "startoffset : $startoffset")
+
+        val declaredLength = fileDescriptor.declaredLength
+        Log.d("SSAFY-load", "declaredLength : $declaredLength")
+
+        Log.d("SSAFY-load", "return : ${fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength)}")
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength)
     }
 
     private fun getPreprocessNormalizeOp(): TensorOperator {
@@ -204,11 +263,13 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         // Creates processor for the TensorImage.
         val cropSize = min(bitmap.width, bitmap.height)
+
         val imageProcessor = ImageProcessor.Builder()
             .add(ResizeWithCropOrPadOp(cropSize, cropSize))
             .add(ResizeOp(imageSizeX, imageSizeY, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
             .add(getPreprocessNormalizeOp())
             .build()
+
         return imageProcessor.process(inputImageBuffer)
     }
 
