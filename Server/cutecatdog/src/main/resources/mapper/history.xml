@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.HistoryMapper">
+	
+	<select id="selectHistory" resultType="HistoryDto">
+		SELECT id, emotion, datetime
+		FROM tbl_history
+    WHERE pet_id = #{petId}
+	</select>
+
+  <select id="selectHistoryTime" resultType="HistoryDto">
+    SELECT id, emotion, datetime
+		FROM tbl_history
+    WHERE datetime &gt;= #{startdate}  AND datetime &lt; #{enddate}
+  </select>
+</mapper>

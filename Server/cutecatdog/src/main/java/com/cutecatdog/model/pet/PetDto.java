@@ -1,4 +1,4 @@
-package com.cutecatdog.model;
+package com.cutecatdog.model.pet;
 
 import lombok.Getter;
 import lombok.Setter;

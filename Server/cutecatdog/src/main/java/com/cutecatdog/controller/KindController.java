@@ -2,11 +2,10 @@ package com.cutecatdog.controller;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.cutecatdog.common.message.Message;
-import com.cutecatdog.model.KindDto;
+import com.cutecatdog.model.kind.KindDto;
 import com.cutecatdog.service.KindService;
 
 import org.springframework.beans.factory.annotation.Autowired;

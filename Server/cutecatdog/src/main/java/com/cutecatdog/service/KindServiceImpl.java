@@ -3,7 +3,7 @@ package com.cutecatdog.service;
 import java.util.List;
 
 import com.cutecatdog.mapper.KindMapper;
-import com.cutecatdog.model.KindDto;
+import com.cutecatdog.model.kind.KindDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
