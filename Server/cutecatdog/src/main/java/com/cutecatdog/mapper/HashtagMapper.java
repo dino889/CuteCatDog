@@ -3,7 +3,7 @@ package com.cutecatdog.mapper;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.cutecatdog.model.HashtagDto;
+import com.cutecatdog.model.diary.HashtagDto;
 
 import org.apache.ibatis.annotations.Mapper;
 

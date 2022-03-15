@@ -4,7 +4,7 @@
 <mapper namespace="com.cutecatdog.mapper.DiaryMapper">
 	
 	<select id="selectDiaryAsc" parameterType="int" resultType="DiaryDto">
-		SELECT id, title, datetime
+		SELECT id, title, content, datetime
 		FROM tbl_diary
         WHERE user_id = #{userId}
         order by datetime
@@ -32,16 +32,30 @@
 		DELETE FROM tbl_diary WHERE id = #{id}
 	</delete>
 
-	<select id="selectDiaryByDate" parameterType="String" resultType="DiaryDto">
+	<delete id="deletePhoto" parameterType="int">
+		DELETE FROM tbl_diary_photo WHERE diary_id = #{id}
+	</delete>
+
+	<delete id="deleteHashtag" parameterType="int">
+		DELETE FROM tbl_hashtag_in_diary WHERE diary_id = #{id}
+	</delete>
+
+	<select id="selectDiaryByDate" parameterType="DiaryParamDto" resultType="DiaryDto">
 		SELECT id, user_id, title, content, datetime
 		FROM tbl_diary
-        WHERE user_id = #{userId} and datetime = #{datetime}
+		<if test="end_date != null and end_date != ''">
+			WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+			order by datetime desc
+		</if>
+		<if test="end_date == null or end_date == ''">
+        	WHERE user_id = #{userId} and datetime = #{start_date}
+		</if>
 	</select>
 
-    <select id="selectDiaryByPeriod" parameterType="String" resultType="DiaryDto">
-		SELECT id, user_id, title, content, datetime
+	<select id="selectDiaryDetali" parameterType="int" resultType="DiaryDto">
+		SELECT id, title, content, datetime
 		FROM tbl_diary
-        WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+        WHERE id = #{id}
 	</select>
 
 </mapper>
