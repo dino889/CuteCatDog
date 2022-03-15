@@ -170,6 +170,13 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
     }
 
+    /**
+     * @author Jueun
+     * 카메라, 저장공간 등을 불러오고 결과값을 받을 때
+     * onActiviryResult로 return 된다.
+     * 필요한 데이터를 활용하면 되지만,
+     **** Warning :: RequestCode에 따라 분기처리를 잘 할 것!! ****
+     */
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -291,16 +298,30 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
     }
 
+    /**
+     * @author Jueun
+     * bottomNavigation 숨기기
+     */
     fun hideBottomAppBar(){
         binding.bottomAppBar.visibility = View.GONE
         binding.activityMainFabCam.visibility = View.GONE
     }
 
+    /**
+     * @author Jueun
+     * bottomNavigation 보이기
+     */
     fun showBottomAppBar(){
         binding.bottomAppBar.visibility = View.VISIBLE
         binding.activityMainFabCam.visibility = View.VISIBLE
     }
 
+
+    /**
+     * @author Jueun
+     * bottomNavigation mainActivty resume 될 때
+     * bottomNav가 열리도록 함.
+     */
     override fun onResume() {
         super.onResume()
         showBottomAppBar()
