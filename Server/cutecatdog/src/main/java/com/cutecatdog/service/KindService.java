@@ -2,7 +2,7 @@ package com.cutecatdog.service;
 
 import java.util.List;
 
-import com.cutecatdog.model.KindDto;
+import com.cutecatdog.model.kind.KindDto;
 
 public interface KindService {
 

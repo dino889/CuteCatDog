@@ -2,8 +2,7 @@ package com.cutecatdog.service;
 
 import java.util.List;
 
-
-import com.cutecatdog.model.PetDto;
+import com.cutecatdog.model.pet.PetDto;
 
 public interface PetService {
   public List<PetDto> findPet() throws Exception;

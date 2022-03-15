@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.cutecatdog.common.message.Message;
-import com.cutecatdog.model.PetDto;
+import com.cutecatdog.model.pet.PetDto;
 import com.cutecatdog.service.PetService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.cutecatdog.mapper;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.cutecatdog.model.PetDto;
+import com.cutecatdog.model.pet.PetDto;
 
 import org.apache.ibatis.annotations.Mapper;
 
