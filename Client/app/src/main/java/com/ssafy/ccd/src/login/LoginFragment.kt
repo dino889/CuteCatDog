@@ -48,9 +48,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
     private fun loginBtnClickEvent() {
         binding.fragmentLoginBtnLogin.setOnClickListener {
-            login(binding.fragmentLoginEmail.text.toString(), binding.fragmentLoginPw.text.toString())
-
-            val loginRes = mainViewModel.loginInfo
+            val loginRes = login(binding.fragmentLoginEmail.text.toString(), binding.fragmentLoginPw.text.toString())
 
             if(loginRes.data.get("user") != null && loginRes.message == "로그인 성공") {
                 val loginUser = loginRes.data["user"]
@@ -58,7 +56,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
                 val type: Type = object : TypeToken<User>() {}.type
                 val user = CommonUtils.parseDto<User>(loginUser!!, type)
 
-                ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.device_token))
+                ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.deviceToken))
                 showCustomToast("로그인 되었습니다.")
                 loginActivity.openFragment(1)
 
@@ -73,10 +71,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
         }
     }
 
-    private fun login(email: String, password: String) {
+    private fun login(email: String, password: String) : Message{
+        var result = Message()
         runBlocking {
-            mainViewModel.login(User(email, password))
+            result = mainViewModel.login(User(email, password))
         }
+        return result
     }
 
 }

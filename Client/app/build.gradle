@@ -122,5 +122,25 @@ dependencies {
     // https://github.com/ybq/Android-SpinKit
 //    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+    // rxAndroid, rxKotlin
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
+    // rxBinding
+    implementation "com.jakewharton.rxbinding3:rxbinding:3.1.0"
+
+    // Google Material Component Binding
+    implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.1.0'
+
+    // AndroidX
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-core:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-appcompat:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-drawerlayout:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-leanback:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-recyclerview:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-slidingpanelayout:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-viewpager:4.0.0'
+//    implementation 'com.jakewharton.rxbinding4:rxbinding-viewpager2:4.0.0'
 
 }

@@ -259,28 +259,18 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            if (userService.checkEmail(email)) {
-                SendCodeByMailResultDto result = userService.sendCodeByMail(email);
-                if (result.isSuccess()) {
-                    response.setMessage("이메일 인증 요청 성공");
-                    data.put("code", result.getCode());
-                    response.setData(data);
-                    status = HttpStatus.OK;
-                } else {
-                    response.setMessage("이메일 인증 요청 실패");
-                    data.put("code", null);
-                    data.put("isExisted", true);
-                    response.setData(data);
-                    status = HttpStatus.INTERNAL_SERVER_ERROR;
-                }
-            } else {
-                response.setMessage("존재하지 않는 Email");
-                data.put("code", null);
-                data.put("isExisted", false);
+            SendCodeByMailResultDto result = userService.sendCodeByMail(email);
+            if (result.isSuccess()) {
+                response.setMessage("이메일 인증 요청 성공");
+                data.put("code", result.getCode());
                 response.setData(data);
                 status = HttpStatus.OK;
+            } else {
+                response.setMessage("이메일 인증 요청 실패");
+                data.put("code", null);
+                response.setData(data);
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
-
         } catch (Exception e) {
             response.setSuccess(false);
             response.setMessage(e.getMessage());

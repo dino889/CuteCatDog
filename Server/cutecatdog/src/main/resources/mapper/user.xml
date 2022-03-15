@@ -5,9 +5,9 @@
 	
 	<insert id="insertUser" parameterType="userDto">
 		insert into tbl_user (email, password, nickname, profile_image)
-		values (#{email}, #{password}, #{nickname}, #{profile_image})
+		values (#{email}, #{password}, #{nickname}, #{profileImage})
 	</insert>
-	
+
 	<select id="selectUser" parameterType="int" resultType="userDto">
 		select id, email, password, nickname, profile_image
 		from tbl_user
@@ -16,7 +16,7 @@
 	
 	<update id= "modifyUser" parameterType="userDto">
 		update tbl_user
-		set email = #{email}, password = #{password}, nickname = #{nickname}, profile_image=#{profile_image}
+		set email = #{email}, password = #{password}, nickname = #{nickname}, profile_image=#{profileImage}
 		where id = #{id}
 	</update>
 	

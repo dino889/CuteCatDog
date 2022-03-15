@@ -10,7 +10,7 @@ interface UserApi {
 
     // 회원 정보 조회 by userId
     @GET("/users")
-    suspend fun userInfo(@Query("id") id: Int) : Response<Message>
+    suspend fun readUserInfo(@Query("id") id: Int) : Response<Message>
 
     // 회원가입(이메일, 비밀번호, 닉네임, 프로필 사진)
     @POST("/users")
@@ -33,13 +33,11 @@ interface UserApi {
     suspend fun loginUser(@Body account: User) : Response<Message>
 
     // 비밀번호 초기화
-    @GET("/users/reset-password")
-    suspend fun resetPw(@Query("email") email: String) : Response<Message>
+    @PUT("/users/reset-password")
+    suspend fun resetUserPw(@Body account: User, @Query("email") email: String) : Response<Message>
 
     // 이메일 인증
-    @GET("/users/verify")
+    @GET("/users/send-code")
     suspend fun verifyUserEmail(@Query("email") email: String) : Response<Message>
-
-
 
 }

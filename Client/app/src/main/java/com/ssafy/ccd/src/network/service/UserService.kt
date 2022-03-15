@@ -8,11 +8,74 @@ import retrofit2.Response
 class UserService {
 
     /**
-     * 로그인
+     * 회원 정보 조회
+     * @param id
+     * @return Response<Message>
+     */
+    suspend fun readUserInfo(id: Int) : Response<Message> {
+        return RetrofitUtil.userService.readUserInfo(id)
+    }
+
+    /**
+     * 회원가입
+     * @param userDto
+     * @return Response<Message>
+     */
+    suspend fun createUser(userDto: User) : Response<Message> {
+        return RetrofitUtil.userService.createUser(userDto)
+    }
+
+    /**
+     * 회원 정보 수정
+     * @param userDto
+     * @return Response<Message>
+     */
+    suspend fun updateUser(userDto: User) : Response<Message> {
+        return RetrofitUtil.userService.updateUser(userDto)
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param id
+     * @return Response<Message>
+     */
+    suspend fun deleteUser(id: Int) : Response<Message> {
+        return RetrofitUtil.userService.deleteUser(id)
+    }
+
+    /**
+     * 이메일 중복 검사
      * @param email
-     * @param password
+     * @return Response<Message>
+     */
+    suspend fun existsUserEmail(email: String) : Response<Message> {
+        return RetrofitUtil.userService.existsUserEmail(email)
+    }
+
+    /**
+     * 로그인
+     * @param account
      */
     suspend fun loginUser(account : User) : Response<Message> {
         return RetrofitUtil.userService.loginUser(account)
+    }
+
+    /**
+     * 비밀번호 초기화
+     * @param account
+     * @param email
+     * @return Response<Message>
+     */
+    suspend fun resetUserPw(account: User, email : String) : Response<Message> {
+        return RetrofitUtil.userService.resetUserPw(account, email)
+    }
+
+    /**
+     * 이메일 인증
+     * @param email
+     * @return Response<Message>
+     */
+    suspend fun verifyUserEmail(email: String) : Response<Message> {
+        return RetrofitUtil.userService.verifyUserEmail(email)
     }
 }

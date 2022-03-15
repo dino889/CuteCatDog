@@ -5,12 +5,13 @@ data class User(
     val email: String,
     val nickname: String,
     val password: String,
-    val profile_image: String,
-    val device_token: String
+    val profileImage: String,
+    val deviceToken: String
 ) {
     constructor() : this(0, "", "", "", "", "")
     constructor(id: Int) : this(id, "", "", "", "", "")
-    constructor(id: Int, device_token: String) : this(id, "", "", "", "", device_token)
+    constructor(id: Int, deviceToken: String) : this(id, "", "", "", "", deviceToken)
     constructor(email: String, password: String) : this(0, email, "", password, "", "")
-    constructor(id:Int, email: String, nickname: String, password: String, profile_image: String) : this(0, email, nickname, password, profile_image, "")
+    constructor(email: String, nickname: String, password: String, profileImage: String) : this(0, email, nickname, password, profileImage, "")
+    constructor(id:Int, email: String, nickname: String, password: String, profileImage: String) : this(0, email, nickname, password, profileImage, "")
 }
