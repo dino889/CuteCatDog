@@ -30,6 +30,7 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.MappedByteBuffer
@@ -55,6 +56,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private var imageSizeX = 0
     private var imageSizeY = 0
     private val imageTensorIndex = 0
+    private lateinit var bitmap: Bitmap
 
     // TnesorFlow 관련 객체
     private val mimeTypeMap = MimeTypeMap.getSingleton()
@@ -70,12 +72,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressDialog.show()
-
         setInstance()
-        setInit()
 
-        progressDialog.dismiss()
+        progressDialog.show()
+        setInit()
     }
 
     private fun setInstance() {
@@ -101,13 +101,21 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             tflite = Interpreter(loadmodelfile(mainActivity))
         } catch (e: Exception) {
             e.printStackTrace()
+            showCustomToast(e.message.toString())
         }
 
         try {
             labels = FileUtil.loadLabels(mainActivity, "labels.txt")
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
+            showCustomToast(e.message.toString())
         }
+
+        // Bitmap 설정
+        bitmap = mainViewModels.uploadedImage
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
     }
 
     private fun setInit() {
@@ -139,14 +147,15 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                         val probabilityTensorIndex = 0
                         val probabilityShape: IntArray = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
                         val probabilityDataType: DataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
+
                         inputImageBuffer = TensorImage(imageDataType)
                         outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
                         probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
-                        inputImageBuffer = loadImage(mainViewModels.uploadedImage)
-                        tflite.run(
-                            inputImageBuffer.buffer,
-                            TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind()
-                        )
+
+                        inputImageBuffer = loadImage(bitmap)
+                        tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
+
+                        // 결과 출력
                         val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
                         val maxValueInMap = Collections.max(labeledProbability.values)
 
@@ -154,8 +163,13 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                             if (entry.value == maxValueInMap) {
                                 result = entry.key
                                 tvEmotion.text = result
+                                Log.d("SSAFY", entry.toString())
+                                Log.d("SSAFY", maxValueInMap.toString())
+                                Log.d("SSAFY", (entry.value == maxValueInMap).toString() + "\n")
                             }
                         }
+
+                        progressDialog.dismiss()
                     }
             }
     }
@@ -164,7 +178,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     @Throws(IOException::class)
     private fun loadmodelfile(activity: Activity): MappedByteBuffer {
-        val fileDescriptor = activity.assets.openFd("model.tflite")
+        val fileDescriptor = if(mainViewModel.aiType == 0 ) activity.assets.openFd("model.tflite") else activity.assets.openFd("model2.tflite")
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
         val startoffset = fileDescriptor.startOffset

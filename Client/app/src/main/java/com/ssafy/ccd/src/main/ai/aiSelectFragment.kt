@@ -49,7 +49,7 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
                 .commit()
         }
 
-        radioGroup.setOnCheckedChangeListener { radioGroup, i ->
+        radioGroup.setOnCheckedChangeListener { _, i ->
             if(i == R.id.fragmentAiSelect_rbDog) mainViewModels.aiType = 0
             if(i == R.id.fragmentAiSelect_rbCat) mainViewModels.aiType = 1
         }
@@ -71,5 +71,10 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
     override fun onPause() {
         super.onPause()
         (requireActivity() as MainActivity).showBottomAppBar()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideBottomAppBar()
     }
 }
