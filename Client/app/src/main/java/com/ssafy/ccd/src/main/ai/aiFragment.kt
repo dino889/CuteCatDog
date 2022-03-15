@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import android.widget.TextView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.ssafy.ccd.R
@@ -19,6 +20,7 @@ import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.common.FileUtil
 import org.tensorflow.lite.support.common.TensorOperator
 import org.tensorflow.lite.support.common.TensorProcessor
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -26,11 +28,14 @@ import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
+import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.util.*
+import kotlin.math.min
 
 open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,R.layout.fragment_ai) {
     // mainActivity 관련 객체
@@ -44,23 +49,23 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     // binding 객체
     private lateinit var imageView:ImageView
+    private lateinit var tvEmotion:TextView
 
-
-    // TensorFlow 관련 Final 값
-    private val IMAGE_MEAN = 0.0f
-    private val IMAGE_STD = 1.0f
-    private val PROBABILITY_MEAN = 0.0f
-    private val PROBABILITY_STD = 255.0f
+    // 이미지 관련 객체
     private var imageSizeX = 0
     private var imageSizeY = 0
     private val imageTensorIndex = 0
 
     // TnesorFlow 관련 객체
-    val mimeTypeMap = MimeTypeMap.getSingleton()
-    var tflite: Interpreter? = null
-    private var inputImageBuffer: TensorImage? = null
-    private var probabilityProcessor: TensorProcessor? = null
+    private val mimeTypeMap = MimeTypeMap.getSingleton()
+    private lateinit var tflite: Interpreter
+    private lateinit var inputImageBuffer: TensorImage
+    private lateinit var probabilityProcessor: TensorProcessor
+    private lateinit var outputProbabilityBuffer: TensorBuffer
+    private lateinit var labels:List<String>
 
+    // 결과
+    private lateinit var result:String
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,46 +76,6 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         setInit()
 
         progressDialog.dismiss()
-    }
-
-    private fun setInit() {
-        // ErrorCheck (객체 확인)
-        if(storageReference == null) {
-            Log.e("ERROR", "Firebase에서 문제가 발생하였습니다.")
-            showCustomToast("Firebase에서 문제가 발생하였습니다.")
-            childFragmentManager.popBackStack()
-        }
-
-        if(mainViewModels.uploadedImageUri == null){
-            Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
-            showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
-            childFragmentManager.popBackStack()
-        }
-
-        // Firebase Storage Child를 만들고 사용
-        val storageReferenceChild = storageReference!!.child(System.currentTimeMillis().toString() + "." + GetFileExtension(mainViewModels.uploadedImageUri))
-
-        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
-            .addOnSuccessListener {
-                storageReferenceChild.downloadUrl
-                    .addOnSuccessListener {
-                        val imageShape = tflite!!.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
-                        imageSizeY = imageShape[1]
-                        imageSizeX = imageShape[2]
-                        val imageDataType: DataType = tflite!!.getInputTensor(imageTensorIndex).dataType()
-                        val probabilityTensorIndex = 0
-                        val probabilityShape: IntArray = tflite!!.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
-                        val probabilityDataType: DataType = tflite!!.getOutputTensor(probabilityTensorIndex).dataType()
-                        inputImageBuffer = TensorImage(imageDataType)
-                        probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
-                        inputImageBuffer = loadImage(mainViewModels.uploadedImage)
-                        tflite!!.run(
-                            inputImageBuffer!!.buffer,
-                            TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind()
-                        )
-//                        showresult()
-                    }
-            }
     }
 
     private fun setInstance() {
@@ -125,18 +90,77 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         // Firebase 관련 객체
         storageReference = FirebaseStorage.getInstance().getReference("Animals")
-        
+
         // Android Binding 객체
         imageView = binding.fragmentAiImage
         imageView.setImageURI(mainViewModels.uploadedImageUri)
-        
+        tvEmotion = binding.fragmentAiResultEmotion
+
         // TensorFlow 객체
         try {
             tflite = Interpreter(loadmodelfile(mainActivity))
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        try {
+            labels = FileUtil.loadLabels(mainActivity, "labels.txt")
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
+
+    private fun setInit() {
+        // ErrorCheck (객체 확인)
+        if(storageReference == null) {
+            Log.e("ERROR", "Firebase에서 문제가 발생하였습니다.")
+            showCustomToast("Firebase에서 문제가 발생하였습니다.")
+            childFragmentManager.popBackStack()
+        }
+
+        // 이미지 Uri 확인
+        if(mainViewModels.uploadedImageUri == null){
+            Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
+            showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
+            childFragmentManager.popBackStack()
+        }
+
+        // Firebase Storage Child를 만들고 사용
+        val storageReferenceChild = storageReference!!.child(System.currentTimeMillis().toString() + "." + GetFileExtension(mainViewModels.uploadedImageUri))
+
+        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
+            .addOnSuccessListener {
+                storageReferenceChild.downloadUrl
+                    .addOnSuccessListener {
+                        val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
+                        imageSizeY = imageShape[1]
+                        imageSizeX = imageShape[2]
+                        val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
+                        val probabilityTensorIndex = 0
+                        val probabilityShape: IntArray = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
+                        val probabilityDataType: DataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
+                        inputImageBuffer = TensorImage(imageDataType)
+                        outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
+                        probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
+                        inputImageBuffer = loadImage(mainViewModels.uploadedImage)
+                        tflite.run(
+                            inputImageBuffer.buffer,
+                            TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind()
+                        )
+                        val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
+                        val maxValueInMap = Collections.max(labeledProbability.values)
+
+                        labeledProbability.entries.forEach { entry ->
+                            if (entry.value == maxValueInMap) {
+                                result = entry.key
+                                tvEmotion.text = result
+                            }
+                        }
+                    }
+            }
+    }
+
+
 
     @Throws(IOException::class)
     private fun loadmodelfile(activity: Activity): MappedByteBuffer {
@@ -152,26 +176,33 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
     }
 
-    private fun getPreprocessNormalizeOp(): TensorOperator? {
+    private fun getPreprocessNormalizeOp(): TensorOperator {
         return NormalizeOp(IMAGE_MEAN, IMAGE_STD)
     }
 
-    private fun getPostprocessNormalizeOp(): TensorOperator? {
+    private fun getPostprocessNormalizeOp(): TensorOperator {
         return NormalizeOp(PROBABILITY_MEAN,PROBABILITY_STD)
     }
 
-    private fun loadImage(bitmap: Bitmap): TensorImage? {
+    private fun loadImage(bitmap: Bitmap): TensorImage {
         // Loads bitmap into a TensorImage.
-        inputImageBuffer!!.load(bitmap)
+        inputImageBuffer.load(bitmap)
 
         // Creates processor for the TensorImage.
-        val cropSize = Math.min(bitmap.width, bitmap.height)
-        // TODO(b/143564309): Fuse ops inside ImageProcessor.
+        val cropSize = min(bitmap.width, bitmap.height)
         val imageProcessor = ImageProcessor.Builder()
             .add(ResizeWithCropOrPadOp(cropSize, cropSize))
             .add(ResizeOp(imageSizeX, imageSizeY, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
             .add(getPreprocessNormalizeOp())
             .build()
         return imageProcessor.process(inputImageBuffer)
+    }
+
+    companion object {
+        // TensorFlow 관련 Final 값
+        private const val IMAGE_MEAN = 0.0f
+        private const val IMAGE_STD = 1.0f
+        private const val PROBABILITY_MEAN = 0.0f
+        private const val PROBABILITY_STD = 255.0f
     }
 }

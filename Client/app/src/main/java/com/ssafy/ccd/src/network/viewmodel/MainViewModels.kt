@@ -94,7 +94,7 @@ class MainViewModels : ViewModel() {
     private val _myPetsList = MutableLiveData<MutableList<Pet>>()
     private val _pet = MutableLiveData<Pet>()
     private val _kinds = MutableLiveData<MutableList<PetKind>>()
-    
+
     val petsList : LiveData<MutableList<Pet>>
         get() = _petsList
     val myPetsList : LiveData<MutableList<Pet>>
@@ -103,7 +103,7 @@ class MainViewModels : ViewModel() {
         get() = _pet
     val kinds : LiveData<MutableList<PetKind>>
         get() = _kinds
-    
+
     fun setPetList(list:MutableList<Pet>) = viewModelScope.launch {
         _petsList.value = list
     }
@@ -113,10 +113,10 @@ class MainViewModels : ViewModel() {
     fun setPet(pet:Pet) = viewModelScope.launch {
         _pet.value = pet
     }
-    fun setKinds(list:MutableList<PetKind>) = viewModelScope.launch { 
+    fun setKinds(list:MutableList<PetKind>) = viewModelScope.launch {
         _kinds.value = list
     }
-    
+
     suspend fun getPetsAllList(){
         val response = PetService().petsAllListService()
         viewModelScope.launch {
@@ -170,10 +170,10 @@ class MainViewModels : ViewModel() {
             }
         }
     }
-    
+
     suspend fun getPetKindsAllList(){
         val response = PetService().kindsAllListService()
-        viewModelScope.launch { 
+        viewModelScope.launch {
             val res = response.body()
             if(response.code() == 200){
                 if(res!=null){
@@ -197,5 +197,4 @@ class MainViewModels : ViewModel() {
     lateinit var uploadedImage : Bitmap
     var uploadedImageUri : Uri? = null
     var aiType = 0
-
 }

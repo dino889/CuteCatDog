@@ -50,6 +50,8 @@ private const val TAG = "AddPetFragment_ccd"
 class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding::bind, R.layout.fragment_add_pet) {
     var curDate = Date() // 현재
     private lateinit var mainActivity : MainActivity
+//    private val mainViewModel: MainViewModels by activityViewModels()
+
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
     var kindId = 0
     var gender = -1
