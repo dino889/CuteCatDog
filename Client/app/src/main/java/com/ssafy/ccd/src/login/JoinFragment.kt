@@ -1,8 +1,10 @@
 package com.ssafy.ccd.src.login
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -15,11 +17,9 @@ import com.ssafy.ccd.src.dto.User
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
-import android.os.Looper
 import android.widget.ArrayAdapter
 
 
@@ -47,6 +47,7 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         dupChkEmailClickEvent()
         joinBtnClickEvent()
         initDomain()
+
         loginActivity.runOnUiThread(Runnable {
             inputObservable()
         })
@@ -57,7 +58,8 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         binding.fragmentJoinBtnDupChkEmail.setOnClickListener {
             val res = existEmailChk(validatedEmail())
             if(res == true) {
-                certBtnClickEvent()
+                showConfirmDialog()
+//                certBtnClickEvent()
             }
         }
     }
@@ -75,13 +77,15 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             }
             Log.d(TAG, "certBtnClickEvent: $codeRes")
             if(codeRes.data["code"] != null && codeRes.message == "이메일 인증 요청 성공") {
+
                 certCode = codeRes.data["code"] as String
                 okBtnClickEvent(codeRes.data["code"] as String)
                 Log.d(TAG, "certBtnClickEvent: $certCode")
-            } else if(codeRes.data["code"] == null && codeRes.data["isExisted"] == true) {
+
+            } else if(codeRes.data["code"] == null && codeRes.message == "이메일 인증 요청 실패") {
+
                 showCustomToast(codeRes.message)    // 이메일 존재O, but 이메일 인증 요청 실패
-            }  else if(codeRes.data["code"] == null && codeRes.data["isExisted"] == false) {
-                showCustomToast(codeRes.message)    // 존재하지 않는 Email
+
             } else {
                 showCustomToast("서버 통신에 실패했습니다.")
                 Log.d(TAG, "certBtnClickEvent: ${codeRes.message}")
@@ -102,11 +106,11 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         }
 
         if(existEmailRes.data["isExisted"] == false && existEmailRes.message == "중복된 이메일 없음") {
-            binding.fragmentJoinTilEmail.isEnabled = false
-            binding.fragmentJoinTilDomain.isEnabled = false
-            binding.fragmentJoinBtnDupChkEmail.visibility = View.GONE
-            binding.fragmentJoinBtnAuthOk.visibility = View.VISIBLE
-            binding.joinFragmentClCertNum.visibility = View.VISIBLE
+//            binding.fragmentJoinTilEmail.isEnabled = false
+//            binding.fragmentJoinTilDomain.isEnabled = false
+//            binding.fragmentJoinBtnDupChkEmail.visibility = View.GONE
+//            binding.fragmentJoinBtnAuthOk.visibility = View.VISIBLE
+//            binding.joinFragmentClCertNum.visibility = View.VISIBLE
             return true
         } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {
             binding.joinFragmentClCertNum.visibility = View.GONE
@@ -121,11 +125,16 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
 
     // 인증번호 확인 버튼 클릭 이벤트
     private fun okBtnClickEvent(code: String) {
-        binding.fragmentJoinBtnAuthOk.setOnClickListener {
+        Log.d(TAG, "okBtnClickEvent: $code")
+        binding.fragmentJoinBtnOk.setOnClickListener {
             if(code == binding.fragmentJoinEtCertNum.text.toString()) {
+                showCustomToast("이메일 인증에 성공했습니다")
+                binding.fragmentJoinBtnAuthOk.isEnabled = false
                 binding.joinFragmentTilCertNum.isEnabled = false
                 isEmailPossible = true
             } else {
+                showCustomToast("이메일 인증에 실패했습니다")
+                binding.fragmentJoinBtnAuthOk.isEnabled = true
                 binding.joinFragmentTilCertNum.isEnabled = true
                 isEmailPossible = false
             }
@@ -181,7 +190,6 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             return null
         }
     }
-
 
 
     /**
@@ -263,13 +271,13 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             binding.fragmentJoinTilDomain.error = "Required Domain Field"
             return null
         }
-        else if(!Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}\$", email)) {
+        else if(!Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z].{2,25}\$", email)) {
             binding.fragmentJoinTilEmail.error = "이메일 형식을 확인해주세요."
             return null
         }
         else {
-            binding.fragmentJoinTilEmail.error = null
-            binding.fragmentJoinTilDomain.error = null
+            binding.fragmentJoinTilEmail.isErrorEnabled = false
+            binding.fragmentJoinTilDomain.isErrorEnabled = false
             return email
         }
     }
@@ -318,4 +326,30 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             editTextSubscription.dispose()
         }
     }
+
+    private fun showConfirmDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("이메일 사용 확인")
+            .setMessage("현재 이메일을 사용하시겠습니까?")
+            .setPositiveButton("확인") { dialog, which ->
+                binding.fragmentJoinTilEmail.isEnabled = false
+                binding.fragmentJoinTilDomain.isEnabled = false
+                binding.fragmentJoinBtnDupChkEmail.visibility = View.GONE
+                binding.fragmentJoinBtnAuthOk.visibility = View.VISIBLE
+                binding.joinFragmentClCertNum.visibility = View.VISIBLE
+                certBtnClickEvent()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") {
+                    dialog, which -> dialog.dismiss()
+            }
+//            .setNeutralButton("neutral", object : DialogInterface.OnClickListener {
+//                override fun onClick(dialog: DialogInterface, which: Int) {
+//                    Log.d("MyTag", "neutral")
+//                }
+//            })
+            .create()
+            .show()
+    }
+
 }
