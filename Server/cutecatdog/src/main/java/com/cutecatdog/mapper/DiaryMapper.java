@@ -3,7 +3,8 @@ package com.cutecatdog.mapper;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.cutecatdog.model.DiaryDto;
+import com.cutecatdog.model.diary.DiaryDto;
+import com.cutecatdog.model.diary.DiaryParamDto;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,9 +25,7 @@ public interface DiaryMapper {
 
     public List<DiaryDto> selectDiaryDesc(int user_id) throws SQLException;
 
-    public List<DiaryDto> selectDiaryByDate(int user_id, String date) throws SQLException;
-
-    public List<DiaryDto> selectDiaryByPeriod(int user_id, String start_date, String end_date) throws SQLException;
+    public List<DiaryDto> selectDiaryByDate(DiaryParamDto diaryParamDto) throws SQLException;
 
     public DiaryDto selectDiaryDetali(int user_id) throws SQLException;
 

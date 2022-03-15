@@ -2,7 +2,7 @@ package com.cutecatdog.service;
 
 import java.util.List;
 
-import com.cutecatdog.model.PhotoDto;
+import com.cutecatdog.model.diary.PhotoDto;
 
 public interface PhotoService {
     

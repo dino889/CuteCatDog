@@ -40,16 +40,16 @@
 		DELETE FROM tbl_hashtag_in_diary WHERE diary_id = #{id}
 	</delete>
 
-	<select id="selectDiaryByDate" parameterType="String" resultType="DiaryDto">
+	<select id="selectDiaryByDate" parameterType="DiaryParamDto" resultType="DiaryDto">
 		SELECT id, user_id, title, content, datetime
 		FROM tbl_diary
-        WHERE user_id = #{userId} and datetime = #{datetime}
-	</select>
-
-    <select id="selectDiaryByPeriod" parameterType="String" resultType="DiaryDto">
-		SELECT id, user_id, title, content, datetime
-		FROM tbl_diary
-        WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+		<if test="end_date != null and end_date != ''">
+			WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+			order by datetime desc
+		</if>
+		<if test="end_date == null or end_date == ''">
+        	WHERE user_id = #{userId} and datetime = #{start_date}
+		</if>
 	</select>
 
 	<select id="selectDiaryDetali" parameterType="int" resultType="DiaryDto">

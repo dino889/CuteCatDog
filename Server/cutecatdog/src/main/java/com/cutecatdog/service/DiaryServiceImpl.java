@@ -3,7 +3,8 @@ package com.cutecatdog.service;
 import java.util.List;
 
 import com.cutecatdog.mapper.DiaryMapper;
-import com.cutecatdog.model.DiaryDto;
+import com.cutecatdog.model.diary.DiaryDto;
+import com.cutecatdog.model.diary.DiaryParamDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,8 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<DiaryDto> findDiaryByDate(int user_id, String date) throws Exception {
-        return sqlSession.getMapper(DiaryMapper.class).selectDiaryByDate(user_id, date);
-    }
-
-    @Override
-    public List<DiaryDto> findDiaryByPeriod(int user_id, String start_date, String end_date) throws Exception {
-        return sqlSession.getMapper(DiaryMapper.class).selectDiaryByPeriod(user_id, start_date, end_date);
+    public List<DiaryDto> findDiaryByDate(DiaryParamDto diaryParamDto) throws Exception {
+        return sqlSession.getMapper(DiaryMapper.class).selectDiaryByDate(diaryParamDto);
     }
 
     @Override

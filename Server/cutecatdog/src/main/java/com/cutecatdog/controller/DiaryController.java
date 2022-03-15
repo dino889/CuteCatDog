@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
-import com.cutecatdog.model.DiaryDto;
+import com.cutecatdog.model.diary.DiaryDto;
+import com.cutecatdog.model.diary.DiaryParamDto;
 import com.cutecatdog.service.DiaryService;
 import com.cutecatdog.service.HashtagService;
 import com.cutecatdog.service.PhotoService;
@@ -78,19 +79,81 @@ public class DiaryController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            List<DiaryDto> diarys = diaryService.findDiaryDesc(user_id);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
-            if (diarys.size()>0) {
-                for (DiaryDto diaryDto : diarys) {
+            data.put("diarys", diaryService.findDiaryDesc(user_id));
+            if (data.get("diarys").size()>0) {
+                for (DiaryDto diaryDto : data.get("diarys")) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
                 }
-                data.put("diarys", diarys);
                 response.setData(data);
                 response.setMessage("일기 목록 조회 성공");
                 status = HttpStatus.OK;
             } else {
-                data.put("diarys", diarys);
+                response.setData(data);
+                response.setMessage("일기 목록 없음");
+                status = HttpStatus.OK;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ApiOperation(value = "전체 일기 조회-오래된 순", notes = "", response = Map.class)
+    @GetMapping("/asc")
+    public ResponseEntity<Message> diaryListAsc(@RequestParam(value = "user_id", required = true) int user_id)
+            throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<DiaryDto>> data = new HashMap<>();
+            data.put("diarys", diaryService.findDiaryAsc(user_id));
+            if (data.get("diarys").size()>0) {
+                for (DiaryDto diaryDto : data.get("diarys")) {
+                    diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
+                    diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
+                }
+                response.setData(data);
+                response.setMessage("일기 목록 조회 성공");
+                status = HttpStatus.OK;
+            } else {
+                response.setData(data);
+                response.setMessage("일기 목록 없음");
+                status = HttpStatus.OK;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ApiOperation(value = "날짜로 일기 조회", notes = "", response = Map.class)
+    @GetMapping("/date")
+    public ResponseEntity<Message> diaryListByDate(@RequestBody(required = true) DiaryParamDto diaryParamDto)
+            throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<DiaryDto>> data = new HashMap<>();
+            data.put("diarys", diaryService.findDiaryByDate(diaryParamDto));
+            if (data.get("diarys").size()>0) {
+                for (DiaryDto diaryDto : data.get("diarys")) {
+                    diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
+                    diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
+                }
+                response.setData(data);
+                response.setMessage("일기 목록 조회 성공");
+                status = HttpStatus.OK;
+            } else {
                 response.setData(data);
                 response.setMessage("일기 목록 없음");
                 status = HttpStatus.OK;

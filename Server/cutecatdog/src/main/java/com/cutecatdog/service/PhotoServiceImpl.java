@@ -3,7 +3,7 @@ package com.cutecatdog.service;
 import java.util.List;
 
 import com.cutecatdog.mapper.PhotoMapper;
-import com.cutecatdog.model.PhotoDto;
+import com.cutecatdog.model.diary.PhotoDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.cutecatdog.service;
 import java.util.List;
 
 import com.cutecatdog.mapper.HashtagMapper;
-import com.cutecatdog.model.HashtagDto;
+import com.cutecatdog.model.diary.HashtagDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

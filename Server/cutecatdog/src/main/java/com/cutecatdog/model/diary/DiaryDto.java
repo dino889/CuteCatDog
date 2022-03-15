@@ -1,4 +1,4 @@
-package com.cutecatdog.model;
+package com.cutecatdog.model.diary;
 
 import java.util.List;
 
