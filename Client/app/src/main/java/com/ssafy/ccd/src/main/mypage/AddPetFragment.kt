@@ -13,6 +13,7 @@ import com.ssafy.ccd.databinding.FragmentAddPetBinding
 import com.ssafy.ccd.databinding.FragmentMyPageBinding
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -29,8 +30,14 @@ import java.util.*
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.google.gson.Gson
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Pet
@@ -45,6 +52,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.time.LocalDate
 
 private const val TAG = "AddPetFragment_ccd"
 class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding::bind, R.layout.fragment_add_pet) {
@@ -54,8 +62,11 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     var kindId = 0
     var gender = -1
     var isNeutered = -1
-    private lateinit var imgUri: Uri
-    private var fileExtension : String? = ""
+    var fileName = ""
+    //firebase
+    private var storageReference: StorageReference? = null
+    private lateinit var contentResolver : ContentResolver
+
     // SimpleDateFormat 으로 포맷 결정
     var result: String = dataFormat.format(curDate)
 
@@ -75,28 +86,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         initListener()
 
         binding.addPetFragmentIbSelectImg.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
-            filterActivityLauncher.launch(intent)
+            mainActivity.getAlbum()
         }
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
-            val file = File(imgUri.path!!)
-
-            var inputStream: InputStream? = null
-            try {
-                inputStream = requireActivity().contentResolver.openInputStream(imgUri)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream)  // 압축해서 저장
-            val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArrayOutputStream.toByteArray())
-            val uploadFile = MultipartBody.Part.createFormData("img", "${file.name}.${fileExtension?.substring(6)}", requestBody)
-//            val gson : Gson = Gson()
-//            val json = gson.toJson(user)
-//            val requestBody_user = RequestBody.create(MediaType.parse("text/plain"), json)
-
             var pet = Pet(
                 birth = binding.addPetFragmentTietBirth.text.toString(),
                 gender = gender,
@@ -104,13 +96,26 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 isNeutered = isNeutered,
                 kindId = kindId,
                 name = binding.addPetFragmentTietName.text.toString(),
-                photoPath = "",
+                photoPath = mainViewModel.uploadedImageUri.toString(),
                 userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             )
+            addFireBase()
             insertPet(pet)
         }
 
     }
+    fun addFireBase(){
+        val storageReferenceChild = storageReference!!.child("${ApplicationClass.sharedPreferencesUtil.getUser().id}/${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
+        storageReferenceChild.putFile(mainViewModel.uploadedImageUri!!)
+            .addOnSuccessListener{
+                storageReferenceChild.downloadUrl
+                    .addOnSuccessListener {
+                        Log.d(TAG, "addFireBase: ${it}")
+                        binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
+                    }
+            }
+    }
+
     fun initListener(){
         initKinds()
         selectedGender()
@@ -213,37 +218,5 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         val selectedDateStr = dataFormat.format(curDate)
         binding.addPetFragmentTietBirth.setText(selectedDateStr) // 버튼의 텍스트 수정
     }
-    private val filterActivityLauncher : ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            if(it.resultCode == RESULT_OK && it.data != null){
-                var currentImageUri = it.data?.data
-                try{
-                    currentImageUri?.let {
-                        if(Build.VERSION.SDK_INT < 28){
-                            Glide.with(requireContext())
-                                .load(currentImageUri)
-                                .into(binding.addPEtFragmentIvPetImage)
-
-                            imgUri = currentImageUri
-                            fileExtension = requireActivity().contentResolver.getType(currentImageUri)
-                        }else{
-                            Glide.with(requireContext())
-                                .load(currentImageUri)
-                                .into(binding.addPEtFragmentIvPetImage)
-
-                            imgUri = currentImageUri
-                            fileExtension = requireActivity().contentResolver.getType(currentImageUri)
-                        }
-                    }
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }else if(it.resultCode == RESULT_CANCELED){
-                showCustomToast("사진 선택 취소")
-                imgUri = Uri.EMPTY
-            }else{
-                Log.d(TAG, "something Wrong")
-            }
-        }
 
 }

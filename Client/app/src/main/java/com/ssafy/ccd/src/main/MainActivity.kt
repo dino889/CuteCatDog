@@ -8,6 +8,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
@@ -15,6 +16,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -26,23 +28,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
 import com.ssafy.ccd.src.main.ai.aiFragment
 import com.ssafy.ccd.src.main.ai.aiSelectFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 
 class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     val TAG = "SSAFY"
+
+    // 카메라 모드
+    private var cameraMode = 0
 
     // 카메라, 저장장소 권한
     private val CAMERA = arrayOf(Manifest.permission.CAMERA)
     private val STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val CAMERA_CODE = 98
     private val STORAGE_CODE = 99
-
+    private val GALLERY_CODE = 10
     // Dialog
     private lateinit var photoDialog:Dialog
     private lateinit var photoDialogView: View
@@ -211,6 +220,19 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         photoDialog.dismiss()
                     }
                 }
+                GALLERY_CODE -> {
+                    if (data?.extras?.get("data") != null) {
+                        mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
+                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
+
+                        // 이미지 검사
+                        if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                        else {
+                            showCustomToast("이미지가 정상적으로 로드 되었습니다.")
+                        }
+                    }
+                }
+
             }
         }
     }
