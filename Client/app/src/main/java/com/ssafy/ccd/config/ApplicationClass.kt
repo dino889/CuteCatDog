@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
     companion object{
-        // jiwoo
-        const val SERVER_URL = "http://61.85.38.39:8889/"
+
+        const val SERVER_URL = "https://j6d103.p.ssafy.io/"
         // jueun
 //        const val SERVER_URL = "http://localhost:8080/"
         // AWS Server
