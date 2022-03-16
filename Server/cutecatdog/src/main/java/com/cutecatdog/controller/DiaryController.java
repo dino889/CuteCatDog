@@ -7,6 +7,10 @@ import java.util.Map;
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.diary.DiaryDto;
 import com.cutecatdog.model.diary.DiaryParamDto;
+import com.cutecatdog.model.diary.HashtagDto;
+import com.cutecatdog.model.diary.HashtagParamDto;
+import com.cutecatdog.model.diary.PhotoDto;
+import com.cutecatdog.model.diary.PhotoParamDto;
 import com.cutecatdog.service.DiaryService;
 import com.cutecatdog.service.HashtagService;
 import com.cutecatdog.service.PhotoService;
@@ -53,6 +57,18 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
             if (diaryService.addDiary(diaryDto)) {
+                HashtagParamDto hashtagParamDto = new HashtagParamDto();
+                hashtagParamDto.setDiary_id(diaryDto.getId());
+                for (HashtagDto hashtagDto : diaryDto.getHashtag()) { //해시태그 등록
+                    hashtagParamDto.setHashtag(hashtagDto.getHashtag());
+                    hashtagService.addHashtagtoDiary(hashtagParamDto);
+                }
+                PhotoParamDto paramDto = new PhotoParamDto();
+                paramDto.setDiary_id(diaryDto.getId());
+                for (PhotoDto photoDto : diaryDto.getPhoto()) {
+                    paramDto.setPhoto(photoDto.getPhoto());
+                    photoService.addPhoto(paramDto);
+                }
                 response.setMessage("일기 등록 완료");
                 data.put("isAdd", true);
                 response.setData(data);
@@ -205,7 +221,9 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, DiaryDto> data = new HashMap<>();
             DiaryDto diaryDto = diaryService.findDiaryDetail(id);
-            if (diaryService.removeDiary(id)) {
+            if (diaryDto != null) {
+                diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
+                diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
                 response.setMessage("일기 조회 성공");
                 data.put("diary", diaryDto);
                 response.setData(data);

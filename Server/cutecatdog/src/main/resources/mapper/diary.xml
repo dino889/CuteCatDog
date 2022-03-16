@@ -17,7 +17,7 @@
         order by datetime desc
 	</select>
 
-    <insert id="insertDiary" parameterType="DiaryDto">
+    <insert id="insertDiary" parameterType="DiaryDto" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tbl_diary (user_id, title, content, datetime)
 		VALUES (#{userId},#{title},#{content},#{datetime})
 	</insert>
