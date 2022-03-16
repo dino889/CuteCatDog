@@ -4,11 +4,9 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.storage.FirebaseStorage
@@ -31,9 +29,7 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
-import java.io.IOException
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
@@ -115,9 +111,6 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         // Bitmap 설정
         bitmap = mainViewModels.uploadedImage
-        val bytes = ByteArrayOutputStream()
-        bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
     }
 
     private fun setInit() {
@@ -135,75 +128,22 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             childFragmentManager.popBackStack()
         }
 
-//        // Firebase Storage Child를 만들고 사용
-//        val storageReferenceChild = storageReference!!.child(System.currentTimeMillis().toString() + "." + GetFileExtension(mainViewModels.uploadedImageUri))
-//
-//        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
-//            .addOnSuccessListener {
-//                storageReferenceChild.downloadUrl
-//                    .addOnSuccessListener {
-//                        val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
-//                        imageSizeY = imageShape[1]
-//                        imageSizeX = imageShape[2]
-//                        val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
-//                        val probabilityTensorIndex = 0
-//                        val probabilityShape: IntArray = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
-//                        val probabilityDataType: DataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
-//
-//                        inputImageBuffer = TensorImage(imageDataType)
-//                        outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
-//                        probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
-//
-//                        inputImageBuffer = loadImage(bitmap)
-//                        tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
-//
-//                        // 결과 출력
-//                        val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
-//                        val maxValueInMap = Collections.max(labeledProbability.values)
-//
-//                        labeledProbability.entries.forEach { entry ->
-//                            if (entry.value == maxValueInMap) {
-//                                result = entry.key
-//                                tvEmotion.text = result
-//                                Log.d("SSAFY", entry.toString())
-//                                Log.d("SSAFY", maxValueInMap.toString())
-//                                Log.d("SSAFY", (entry.value == maxValueInMap).toString() + "\n")
-//                            }
-//                        }
-//
-//                        progressDialog.dismiss()
-//                    }
-//            }
-
         runBlocking {
-            val imageShape = tflite.getInputTensor(imageTensorIndex).shape() // {1, height, width, 3}
-            imageSizeY = imageShape[1]
-            imageSizeX = imageShape[2]
-            Log.d("SSAFY-2", "imageShape : $imageShape")
-            Log.d("SSAFY-2", "imageSizeY : $imageSizeY")
-            Log.d("SSAFY-2", "imageSizeX : $imageSizeX")
+            val imageTensorIndex2 = 0
+            val imageShape2 = tflite.getInputTensor(imageTensorIndex2).shape() // {1, height, width, 3}
 
-            val imageDataType: DataType = tflite.getInputTensor(imageTensorIndex).dataType()
-            val probabilityTensorIndex = 0
-            val probabilityShape = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
-            val probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
-            Log.d("SSAFY-3", "imageDataType : $imageDataType")
-            Log.d("SSAFY-3", "probabilityShape : ${probabilityShape[0]}")
-            Log.d("SSAFY-3", "probabilityDataType : $probabilityDataType")
+            imageSizeY = imageShape2[1]
+            imageSizeX = imageShape2[2]
+            val imageDataType2 = tflite.getInputTensor(imageTensorIndex2).dataType()
+            val probabilityTensorIndex2 = 0
+            val probabilityShape2 = tflite.getOutputTensor(probabilityTensorIndex2).shape() // {1, NUM_CLASSES}
+            val probabilityDataType2 = tflite.getOutputTensor(probabilityTensorIndex2).dataType()
 
-
-            inputImageBuffer = TensorImage(imageDataType)
-            outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType)
+            inputImageBuffer = TensorImage(imageDataType2)
+            outputProbabilityBuffer = TensorBuffer.createFixedSize(probabilityShape2, probabilityDataType2)
             probabilityProcessor = TensorProcessor.Builder().add(getPostprocessNormalizeOp()).build()
-            Log.d("SSAFY-4", "inputImageBuffer : $inputImageBuffer")
-            Log.d("SSAFY-4", "outputProbabilityBuffer : $outputProbabilityBuffer")
-            Log.d("SSAFY-4", "probabilityProcessor : $probabilityProcessor")
-
             inputImageBuffer = loadImage(bitmap)
-            tflite.run(inputImageBuffer.buffer,TensorBuffer.createFixedSize(probabilityShape, probabilityDataType).buffer.rewind())
-            Log.d("SSAFY-5", "inputImageBuffer : $inputImageBuffer")
-            Log.d("SSAFY-5", "outputProbabilityBuffer : $outputProbabilityBuffer")
-            Log.d("SSAFY-5", "probabilityProcessor : $probabilityProcessor")
+            tflite.run(inputImageBuffer.buffer, outputProbabilityBuffer.buffer.rewind())
 
             // 결과 출력
             val labeledProbability: Map<String, Float> = TensorLabel(labels, probabilityProcessor.process(outputProbabilityBuffer)).mapWithFloatValue
@@ -231,21 +171,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         val fileDescriptor = if(mainViewModel.aiType == 0 )
             activity.assets.openFd("model.tflite")
         else activity.assets.openFd("model2.tflite")
-        Log.d("SSAFY-load", "fileDescriptor : $fileDescriptor")
-
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        Log.d("SSAFY-load", "inputStream : $inputStream")
-
         val fileChannel = inputStream.channel
-        Log.d("SSAFY-load", "fileChannel : $fileChannel")
-
         val startoffset = fileDescriptor.startOffset
-        Log.d("SSAFY-load", "startoffset : $startoffset")
-
         val declaredLength = fileDescriptor.declaredLength
-        Log.d("SSAFY-load", "declaredLength : $declaredLength")
-
-        Log.d("SSAFY-load", "return : ${fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength)}")
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startoffset, declaredLength)
     }
 
@@ -258,12 +187,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     }
 
     private fun loadImage(bitmap: Bitmap): TensorImage {
-        // Loads bitmap into a TensorImage.
         inputImageBuffer.load(bitmap)
-
-        // Creates processor for the TensorImage.
         val cropSize = min(bitmap.width, bitmap.height)
-
         val imageProcessor = ImageProcessor.Builder()
             .add(ResizeWithCropOrPadOp(cropSize, cropSize))
             .add(ResizeOp(imageSizeX, imageSizeY, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
