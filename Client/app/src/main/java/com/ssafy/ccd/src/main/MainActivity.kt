@@ -203,7 +203,6 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
                 STORAGE_CODE -> {
                     mainViewModels.uploadedImageUri = data?.data
-
                     // 이미지 검사
                     if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
