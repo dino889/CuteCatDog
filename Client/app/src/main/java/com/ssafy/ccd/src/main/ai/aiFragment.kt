@@ -188,7 +188,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             val probabilityShape = tflite.getOutputTensor(probabilityTensorIndex).shape() // {1, NUM_CLASSES}
             val probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType()
             Log.d("SSAFY-3", "imageDataType : $imageDataType")
-            Log.d("SSAFY-3", "probabilityShape : $probabilityShape")
+            Log.d("SSAFY-3", "probabilityShape : ${probabilityShape[0]}")
             Log.d("SSAFY-3", "probabilityDataType : $probabilityDataType")
 
 
