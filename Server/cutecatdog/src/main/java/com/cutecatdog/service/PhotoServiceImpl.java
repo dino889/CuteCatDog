@@ -16,8 +16,8 @@ public class PhotoServiceImpl implements PhotoService {
     private SqlSession sqlSession;
 
     @Override
-    public boolean addPhoto(String photo) throws Exception {
-        return sqlSession.getMapper(PhotoMapper.class).insertPhoto(photo);
+    public boolean addPhoto(int diary_id, String photo) throws Exception {
+        return sqlSession.getMapper(PhotoMapper.class).insertPhoto(diary_id, photo);
     }
 
     @Override

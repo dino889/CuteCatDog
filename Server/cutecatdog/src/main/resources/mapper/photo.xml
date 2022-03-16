@@ -10,8 +10,8 @@
 	</select>
 
   <insert id="insertPhoto" parameterType="String">
-		INSERT INTO tbl_diary_photo (photo)
-		VALUE (#{photo})
+		INSERT INTO tbl_diary_photo (diary_id, photo)
+		VALUE (#{diary_id}, #{photo})
   </insert>
 
   <delete id="deletePhoto" parameterType="int">

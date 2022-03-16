@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PhotoMapper {
     
-    public boolean insertPhoto(String photo) throws SQLException;
+    public boolean insertPhoto(int diary_id, String photo) throws SQLException;
 
     public boolean deletePhoto(int id) throws SQLException;
 

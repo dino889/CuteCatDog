@@ -15,5 +15,8 @@ public interface HashtagMapper {
     public boolean deleteHashtag(int id) throws SQLException;
 
     public List<HashtagDto> selectHashtag(int diary_id) throws SQLException;
+
+    public List<HashtagDto> selectHashtagList() throws SQLException;
     
+    public boolean insertHashtagDiary(int diary_id, String hashtag);
 }

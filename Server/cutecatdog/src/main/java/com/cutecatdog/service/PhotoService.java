@@ -6,7 +6,7 @@ import com.cutecatdog.model.diary.PhotoDto;
 
 public interface PhotoService {
     
-    public boolean addPhoto(String photo) throws Exception;
+    public boolean addPhoto(int diary_id, String photo) throws Exception;
 
     public boolean removePhoto(int id) throws Exception;
 
