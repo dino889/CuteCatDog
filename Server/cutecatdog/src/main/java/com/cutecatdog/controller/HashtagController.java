@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.diary.HashtagDto;
+import com.cutecatdog.model.diary.HashtagParamDto;
 import com.cutecatdog.service.HashtagService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/hashtags")
@@ -56,7 +58,7 @@ public class HashtagController {
     }
 
     @ApiOperation(value = "다이어리 해시태그 조회", notes = "다이어리에 작성된 해시태그를 조회한다.", response = Map.class)
-    @GetMapping("/{id}")
+    @GetMapping("/{diary_id}")
     public ResponseEntity<Message> hashtagDiary(@PathVariable(name = "diary_id") int diary_id) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
@@ -110,23 +112,39 @@ public class HashtagController {
 
     @ApiOperation(value = "일기 해시태그 등록", notes = "", response = Map.class)
     @PostMapping
-    public ResponseEntity<Message> hashtagAddtoDiary(@RequestParam(value = "hashtag", required = true) int user_id,
-            @RequestParam(value = "hashtag", required = true) String hashtag) throws Exception {
+    public ResponseEntity<Message> hashtagAddtoDiary(@RequestBody(required = true) HashtagParamDto hashtagParamDto) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
-            if (hashtagService.addHashtag(hashtag)) {
-                response.setMessage("해시태그 등록 성공");
-                data.put("isAdd", true);
-                response.setData(data);
-                status = HttpStatus.OK;
-            } else {
-                response.setMessage("해시태그 등록 실패");
-                data.put("isAdd", false);
-                response.setData(data);
-                status = HttpStatus.OK;
+            status = HttpStatus.OK;
+            if (hashtagService.findHashtagId(hashtagParamDto.getHashtag()) == null) { //등록되지 않은 해시태그
+                if (hashtagService.addHashtag(hashtagParamDto.getHashtag())) { //해시태그 등록
+                    if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
+                        response.setMessage("다이어리에 해시태그 등록 성공");
+                        data.put("isAdd", true);
+                        response.setData(data);
+                    } else {
+                        response.setMessage("다이어리에 해시태그 등록 실패");
+                        data.put("isAdd", false);
+                        response.setData(data);
+                    }
+                }else{
+                    response.setMessage("해시태그 등록 실패");
+                    data.put("isAdd", false);
+                    response.setData(data);
+                }
+            }else{
+                if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
+                    response.setMessage("다이어리에 해시태그 등록 성공");
+                    data.put("isAdd", true);
+                    response.setData(data);
+                } else {
+                    response.setMessage("다이어리에 해시태그 등록 실패");
+                    data.put("isAdd", false);
+                    response.setData(data);
+                }
             }
         } catch (Exception e) {
             response.setSuccess(false);
