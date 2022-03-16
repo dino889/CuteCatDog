@@ -1,6 +1,5 @@
 package com.ssafy.ccd.src.network.viewmodel
 
-import android.provider.ContactsContract
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log

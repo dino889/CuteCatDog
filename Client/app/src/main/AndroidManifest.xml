@@ -30,6 +30,9 @@
         <activity
             android:name=".src.main.MainActivity"
             android:exported="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
         </activity>
     </application>
 

@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
@@ -28,7 +27,6 @@ import androidx.navigation.ui.NavigationUI
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
-import com.ssafy.ccd.src.main.ai.aiFragment
 import com.ssafy.ccd.src.main.ai.aiSelectFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.io.FileOutputStream
@@ -206,8 +204,9 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     // 이미지 검사
                     if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
-                        val source = ImageDecoder.createSource(this.contentResolver, mainViewModels.uploadedImageUri!!)
-                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+//                        val source = ImageDecoder.createSource(this.contentResolver, mainViewModels.uploadedImageUri!!)
+//                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+                        mainViewModels.uploadedImage = MediaStore.Images.Media.getBitmap(contentResolver, mainViewModels.uploadedImageUri)
 
                         // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
                         supportFragmentManager.beginTransaction()
