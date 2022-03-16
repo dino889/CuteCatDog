@@ -36,6 +36,7 @@ import com.ssafy.ccd.src.main.ai.aiFragment
 import com.ssafy.ccd.src.main.ai.aiSelectFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -230,17 +231,29 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
                 GALLERY_CODE -> {
-                    mainViewModels.uploadedImageUri = randomFileName().toUri()
-                        // 이미지 검사
-                        if (mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
-                        else {
-                            val source = ImageDecoder.createSource(
-                                this.contentResolver,
-                                mainViewModels.uploadedImageUri!!
-                            )
-                            mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+                    mainViewModels.uploadedImageUri = data?.data
+                    // 이미지 검사
+                    if (mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                    else {
+//                        val source = ImageDecoder.createSource(
+//                            this.contentResolver,
+//                            mainViewModels.uploadedImageUri!!
+//                        )
+//                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
+                                    contentResolver, mainViewModels.uploadedImageUri!!
+                                ))
+                            } else {
+                                mainViewModels.uploadedImage = MediaStore.Images.Media.getBitmap(
+                                    contentResolver, mainViewModels.uploadedImageUri)
+                            }
+                        } catch ( e: IOException) {
+                            e.printStackTrace();
                         }
                     }
+                }
 
             }
         }

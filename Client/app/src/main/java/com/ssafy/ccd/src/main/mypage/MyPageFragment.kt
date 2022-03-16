@@ -47,6 +47,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         binding.viewModel = mainViewModel
         initPetAdapter()
         initTabAdapter()
+
     }
 
     fun initPetAdapter(){

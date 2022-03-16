@@ -22,6 +22,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import java.lang.Exception
@@ -32,6 +33,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -63,6 +65,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     var gender = -1
     var isNeutered = -1
     var fileName = ""
+    var timeName = ""
     //firebase
     private var storageReference: StorageReference? = null
     private lateinit var contentResolver : ContentResolver
@@ -91,17 +94,19 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             loadImage()
         }
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
+            timeName = System.currentTimeMillis().toString();
+            fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+GetFileExtension(mainViewModel.uploadedImageUri)
             var pet = Pet(
                 birth = binding.addPetFragmentTietBirth.text.toString(),
-                gender = gender,
+                gender = 1,
                 id=0,
                 isNeutered = isNeutered,
-                kindId = kindId,
+                kindId = 1,
                 name = binding.addPetFragmentTietName.text.toString(),
-                photoPath ="${ApplicationClass.sharedPreferencesUtil.getUser().id}/${mainViewModel.uploadedImageUri}",
+                photoPath = fileName,
                 userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             )
-            addFireBase()
+
             insertPet(pet)
         }
 
@@ -123,7 +128,11 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
             childFragmentManager.popBackStack()
         }
-        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child("${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
+
+//        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child("${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
+
+        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+GetFileExtension(mainViewModel.uploadedImageUri))
+
         storageReferenceChild.putFile(mainViewModel.uploadedImageUri!!)
             .addOnSuccessListener{
                 storageReferenceChild.downloadUrl
@@ -137,8 +146,6 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         initKinds()
         selectedGender()
         selectedNeutered()
-//        storageReference = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}")
-//        storageReference = storage.reference
         binding.addPetFragmentTietBirth.setText(result)
         binding.addPetFragmentTietBirth.setOnClickListener {
             setBirth()
@@ -181,13 +188,18 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     }
     fun insertPet(pet:Pet){
         GlobalScope.launch {
+            Log.d(TAG, "insertPet: ${pet}")
             var response = PetService().petsCreateService(pet)
+            Log.d(TAG, "insertPet: ${response.code()}")
             val res = response.body()
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
                         runBlocking {
-                            mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+//                            mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+                            Log.d(TAG, "insertPet: ")
+                            addFireBase()
+                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
                         }
                     }else{
                         Log.d(TAG, "insertPet: ${res.message}")
@@ -199,7 +211,11 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         }
 
     }
-
+    fun GetFileExtension(uri: Uri?): String? {
+        val mimeTypeMap = MimeTypeMap.getSingleton()
+        contentResolver = mainActivity.contentResolver
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
     private fun setBirth() {
 
         val calendar: Calendar = Calendar.getInstance()

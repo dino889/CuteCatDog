@@ -1,6 +1,5 @@
 package com.ssafy.ccd.src.network.viewmodel
 
-import android.provider.ContactsContract
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -208,7 +207,8 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        var type = object:TypeToken<Pet?>() {}.type
+                        Log.d(TAG, "getPetDetailList: ${res.data}")
+                        var type = object:TypeToken<Pet>() {}.type
                         var pet = CommonUtils.parseDto<Pet>(res.data.get("pet")!!,type)
                         setPet(pet)
                     }else{
