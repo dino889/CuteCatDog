@@ -29,5 +29,15 @@ public class HashtagServiceImpl implements HashtagService {
     public List<HashtagDto> findHashtag(int diary_id) throws Exception {
         return sqlSession.getMapper(HashtagMapper.class).selectHashtag(diary_id);
     }
+
+    @Override
+    public boolean addHashtagtoDiary(int diary_id, String hashtag) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).insertHashtagDiary(diary_id, hashtag);
+    }
+
+    @Override
+    public List<HashtagDto> findHashtagList() throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).selectHashtagList();
+    }
     
 }

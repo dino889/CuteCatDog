@@ -42,7 +42,7 @@ public class DiaryController {
     @Autowired
     private PhotoService photoService;
 
-    @ApiOperation(value = "일기 등록", notes = "", response = Map.class)
+    @ApiOperation(value = "일기 등록", notes = "새로 작성한 일기를 등록한다.", response = Map.class)
     @PostMapping
     public ResponseEntity<Message> diaryAdd(
             @RequestBody @ApiParam(value = "일기(작성자, 제목, 내용, 작성 시간, 해시태그, 사진)", required = true) DiaryDto diaryDto)
@@ -71,7 +71,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "전체 일기 조회-최신순", notes = "", response = Map.class)
+    @ApiOperation(value = "전체 일기 조회-최신순", notes = "최신 날짜순으로 일기를 조회한다.", response = Map.class)
     @GetMapping
     public ResponseEntity<Message> diaryListDesc(@RequestParam(value = "user_id", required = true) int user_id)
             throws Exception {
@@ -103,7 +103,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "전체 일기 조회-오래된 순", notes = "", response = Map.class)
+    @ApiOperation(value = "전체 일기 조회-오래된 순", notes = "오래된 날짜 순으로 일기를 조회한다.", response = Map.class)
     @GetMapping("/asc")
     public ResponseEntity<Message> diaryListAsc(@RequestParam(value = "user_id", required = true) int user_id)
             throws Exception {
@@ -135,7 +135,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "날짜로 일기 조회", notes = "", response = Map.class)
+    @ApiOperation(value = "날짜로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. - end_date를 쓰면 기간으로, 비우면 날짜로 조회", response = Map.class)
     @GetMapping("/date")
     public ResponseEntity<Message> diaryListByDate(@RequestBody(required = true) DiaryParamDto diaryParamDto)
             throws Exception {
@@ -145,16 +145,15 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
             data.put("diarys", diaryService.findDiaryByDate(diaryParamDto));
+            response.setData(data);
             if (data.get("diarys").size()>0) {
                 for (DiaryDto diaryDto : data.get("diarys")) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
                 }
-                response.setData(data);
                 response.setMessage("일기 목록 조회 성공");
                 status = HttpStatus.OK;
             } else {
-                response.setData(data);
                 response.setMessage("일기 목록 없음");
                 status = HttpStatus.OK;
             }
@@ -167,7 +166,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "일기 삭제", notes = "", response = Map.class)
+    @ApiOperation(value = "일기 삭제", notes = "일기를 삭제한다.", response = Map.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Message> diaryRemove(@PathVariable(name = "id") int id)
             throws Exception {
@@ -196,7 +195,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "일기 상세 조회", notes = "", response = Map.class)
+    @ApiOperation(value = "일기 상세 조회", notes = "일기를 상세 조회한다.", response = Map.class)
     @GetMapping("/{id}")
     public ResponseEntity<Message> diaryDetail(@PathVariable(name = "id") int id)
             throws Exception {
@@ -226,7 +225,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "일기 수정", notes = "", response = Map.class)
+    @ApiOperation(value = "일기 수정", notes = "일기를 수정한다.", response = Map.class)
     @PutMapping
     public ResponseEntity<Message> diaryModify(
             @RequestBody @ApiParam(value = "일기 정보", required = true) DiaryDto diaryDto) throws Exception {

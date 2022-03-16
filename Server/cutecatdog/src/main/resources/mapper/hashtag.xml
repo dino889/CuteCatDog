@@ -9,12 +9,22 @@
         WHERE th.id = #{diary_id} AND th.hashtag_id = h.id
 	</select>
 
-  <insert id="insertHashtag" parameterType="String">
+	<select id="selectHashtagList" resultType="HashtagDto">
+		SELECT id, hashtag
+        FROM tbl_hashtag
+	</select>
+
+    <insert id="insertHashtag" parameterType="String">
 		INSERT INTO tbl_hashtag (hashtag)
 		VALUE (#{hashtag})
-  </insert>
+  	</insert>
 
-  <delete id="deleteHashtag" parameterType="int">
+  	<insert id="insertHashtagDiary" parameterType="String">
+		INSERT INTO tbl_hashtag_in_diary (diary_id, hashtag)
+		VALUE (#{diary_id}, #{hashtag})
+  	</insert>
+
+  	<delete id="deleteHashtag" parameterType="int">
 		DELETE FROM tbl_hashtag WHERE id = #{id}
 	</delete>
 
