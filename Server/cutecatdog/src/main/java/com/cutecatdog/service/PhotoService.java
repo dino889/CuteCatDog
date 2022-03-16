@@ -3,10 +3,11 @@ package com.cutecatdog.service;
 import java.util.List;
 
 import com.cutecatdog.model.diary.PhotoDto;
+import com.cutecatdog.model.diary.PhotoParamDto;
 
 public interface PhotoService {
     
-    public boolean addPhoto(int diary_id, String photo) throws Exception;
+    public boolean addPhoto(PhotoParamDto paramDto) throws Exception;
 
     public boolean removePhoto(int id) throws Exception;
 
