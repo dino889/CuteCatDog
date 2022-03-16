@@ -13,7 +13,7 @@ public interface PetMapper {
 
   public boolean insertPet(PetDto petDto) throws SQLException;
 
-  public List<PetDto> selectPetDetail(int id) throws SQLException;
+  public PetDto selectPetDetail(int id) throws SQLException;
 
   public boolean updatePet(PetDto petDto) throws SQLException;
 

@@ -25,7 +25,7 @@ public class PetServiceImpl implements PetService{
   }
 
   @Override
-  public List<PetDto> findPetDetail(int id) throws Exception {
+  public PetDto findPetDetail(int id) throws Exception {
     return sqlSession.getMapper(PetMapper.class).selectPetDetail(id);
   }
 

@@ -9,7 +9,7 @@ public interface PetService {
 
   public boolean addPet(PetDto petDto) throws Exception;
 
-  public List<PetDto> findPetDetail(int id) throws Exception;
+  public PetDto findPetDetail(int id) throws Exception;
 
   public boolean modifyPet(PetDto petDto) throws Exception;
 

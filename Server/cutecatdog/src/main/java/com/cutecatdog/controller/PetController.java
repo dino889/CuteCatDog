@@ -82,9 +82,11 @@ public class PetController {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 		List<PetDto> pets = new ArrayList<>();
-		pets = petService.findPetDetail(id);
-		HashMap<String,List<PetDto>> map = new HashMap<>();
-		map.put("pet", pets);
+		// pets = petService.findPetDetail(id);
+		// HashMap<String,List<PetDto>> map = new HashMap<>();
+		PetDto pet = petService.findPetDetail(id);
+		HashMap<String, PetDto> map = new HashMap<>();
+		map.put("pet", pet);
 		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
