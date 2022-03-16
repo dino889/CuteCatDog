@@ -36,6 +36,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_know_board.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_local_board.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_login.xml" value="0.5" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_my_page.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_my_schedule.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_qna_board.xml" value="0.5" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_share_board.xml" value="0.30416666666666664" />
@@ -67,7 +68,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

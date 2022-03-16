@@ -89,28 +89,20 @@
                             android:textSize="18sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_space1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
-                        <Space
-                            android:id="@+id/myPageFragment_space1"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_tvPetAgeGender"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_tvPetName" />
 
                         <TextView
                             android:id="@+id/myPageFragment_tvPetAgeGender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(viewModel.pet.gender)}"
+                            app:myPagePetInfo = "@{viewModel.pet}"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_space1" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -127,16 +119,8 @@
                             android:textAlignment="viewStart"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_space2"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
-                        <Space
-                            android:id="@+id/myPageFragment_space2"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_tvPetBirth"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_tvBirth" />
 
                         <TextView
                             android:id="@+id/myPageFragment_tvPetBirth"
@@ -147,7 +131,6 @@
                             android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_space2"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -166,16 +149,8 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_space3"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
-                        <Space
-                            android:id="@+id/myPageFragment_space3"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_tvPetBreed"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_tvBreed" />
 
                         <TextView
                             android:id="@+id/myPageFragment_tvPetBreed"
@@ -186,7 +161,6 @@
                             android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_space3"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -203,27 +177,18 @@
                             android:textAlignment="viewStart"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_space4"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
-                        <Space
-                            android:id="@+id/myPageFragment_space4"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            app:layout_constraintEnd_toStartOf="@+id/myPageFragment_tvPetNeutering"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_tvNeutering" />
 
                         <TextView
                             android:id="@+id/myPageFragment_tvPetNeutering"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(viewModel.pet.isNeutered)}"
+                            app:myPageInfoNeut = "@{viewModel.pet.isNeutered}"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/myPageFragment_space4"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

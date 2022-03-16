@@ -40,11 +40,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+            mainViewModel.myPetsList.value?.get(0)?.let { mainViewModel.getPetDetailList(it.id) }
         }
-        binding.viewModel = mainViewModel
         initPetAdapter()
         initTabAdapter()
 
@@ -74,6 +74,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     //해당 반려동물 정보 불러오기
                     runBlocking{
                         mainViewModel.getPetDetailList(pet.id)
+                        binding.viewModel = mainViewModel
+                        Log.d(TAG, "onClick: ${pet.id}")
                     }
                 }
 

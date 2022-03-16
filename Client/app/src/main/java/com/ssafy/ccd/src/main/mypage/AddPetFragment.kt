@@ -119,19 +119,11 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
     }
     fun addFireBase(){
-//        if(storageReference == null) {
-//            Log.e("ERROR", "Firebase에서 문제가 발생하였습니다.")
-//            showCustomToast("Firebase에서 문제가 발생하였습니다.")
-//            childFragmentManager.popBackStack()
-//        }
-
         if(mainViewModel.uploadedImageUri == null){
             Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
             showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
             childFragmentManager.popBackStack()
         }
-
-//        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child("${System.currentTimeMillis().toString()}.${mainViewModel.uploadedImageUri}")
 
         val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+GetFileExtension(mainViewModel.uploadedImageUri))
 
@@ -155,15 +147,16 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     }
     private fun initKinds(){
         var kinds = mutableListOf<String>()
-        for(item in 0..mainViewModel.kinds.value!!.size){
-//            var name = mainViewModel.kinds.value!![item].name
-//            kinds.add(name)
+        for(item in 0..mainViewModel.kinds.value!!.size-1){
+            var name = mainViewModel.kinds.value!![item].name
+            kinds.add(name)
         }
+        Log.d(TAG, "initKinds: ${kinds}")
         var adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_dropdown_item_1line,kinds)
         binding.addPetFragmentAutoKind.setAdapter(adapter)
 
         binding.addPetFragmentAutoKind.setOnItemClickListener { parent, view, position, id ->
-//            kindId = mainViewModel.kinds.value!![position].id
+            kindId = mainViewModel.kinds.value!![position].id
         }
     }
     private fun selectedGender() {
