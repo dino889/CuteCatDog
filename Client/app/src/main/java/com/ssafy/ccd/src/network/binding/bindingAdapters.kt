@@ -15,6 +15,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Pet
+import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import java.lang.Exception
 import java.time.LocalDate
@@ -92,4 +93,18 @@ fun bindPetConvertNeutering(textView:TextView, neuter:Int){
     }else{
         textView.text = "X"
     }
+}
+
+@BindingAdapter("homePetListData")
+fun bindHomePetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
+    var adapter = recyclerView.adapter as HomeProfilePetsAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as HomeProfilePetsAdapter
+    }
+
+    adapter.list = data as MutableList<Pet>
+    adapter.notifyDataSetChanged()
 }

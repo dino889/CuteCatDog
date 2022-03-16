@@ -6,12 +6,13 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="#FFD84E"
+        android:id="@+id/fragmetHome_btn_add"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/home_pet_footer_background"
         android:drawableTop="@drawable/home_button_back_image"
-        android:elevation="20dp"
         android:gravity="center"
         android:text="새로운 아이와 \n 함께 하시나요?"
         android:textAlignment="center"
