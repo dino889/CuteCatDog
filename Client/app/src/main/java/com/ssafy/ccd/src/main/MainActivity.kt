@@ -8,12 +8,14 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
@@ -21,26 +23,35 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
 import com.ssafy.ccd.src.main.ai.aiSelectFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 
 class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     val TAG = "SSAFY"
+
+    // 카메라 모드
+    private var cameraMode = 0
 
     // 카메라, 저장장소 권한
     private val CAMERA = arrayOf(Manifest.permission.CAMERA)
     private val STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val CAMERA_CODE = 98
     private val STORAGE_CODE = 99
-
+    private val GALLERY_CODE = 10
     // Dialog
     private lateinit var photoDialog:Dialog
     private lateinit var photoDialogView: View
@@ -112,7 +123,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
 
         photoDialog.findViewById<ConstraintLayout>(R.id.dialog_ai_BtnUpload).setOnClickListener {
-            getAlbum()
+            getAlbum(STORAGE_CODE)
         }
     }
 
@@ -159,6 +170,14 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             }
 
             STORAGE_CODE -> {
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("저장소 권한을 승인해 주세요.")
+                    }
+                }
+            }
+
+            GALLERY_CODE -> {
                 for (grant in grantResults) {
                     if (grant != PackageManager.PERMISSION_GRANTED) {
                         showCustomToast("저장소 권한을 승인해 주세요.")
@@ -216,6 +235,31 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         photoDialog.dismiss()
                     }
                 }
+                GALLERY_CODE -> {
+                    mainViewModels.uploadedImageUri = data?.data
+                    // 이미지 검사
+                    if (mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                    else {
+//                        val source = ImageDecoder.createSource(
+//                            this.contentResolver,
+//                            mainViewModels.uploadedImageUri!!
+//                        )
+//                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
+                                    contentResolver, mainViewModels.uploadedImageUri!!
+                                ))
+                            } else {
+                                mainViewModels.uploadedImage = MediaStore.Images.Media.getBitmap(
+                                    contentResolver, mainViewModels.uploadedImageUri)
+                            }
+                        } catch ( e: IOException) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -287,12 +331,12 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
      * @author Jueun
      * 앨범에서 사진을 가져오는 함수
      */
-    fun getAlbum()
+    fun getAlbum(code:Int)
     {
         if (checkPermission(STORAGE, STORAGE_CODE)) {
             val itt = Intent(Intent.ACTION_PICK)
             itt.type = MediaStore.Images.Media.CONTENT_TYPE
-            startActivityForResult(itt, STORAGE_CODE)
+            startActivityForResult(itt, code)
         }
     }
 

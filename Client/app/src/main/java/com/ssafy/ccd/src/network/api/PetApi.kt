@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface PetApi {
     //반려동물 등록
     @POST("/pets")
-    suspend fun petsCreate(@Body pet: Pet): Response<Message>
+    suspend fun petsCreate(@Body petDto: Pet): Response<Message>
 
     //반려동물 전체목록
     @GET("/pets")
