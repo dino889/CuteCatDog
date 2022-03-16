@@ -14,4 +14,15 @@
 		FROM tbl_history
     WHERE datetime &gt;= #{startdate}  AND datetime &lt; #{enddate}
   </select>
+
+  <insert id="insertHistory" parameterType="HistoryRequestDto">
+    INSERT INTO tbl_history (pet_id,emotion,datetime)
+		VALUES (#{petId},#{emotion},#{datetime})
+  </insert>
+
+  <delete id="deleteHistory" parameterType="int">
+    DELETE 
+    FROM tbl_history
+    WHERE id = #{id}
+  </delete>
 </mapper>
