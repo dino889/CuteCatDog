@@ -129,7 +129,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     fun initPetAdapter(){
         mainViewModel.myPetsList.observe(viewLifecycleOwner, {
-            Log.d(TAG, "initPetAdapter: ${it}")
             petAdapter = PetListRecyclerviewAdapter()
             petAdapter.petList = it
 

@@ -69,9 +69,9 @@ class HomeProfilePetsAdapter(var list:MutableList<Pet>):RecyclerView.Adapter<Hom
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if(holder is ItemViewHolder){
-            holder.bind(list[position-1])
+            holder.bind(list[position])
             holder.itemView.setOnClickListener {
-                itemClickListener.onClick(it,position-1,list[position-1])
+                itemClickListener.onClick(it, position, list[position])
             }
         }
         if(holder is FooterViewHolder){
@@ -82,12 +82,12 @@ class HomeProfilePetsAdapter(var list:MutableList<Pet>):RecyclerView.Adapter<Hom
     }
 
     override fun getItemCount(): Int {
-        return list.size+1
+        return list.size + 1
     }
 
     override fun getItemViewType(position: Int): Int =
         when(position){
-            0 -> FOOTER
+            list.size -> FOOTER
             else -> ITEM
         }
 

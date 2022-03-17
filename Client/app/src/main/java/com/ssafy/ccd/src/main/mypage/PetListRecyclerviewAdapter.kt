@@ -38,32 +38,39 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
             }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        if(holder is ItemViewHolder){
-            holder.onBind(petList[position-1])
-            holder.itemView.setOnClickListener {
-                Log.d(TAG, "onBindViewHolder: itemView")
-                        itemClickListener.onClick(it,position-1, petList[position-1])
+//        if(position == petList.size + 1) {
+            if(holder is FooterViewHolder){
+                holder.itemView.findViewById<ImageButton>(R.id.fragment_calender_add_petsBtn).setOnClickListener {
+                    addClickListener.onClick(it,position)
+                }
             }
-        }
-        if(holder is FooterViewHolder){
-            holder.itemView.findViewById<ImageButton>(R.id.fragment_calender_add_petsBtn).setOnClickListener {
-                addClickListener.onClick(it,position)
+//        } else {
+            else if(holder is ItemViewHolder){
+                holder.onBind(petList[position])
+                holder.itemView.setOnClickListener {
+                    Log.d(TAG, "onBindViewHolder: itemView")
+                    itemClickListener.onClick(it,position, petList[position])
+                }
             }
-        }
+//        }
     }
 
     override fun getItemCount(): Int {
         return petList.size + 1
     }
 
-    override fun getItemViewType(position: Int): Int =
-        when(position){
-            0 -> FOOTER
-//            petList.size+1 -> FOOTER
-            else -> ITEM
+    override fun getItemViewType(position: Int): Int {
+        return if(position == petList.size) {
+            FOOTER
+        } else {
+            ITEM
         }
+    }
+
     open class BaseViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView)
+
     class FooterViewHolder(itemView:View):BaseViewHolder(itemView)
+
     class ItemViewHolder(itemView:View):BaseViewHolder(itemView) {
         fun onBind(data:Pet){
 
@@ -95,6 +102,7 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
 
         }
     }
+
     interface ItemClickListener{
         fun onClick(view: View, position: Int, pet: Pet)
     }
@@ -104,10 +112,13 @@ class PetListRecyclerviewAdapter() : RecyclerView.Adapter<PetListRecyclerviewAda
     fun setItemClickListener(itemClickListener: ItemClickListener){
         this.itemClickListener = itemClickListener
     }
+
     interface  AddClickListener{
         fun onClick(view:View, position:Int)
     }
+
     private lateinit var addClickListener: AddClickListener
+
     fun setAddClickListener(addClickListener: AddClickListener){
         this.addClickListener = addClickListener
     }
