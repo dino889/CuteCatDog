@@ -5,4 +5,5 @@
 
 
     <string name="google_login_key">437810809249-5cfg3fpnjsmktlda6s2b9tce8a3iasr2.apps.googleusercontent.com</string>
+    <string name="kakao_nativeapp_key">78b660953c918503e1a723afddb4d6e8</string>
 </resources>

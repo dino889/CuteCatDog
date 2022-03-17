@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.google.android.gms.common.util.Base64Utils
+import com.kakao.sdk.common.util.Utility
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.ApplicationClass.Companion.sharedPreferencesUtil
 import com.ssafy.ccd.src.network.service.UserService
@@ -57,6 +58,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 .replace(R.id.frame_login_layout, LoginFragment())
                 .commit()
         }
+
+
+        // kakao 플랫폼 키 해시 등록
+//        val keyHash = Utility.getKeyHash(this)
+//        Log.d("kakaoKeyHash", "onCreate: $keyHash")
 
     }
 

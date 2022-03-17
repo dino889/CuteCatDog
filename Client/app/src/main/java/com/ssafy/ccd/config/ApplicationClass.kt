@@ -7,6 +7,8 @@ import android.security.keystore.KeyProperties
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.kakao.sdk.common.KakaoSdk
+import com.ssafy.ccd.R
 import com.ssafy.ccd.config.intercepter.AddCookiesInterceptor
 import com.ssafy.ccd.config.intercepter.ReceivedCookiesInterceptor
 import com.ssafy.ccd.config.intercepter.XAccessTokenInterceptor
@@ -72,6 +74,9 @@ class ApplicationClass : Application() {
 
         kpg.initialize(parameterSpec)
         val kp = kpg.generateKeyPair()
+
+        // Kakao SDK 초기화
+        KakaoSdk.init(this, getString(R.string.kakao_nativeapp_key))
     }
 
 }
