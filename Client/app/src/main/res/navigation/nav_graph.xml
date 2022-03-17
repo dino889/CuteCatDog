@@ -26,6 +26,9 @@
         android:name="com.ssafy.ccd.src.main.diary.DiaryFragment"
         android:label="fragment_diary"
         tools:layout="@layout/fragment_diary">
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
     </fragment>
 
     <fragment
@@ -60,6 +63,15 @@
         <action
             android:id="@+id/action_addPetFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/diaryWriteFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryWriteFragment"
+        android:label="fragment_diary_write"
+        tools:layout="@layout/fragment_diary_write" >
+        <action
+            android:id="@+id/action_diaryWriteFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
     </fragment>
 
 </navigation>
