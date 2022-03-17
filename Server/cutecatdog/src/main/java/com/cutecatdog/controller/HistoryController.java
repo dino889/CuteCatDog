@@ -18,62 +18,63 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-@RestController 
+@RestController
 @RequestMapping("/history")
 @CrossOrigin
 @Api("이전 정보 보기 컨트롤러  API V1")
 public class HistoryController {
-  
-  @Autowired
-  private HistoryService historyService;
-  
-  @ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
-  @GetMapping()
-  public ResponseEntity<Message> historyList(@RequestParam int petId) throws Exception{
-    HttpStatus status = HttpStatus.OK;
+
+	@Autowired
+	private HistoryService historyService;
+
+	@ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
+	@GetMapping()
+	public ResponseEntity<Message> historyList(@RequestParam int petId) throws Exception {
+		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 
-    List<HistoryDto> historys = new ArrayList();
+		List<HistoryDto> historys = new ArrayList<HistoryDto>();
 		historys = historyService.findHistory(petId);
-		HashMap<String,List<HistoryDto>> map = new HashMap<>();
+		HashMap<String, List<HistoryDto>> map = new HashMap<>();
 		map.put("historys", historys);
 		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
-  }
+	}
 
-  @ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
-  @GetMapping("{pet_id}")
-  public ResponseEntity<Message> historyList(@PathVariable("pet_id") int petId, @RequestParam String startdate, String enddate ) throws Exception{
-    HttpStatus status = HttpStatus.OK;
+	@ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
+	@GetMapping("{pet_id}")
+	public ResponseEntity<Message> historyList(@PathVariable("pet_id") int petId, @RequestParam String startdate,
+			String enddate) throws Exception {
+		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-    HistoryTimeDto historyTimeDto = new HistoryTimeDto();
-    historyTimeDto.setEnddate(enddate);
-    historyTimeDto.setStartdate(startdate);
-    historyTimeDto.setPetId(petId);
-    List<HistoryDto> historys = new ArrayList<>();
+		HistoryTimeDto historyTimeDto = new HistoryTimeDto();
+		historyTimeDto.setEnddate(enddate);
+		historyTimeDto.setStartdate(startdate);
+		historyTimeDto.setPetId(petId);
+		List<HistoryDto> historys = new ArrayList<>();
 		historys = historyService.findHistoryTime(historyTimeDto);
-		HashMap<String,List<HistoryDto>> map = new HashMap<>();
+		HashMap<String, List<HistoryDto>> map = new HashMap<>();
 		map.put("history", historys);
 		message.setData(map);
 		message.setSuccess(true);
 		return new ResponseEntity<Message>(message, status);
-  }
+	}
 
-  @ApiOperation(value = "반려동물 기록 등록", notes = "자신의 반려 동물의 기록을 등록한다.", response = List.class)
-  @PostMapping()
-  public ResponseEntity<Message> historyAdd(@RequestBody HistoryRequestDto historyRequestDto) throws Exception {
-    Message message = new Message();
+	@ApiOperation(value = "반려동물 기록 등록", notes = "자신의 반려 동물의 기록을 등록한다.", response = List.class)
+	@PostMapping()
+	public ResponseEntity<Message> historyAdd(@RequestBody HistoryRequestDto historyRequestDto) throws Exception {
+		Message message = new Message();
 		HttpStatus status = null;
-		HashMap <String,Boolean> map = new HashMap<>();
+		HashMap<String, Boolean> map = new HashMap<>();
 		if (historyService.addHistroy(historyRequestDto)) {
 			status = HttpStatus.OK;
 			message.setSuccess(true);
@@ -86,15 +87,15 @@ public class HistoryController {
 		message.setData(map);
 		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
-  }
+	}
 
-  @ApiOperation(value = "반려동물 기록 삭제", notes = "반려 동물의 기록을 id 값으로 삭제한다.", response = List.class)
+	@ApiOperation(value = "반려동물 기록 삭제", notes = "반려 동물의 기록을 id 값으로 삭제한다.", response = List.class)
 	@DeleteMapping("{history_id}")
-	public ResponseEntity<Message> historyRemove(@PathVariable("history_id") int history_id) throws Exception{
+	public ResponseEntity<Message> historyRemove(@PathVariable("history_id") int history_id) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		HashMap <String,Boolean> map = new HashMap<>();
-		if(historyService.removeHistory(history_id)){
+		HashMap<String, Boolean> map = new HashMap<>();
+		if (historyService.removeHistory(history_id)) {
 			status = HttpStatus.OK;
 			message.setSuccess(true);
 			map.put("isSuccess", true);

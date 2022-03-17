@@ -29,8 +29,8 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 @Api("반려 동물 컨트롤러  API V1")
 public class PetController {
-  @Autowired
-  private PetService petService;
+	@Autowired
+	private PetService petService;
 
 	@ApiOperation(value = "반려동물 전체 목록", notes = "모든 반려동물들의 정보를 반환한다.", response = List.class)
 	@GetMapping()
@@ -39,7 +39,7 @@ public class PetController {
 		Message message = new Message();
 		List<PetDto> pets = new ArrayList<>();
 		pets = petService.findPet();
-		HashMap<String,List<PetDto>> map = new HashMap<>();
+		HashMap<String, List<PetDto>> map = new HashMap<>();
 		map.put("pets", pets);
 		message.setData(map);
 		message.setSuccess(true);
@@ -47,11 +47,11 @@ public class PetController {
 	}
 
 	@ApiOperation(value = "반려동물 등록", notes = "자신의 반려 동물을 등록한다.", response = List.class)
-  @PostMapping("")
-  public ResponseEntity<Message> petAdd(@RequestBody PetDto petDto) throws Exception {
-    Message message = new Message();
+	@PostMapping("")
+	public ResponseEntity<Message> petAdd(@RequestBody PetDto petDto) throws Exception {
+		Message message = new Message();
 		HttpStatus status = null;
-		HashMap <String,Boolean> map = new HashMap<>();
+		HashMap<String, Boolean> map = new HashMap<>();
 		if (petService.addPet(petDto)) {
 			status = HttpStatus.OK;
 			map.put("isSuccess", true);
@@ -62,16 +62,16 @@ public class PetController {
 		message.setSuccess(false);
 		map.put("isSuccess", false);
 		message.setData(map);
-	status = HttpStatus.OK;
+		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
-  }
+	}
 
-  @ApiOperation(value = "반려동물 정보 수정", notes = "자신의 반려 동물을 수정한다.", response = List.class)
-  @PutMapping("")
-  public ResponseEntity<Message> petModify(@RequestBody PetDto petDto) throws Exception {
-    Message message = new Message();
+	@ApiOperation(value = "반려동물 정보 수정", notes = "자신의 반려 동물을 수정한다.", response = List.class)
+	@PutMapping("")
+	public ResponseEntity<Message> petModify(@RequestBody PetDto petDto) throws Exception {
+		Message message = new Message();
 		HttpStatus status = null;
-		HashMap <String,Boolean> map = new HashMap<>();
+		HashMap<String, Boolean> map = new HashMap<>();
 		if (petService.modifyPet(petDto)) {
 			map.put("isSuccess", true);
 			message.setData(map);
@@ -84,9 +84,9 @@ public class PetController {
 		message.setData(map);
 		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
-  }
+	}
 
-  @ApiOperation(value = "반려동물 조회", notes = "반려 동물의 id 값으로 조회한다.(남의 아이도 볼 수 있다)", response = List.class)
+	@ApiOperation(value = "반려동물 조회", notes = "반려 동물의 id 값으로 조회한다.(남의 아이도 볼 수 있다)", response = List.class)
 	@GetMapping("{id}")
 	public ResponseEntity<Message> petDetails(@PathVariable("id") int id) throws Exception {
 		HttpStatus status = HttpStatus.OK;
@@ -102,13 +102,13 @@ public class PetController {
 		return new ResponseEntity<Message>(message, status);
 	}
 
-  @ApiOperation(value = "반려동물 삭제", notes = "반려 동물의 id 값으로 삭제한다.", response = List.class)
+	@ApiOperation(value = "반려동물 삭제", notes = "반려 동물의 id 값으로 삭제한다.", response = List.class)
 	@DeleteMapping("{id}")
-	public ResponseEntity<Message> petRemove(@PathVariable("id") int id) throws Exception{
+	public ResponseEntity<Message> petRemove(@PathVariable("id") int id) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		HashMap <String,Boolean> map = new HashMap<>();
-		if(petService.removePet(id)){
+		HashMap<String, Boolean> map = new HashMap<>();
+		if (petService.removePet(id)) {
 			map.put("isSuccess", true);
 			message.setData(map);
 			message.setSuccess(true);
@@ -120,14 +120,14 @@ public class PetController {
 		return new ResponseEntity<Message>(message, status);
 	}
 
-  @ApiOperation(value = "반려동물 조회", notes = "반려 동물의 userId 값으로 조회한다.(내 아이만 볼 수 있다)", response = List.class)
+	@ApiOperation(value = "반려동물 조회", notes = "반려 동물의 userId 값으로 조회한다.(내 아이만 볼 수 있다)", response = List.class)
 	@GetMapping("my/{userId}")
 	public ResponseEntity<Message> mypetDetails(@PathVariable("userId") int userId) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 		List<PetDto> pets = new ArrayList<>();
-		HashMap<String,List<PetDto>> map = new HashMap<>();
- 		pets = petService.findMyPetDetail(userId);
+		HashMap<String, List<PetDto>> map = new HashMap<>();
+		pets = petService.findMyPetDetail(userId);
 		map.put("pets", pets);
 		message.setData(map);
 		message.setSuccess(true);
