@@ -8,12 +8,20 @@ import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
@@ -21,7 +29,6 @@ import com.ssafy.ccd.databinding.FragmentLoginBinding
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.User
 import kotlinx.coroutines.runBlocking
-import com.google.gson.reflect.TypeToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
@@ -44,6 +51,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
     var mGoogleSignInClient: GoogleSignInClient? = null
 
 
+    // facebook 로그인
+    private var callbackManager: CallbackManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -59,9 +69,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             loginActivity.openFragment(3)
         }
 
+        callbackManager = CallbackManager.Factory.create()
+
         loginBtnClickEvent()
         googleLoginBtnClickEvent()
         kakaoLoginBtnClickEvent()
+        facebookLoginBtnClickEvent()
     }
 
     private fun loginBtnClickEvent() {
@@ -100,148 +113,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             Log.d(TAG, "loginBtnClickEvent: ${result.message}")
         }
     }
-
-
-    // ---------------------------------------------------------------------------------------------
-    private fun googleLoginBtnClickEvent() {
-        binding.loginFragmentBtnGoogle.setOnClickListener {
-            initAuth()
-        }
-    }
-    /**
-     * sns Login - Google 로그인
-     */
-    // 인증 초기화
-    private fun initAuth() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.google_login_key))
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-
-        mAuth = FirebaseAuth.getInstance()
-        signIn()
-    }
-
-    // 구글 로그인 창을 띄우는 작업
-    private fun signIn() {
-        val signInIntent = mGoogleSignInClient!!.signInIntent
-        requestActivity.launch(signInIntent)
-    }
-
-    // 구글 인증 결과 획득 후 동작 처리
-    private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val data = it.data
-
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
-    }
-
-    // 구글 인증 결과 성공 여부에 따른 처리
-    private fun firebaseAuthWithGoogle(idToken: String?) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    val user = mAuth.currentUser
-                    if(user != null) {
-                        // email nickname pw photo
-                        val email = user.email.toString()
-                        val nickname = user.displayName.toString()
-                        val uid = user.uid
-                        val image = user.photoUrl.toString()
-
-                        val newUser = User(email, nickname, uid, image, "google")
-                        Log.d(TAG, "firebaseAuthWithGoogle: $newUser")
-                        existEmailChk(newUser)
-                    }
-                } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-
-    /**
-     * sns Login - Kakao
-     */
-    private fun kakaoLoginBtnClickEvent() {
-        val disposables = CompositeDisposable()
-        binding.loginFragmentBtnKakao.setOnClickListener {
-            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
-                UserApiClient.rx.loginWithKakaoTalk(requireContext())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .onErrorResumeNext { error ->
-                        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-                        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                            Single.error(error)
-                        } else {
-                            // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                            UserApiClient.rx.loginWithKakaoAccount(requireContext())
-                        }
-                    }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ token ->
-                        Log.i(TAG, "로그인 성공 ${token.accessToken}")
-                        kakaoLogin()
-                    }, { error ->
-                        Log.e(TAG, "로그인 실패", error)
-                    }).addTo(disposables)
-            } else {
-                UserApiClient.rx.loginWithKakaoAccount(requireContext())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ token ->
-                        Log.i(TAG, "로그인 성공 ${token.accessToken}")
-                        kakaoLogin()
-                    }, { error ->
-                        Log.e(TAG, "로그인 실패", error)
-                    }).addTo(disposables)
-            }
-        }
-    }
-    // ---------------------------------------------------------------------------------------------
-    private fun kakaoLogin() {
-        val disposables = CompositeDisposable()
-        // 사용자 정보 요청 (기본)
-        UserApiClient.rx.me()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ user ->
-//                Log.i(TAG, "사용자 정보 요청 성공" +
-//                        "\n회원번호: ${user.id}" +  // pw
-//                        "\n이메일: ${user.kakaoAccount?.email}" +  // id, email
-//                        "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +  // nickname
-//                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")   // image
-
-                val email = user.kakaoAccount?.email.toString()
-                val uid = user.id.toString()
-                val nickname = user.kakaoAccount?.profile?.nickname.toString()
-                val image = user.kakaoAccount?.profile?.thumbnailImageUrl.toString()
-
-                val newUser = User(email, nickname, uid, image, "kakao")
-                existEmailChk(newUser)
-
-            }, { error ->
-                Log.e(TAG, "사용자 정보 요청 실패", error)
-            })
-            .addTo(disposables)
-    }
-
 
     /**
      * email 중복 체크
@@ -295,6 +166,218 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
         } else {
             showCustomToast("입력 값을 다시 확인해 주세요.")
         }
+    }
+
+    // firebase auth 인증 초기화
+    private fun initAuth() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_login_key))
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+        mAuth = FirebaseAuth.getInstance()
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * sns Login - Google 로그인
+     */
+    private fun googleLoginBtnClickEvent() {
+        binding.loginFragmentBtnGoogle.setOnClickListener {
+            initAuth()
+            signIn()
+        }
+    }
+
+    // 구글 로그인 창을 띄우는 작업
+    private fun signIn() {
+        val signInIntent = mGoogleSignInClient!!.signInIntent
+        requestActivity.launch(signInIntent)
+    }
+
+    // 구글 인증 결과 획득 후 동작 처리
+    private val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val data = it.data
+
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e)
+            }
+        }
+    }
+
+    // 구글 인증 결과 성공 여부에 따른 처리
+    private fun firebaseAuthWithGoogle(idToken: String?) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = mAuth.currentUser
+                    if(user != null) {
+                        // email nickname pw photo
+                        val email = user.email.toString()
+                        val nickname = user.displayName.toString()
+                        val uid = user.uid
+                        val image = user.photoUrl.toString()
+
+                        val newUser = User(email, nickname, uid, image, "google")
+                        Log.d(TAG, "firebaseAuthWithGoogle: $newUser")
+                        existEmailChk(newUser)
+                    }
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                }
+            }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * sns Login - Kakao
+     */
+    private fun kakaoLoginBtnClickEvent() {
+        val disposables = CompositeDisposable()
+        binding.loginFragmentBtnKakao.setOnClickListener {
+            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
+                UserApiClient.rx.loginWithKakaoTalk(requireContext())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .onErrorResumeNext { error ->
+                        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                            Single.error(error)
+                        } else {
+                            // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                            UserApiClient.rx.loginWithKakaoAccount(requireContext())
+                        }
+                    }.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ token ->
+                        Log.i(TAG, "로그인 성공 ${token.accessToken}")
+                        kakaoLogin()
+                    }, { error ->
+                        Log.e(TAG, "로그인 실패", error)
+                    }).addTo(disposables)
+            } else {
+                UserApiClient.rx.loginWithKakaoAccount(requireContext())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ token ->
+                        Log.i(TAG, "로그인 성공 ${token.accessToken}")
+                        kakaoLogin()
+                    }, { error ->
+                        Log.e(TAG, "로그인 실패", error)
+                    }).addTo(disposables)
+            }
+        }
+    }
+
+    private fun kakaoLogin() {
+        val disposables = CompositeDisposable()
+        // 사용자 정보 요청 (기본)
+        UserApiClient.rx.me()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ user ->
+//                Log.i(TAG, "사용자 정보 요청 성공" +
+//                        "\n회원번호: ${user.id}" +  // pw
+//                        "\n이메일: ${user.kakaoAccount?.email}" +  // id, email
+//                        "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +  // nickname
+//                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")   // image
+
+                val email = user.kakaoAccount?.email.toString()
+                val uid = user.id.toString()
+                val nickname = user.kakaoAccount?.profile?.nickname.toString()
+                val image = user.kakaoAccount?.profile?.thumbnailImageUrl.toString()
+
+                val newUser = User(email, nickname, uid, image, "kakao")
+                existEmailChk(newUser)
+
+            }, { error ->
+                Log.e(TAG, "사용자 정보 요청 실패", error)
+            })
+            .addTo(disposables)
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * sns Login - Facebook
+     */
+    private fun facebookLoginBtnClickEvent() {
+        binding.loginFragmentBtnFacebook.setOnClickListener {
+            initAuth()
+            facebookLogin()
+        }
+    }
+
+    private fun facebookLogin() {
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, listOf("email", "public_profile"))
+
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
+                    if (result?.accessToken != null) {
+                        // facebook 계정 정보를 firebase 서버에게 전달(로그인)
+                        val accessToken = result.accessToken
+                        firebaseAuthWithFacebook(accessToken)
+                    } else {
+                        Log.d("Facebook", "Fail Facebook Login")
+                    }
+                }
+
+                override fun onCancel() {
+                    //취소가 된 경우 할일
+                }
+
+                override fun onError(error: FacebookException?) {
+                    //에러가 난 경우 할일
+                }
+            })
+    }
+
+    private fun firebaseAuthWithFacebook(accessToken: AccessToken?) {
+        // AccessToken 으로 Facebook 인증
+        val credential = FacebookAuthProvider.getCredential(accessToken!!.token)
+
+        mAuth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = mAuth.currentUser
+                    if(user != null) {
+                        // email nickname pw photo
+                        val email = user.email.toString()
+                        val nickname = user.displayName.toString()
+                        val uid = user.uid
+                        val image = user.photoUrl.toString()
+
+                        val newUser = User(email, nickname, uid, image, "facebook")
+                        existEmailChk(newUser)
+                        Log.d(TAG, "signInWithCredential:success $newUser")
+                    }
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    showCustomToast("Authentication failed.")
+                }
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

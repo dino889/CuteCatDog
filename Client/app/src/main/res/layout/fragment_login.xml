@@ -81,7 +81,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/fragment_login_forgot"
-                app:layout_constraintStart_toEndOf="@+id/checkBox"
+                app:layout_constraintStart_toEndOf="@+id/loginFragment_chkb"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -217,14 +217,21 @@
                 app:layout_constraintStart_toEndOf="@+id/loginFragment_btnGoogle"
                 app:layout_constraintTop_toTopOf="parent" />
 
+<!--            <com.facebook.login.widget.LoginButton-->
+<!--                android:id="@+id/login_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginTop="30dp"-->
+<!--                android:layout_marginBottom="30dp" />-->
             <ImageButton
-                android:id="@+id/loginFragment_btnNaver"
+                android:id="@+id/loginFragment_btnFacebook"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                android:src="@drawable/naver"
+                android:src="@drawable/ic_facebook_btn_512"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/loginFragment_btnKakao"

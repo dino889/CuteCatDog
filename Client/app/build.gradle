@@ -110,10 +110,14 @@ dependencies {
 
     // google login
     implementation 'com.google.android.gms:play-services-auth:20.0.1'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+//    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-auth'
 
     // 카카오 로그인
     implementation "com.kakao.sdk:v2-user-rx:2.4.2"
+
+    // facebook 로그인
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     // TedPermission
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.2.3'

@@ -15,6 +15,9 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import com.facebook.CallbackManager
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.common.util.Base64Utils
 import com.kakao.sdk.common.util.Utility
 import com.ssafy.ccd.config.ApplicationClass
@@ -22,6 +25,7 @@ import com.ssafy.ccd.config.ApplicationClass.Companion.sharedPreferencesUtil
 import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
+import java.math.BigDecimal
 import java.security.*
 import java.util.*
 import kotlin.experimental.and
@@ -30,6 +34,7 @@ import kotlin.experimental.and
 private const val TAG = "LoginActivity_ccd"
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate){
     val mainViewModels: MainViewModels by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +64,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 .commit()
         }
 
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this)
+
+//        logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
 
         // kakao 플랫폼 키 해시 등록
 //        val keyHash = Utility.getKeyHash(this)
 //        Log.d("kakaoKeyHash", "onCreate: $keyHash")
 
     }
+
+
 
     fun openFragment(int:Int){
         val transaction = supportFragmentManager.beginTransaction()
