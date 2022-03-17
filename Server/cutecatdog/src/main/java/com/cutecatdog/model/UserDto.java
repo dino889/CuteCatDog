@@ -22,4 +22,6 @@ public class UserDto {
     private String SNSToken;
     @ApiModelProperty(value = "디바이스 토큰", required = true)
     private String deviceToken;
+    @ApiModelProperty(value = "소셜 로그인 타입", required = true)
+    private String socialType;
 }
