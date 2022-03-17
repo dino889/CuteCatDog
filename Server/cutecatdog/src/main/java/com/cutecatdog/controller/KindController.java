@@ -67,16 +67,22 @@ public class KindController {
   }
 
   @ApiOperation(value = "반려동물 품종 등록", notes = "자신의 반려 동물의 품종을 등록한다.", response = List.class)
-  @PostMapping("")
+  @PostMapping()
   public ResponseEntity<Message> kindAdd(@RequestBody KindAddRequestDto kindAddRequestDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
+
 		if (kindService.addKind(kindAddRequestDto)) {
 			status = HttpStatus.OK;
 			message.setSuccess(true);
+			map.put("isSuccess", true);
+			message.setData(map);
 			return new ResponseEntity<Message>(message, status);
 		}
+		map.put("isSuccess", false);
 		message.setSuccess(false);
+		message.setData(map);
 		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
@@ -86,13 +92,19 @@ public class KindController {
   public ResponseEntity<Message> kindModify(@RequestBody KindmodifyRequestDto KindmodifyRequestDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
 		if (kindService.modifyKind(KindmodifyRequestDto)) {
 			status = HttpStatus.OK;
+			map.put("isSuccess", true);
+			message.setData(map);
 			message.setSuccess(true);
 			return new ResponseEntity<Message>(message, status);
 		}
+
 		message.setSuccess(false);
-		status = HttpStatus.NO_CONTENT;
+		map.put("isSuccess", false);
+		message.setData(map);
+		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
 
@@ -101,13 +113,18 @@ public class KindController {
   public ResponseEntity<Message> kindRemove(@PathVariable("id") int id) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
 		if (kindService.removeKind(id)) {
+			map.put("isSuccess", true);
 			status = HttpStatus.OK;
 			message.setSuccess(true);
+			message.setData(map);
 			return new ResponseEntity<Message>(message, status);
 		}
 		message.setSuccess(false);
-		status = HttpStatus.NO_CONTENT;
+		map.put("isSuccess", false);
+		message.setData(map);
+		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
 

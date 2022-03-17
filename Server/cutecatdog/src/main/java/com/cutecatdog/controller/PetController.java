@@ -51,13 +51,18 @@ public class PetController {
   public ResponseEntity<Message> petAdd(@RequestBody PetDto petDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
 		if (petService.addPet(petDto)) {
 			status = HttpStatus.OK;
+			map.put("isSuccess", true);
+			message.setData(map);
 			message.setSuccess(true);
 			return new ResponseEntity<Message>(message, status);
 		}
 		message.setSuccess(false);
-		status = HttpStatus.NO_CONTENT;
+		map.put("isSuccess", false);
+		message.setData(map);
+	status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
 
@@ -66,13 +71,18 @@ public class PetController {
   public ResponseEntity<Message> petModify(@RequestBody PetDto petDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
 		if (petService.modifyPet(petDto)) {
+			map.put("isSuccess", true);
+			message.setData(map);
 			status = HttpStatus.OK;
 			message.setSuccess(true);
 			return new ResponseEntity<Message>(message, status);
 		}
 		message.setSuccess(false);
-		status = HttpStatus.NO_CONTENT;
+		map.put("isSuccess", false);
+		message.setData(map);
+		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
 
@@ -97,8 +107,16 @@ public class PetController {
 	public ResponseEntity<Message> petRemove(@PathVariable("id") int id) throws Exception{
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(petService.removePet(id));
-		message.setSuccess(true);
+		HashMap <String,Boolean> map = new HashMap<>();
+		if(petService.removePet(id)){
+			map.put("isSuccess", true);
+			message.setData(map);
+			message.setSuccess(true);
+			return new ResponseEntity<Message>(message, status);
+		}
+		map.put("isSuccess", false);
+		message.setData(map);
+		message.setSuccess(false);
 		return new ResponseEntity<Message>(message, status);
 	}
 

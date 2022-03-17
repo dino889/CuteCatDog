@@ -73,12 +73,17 @@ public class HistoryController {
   public ResponseEntity<Message> historyAdd(@RequestBody HistoryRequestDto historyRequestDto) throws Exception {
     Message message = new Message();
 		HttpStatus status = null;
+		HashMap <String,Boolean> map = new HashMap<>();
 		if (historyService.addHistroy(historyRequestDto)) {
 			status = HttpStatus.OK;
 			message.setSuccess(true);
+			map.put("isSuccess", true);
+			message.setData(map);
 			return new ResponseEntity<Message>(message, status);
 		}
 		message.setSuccess(false);
+		map.put("isSuccess", false);
+		message.setData(map);
 		status = HttpStatus.OK;
 		return new ResponseEntity<Message>(message, status);
   }
@@ -88,8 +93,17 @@ public class HistoryController {
 	public ResponseEntity<Message> historyRemove(@PathVariable("history_id") int history_id) throws Exception{
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		message.setData(historyService.removeHistory(history_id));
-		message.setSuccess(true);
+		HashMap <String,Boolean> map = new HashMap<>();
+		if(historyService.removeHistory(history_id)){
+			status = HttpStatus.OK;
+			message.setSuccess(true);
+			map.put("isSuccess", true);
+			message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+		message.setSuccess(false);
+		map.put("isSuccess", false);
+		message.setData(map);
 		return new ResponseEntity<Message>(message, status);
 	}
 
