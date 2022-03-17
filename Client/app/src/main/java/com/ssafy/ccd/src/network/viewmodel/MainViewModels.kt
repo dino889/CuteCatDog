@@ -132,6 +132,7 @@ class MainViewModels : ViewModel() {
     private val _myPetsList = MutableLiveData<MutableList<Pet>>()
     private val _pet = MutableLiveData<Pet>()
     private val _kinds = MutableLiveData<MutableList<PetKind>>()
+    var petId:Int = -1
 
     val petsList : LiveData<MutableList<Pet>>
         get() = _petsList
