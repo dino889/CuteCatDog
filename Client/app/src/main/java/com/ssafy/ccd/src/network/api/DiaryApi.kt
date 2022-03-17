@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.network.api
 
 import android.os.Message
+import com.ssafy.ccd.src.dto.Diary
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -20,4 +21,10 @@ interface DiaryApi {
 
     @DELETE("/diary/{id}")
     suspend fun diaryDelete(@Path("id")id:Int):Response<Message>
+
+    @POST("/diary")
+    suspend fun diaryInsert(@Body diaryDto: Diary):Response<Message>
+
+    @PUT("/diary")
+    suspend fun diaryUpdate(@Body diaryDto:Diary):Response<Message>
 }
