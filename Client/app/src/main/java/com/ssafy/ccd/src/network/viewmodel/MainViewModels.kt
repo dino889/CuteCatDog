@@ -3,6 +3,7 @@ package com.ssafy.ccd.src.network.viewmodel
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,7 @@ import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
 
 private const val TAG = "MainViewModels_ccd"
 class MainViewModels : ViewModel() {
@@ -43,24 +45,38 @@ class MainViewModels : ViewModel() {
         _userInfo.value = user
     }
 
-//    suspend fun getUserInformation(userId: String, loginChk : Boolean) {
-//        val response = UserService().getUser(userId)
-//        viewModelScope.launch {
-//            val res = response.body()
-//            if(response.code() == 200) {
-//                if(res != null) {
-//                    if(loginChk == true) {    // 로그인 user이면
-//                        setLoginUserInfo(res)
-//                    } else {
-//                        setUserInfo(res)
-//                    }
-//                    Log.d(TAG, "getUserInfoSuccess: ${response.message()}")
-//                } else {
-//                    Log.d(TAG, "getUserInfoError: ${response.message()}")
-//                }
-//            }
-//        }
-//    }
+    suspend fun getUserInfo(userId: Int, loginChk : Boolean) : Int {
+        var returnRes = -1
+        val response = UserService().readUserInfo(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.success == true) {
+                        if(res.data["user"] != null && res.message == "회원 정보 조회 성공") {
+                            val type: Type = object : TypeToken<User>() {}.type
+                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
+                            if(loginChk == true) {  // login user
+                                setLoginUserInfo(user)
+                            } else {
+                                setUserInfo(user)
+                            }
+                            returnRes = 1
+                        } else if(res.data["user"] == null) {
+                            returnRes = 2   // 탈퇴한 회원 정보 조회 또는 에러
+                        }
+                    } else {
+                        returnRes = -1  // 서버 통신 오류
+                        Log.e(TAG, "getUserInfo: ${res.message}")
+                    }
+
+                } else {
+                    Log.d(TAG, "getUserInfoError: ${response.message()}")
+                }
+            }
+        }
+        return returnRes
+    }
 
     suspend fun join(user: User) : Message {
         var result = Message()

@@ -103,6 +103,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             val user = CommonUtils.parseDto<User>(loginUser!!, type)
 
             ApplicationClass.sharedPreferencesUtil.addUser(User(user.id, user.deviceToken))
+
+            if(binding.loginFragmentChkb.isChecked) {   // 자동 로그인이 체크되어 있으면
+                ApplicationClass.sharedPreferencesUtil.setAutoLogin(user.id)
+            }
+
             showCustomToast("로그인 되었습니다.")
             loginActivity.openFragment(1)
 
@@ -203,7 +208,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             snsLoginJoin(user)
             return true
         } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {
-
             login(user.email, user.password)
             return false
         } else {
@@ -237,7 +241,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
                 showCustomToast("이미 존재하는 이메일입니다. 다시 인증해 주세요.")
             } else {
                 showCustomToast("서버 통신에 실패했습니다.")
-                Log.d(TAG, "joinBtnClickEvent: ${result.message}")
+                Log.d(TAG, "snsLoginJoin: ${result.message}")
             }
         } else {
             showCustomToast("입력 값을 다시 확인해 주세요.")

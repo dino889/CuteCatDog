@@ -276,7 +276,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 if(res!=null){
                     if(res.success){
                         addFireBase()
-                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        mainActivity.runOnUiThread(Runnable {
+                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        })
                     }else{
                         Log.d(TAG, "insertPet: ${res.message}")
                     }
@@ -298,7 +300,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                         if(mainViewModel.uploadedImageUri != null){
                             addFireBase()
                         }
-                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        mainActivity.runOnUiThread(Runnable {
+                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        })
                     }else{
                         Log.d(TAG, "updatePet: ${res.message}")
                     }
