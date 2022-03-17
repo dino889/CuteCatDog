@@ -1,5 +1,6 @@
 package com.cutecatdog.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RequestMapping("/diary")
 @Api(tags = "Diary")
 public class DiaryController {
-    
+
     @Autowired
     private DiaryService diaryService;
 
@@ -59,7 +60,7 @@ public class DiaryController {
             if (diaryService.addDiary(diaryDto)) {
                 HashtagParamDto hashtagParamDto = new HashtagParamDto();
                 hashtagParamDto.setDiary_id(diaryDto.getId());
-                for (HashtagDto hashtagDto : diaryDto.getHashtag()) { //해시태그 등록
+                for (HashtagDto hashtagDto : diaryDto.getHashtag()) { // 해시태그 등록
                     hashtagParamDto.setHashtag(hashtagDto.getHashtag());
                     hashtagService.addHashtagtoDiary(hashtagParamDto);
                 }
@@ -97,7 +98,7 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
             data.put("diarys", diaryService.findDiaryDesc(user_id));
-            if (data.get("diarys").size()>0) {
+            if (data.get("diarys").size() > 0) {
                 for (DiaryDto diaryDto : data.get("diarys")) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
@@ -129,7 +130,7 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
             data.put("diarys", diaryService.findDiaryAsc(user_id));
-            if (data.get("diarys").size()>0) {
+            if (data.get("diarys").size() > 0) {
                 for (DiaryDto diaryDto : data.get("diarys")) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
@@ -162,7 +163,7 @@ public class DiaryController {
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
             data.put("diarys", diaryService.findDiaryByDate(diaryParamDto));
             response.setData(data);
-            if (data.get("diarys").size()>0) {
+            if (data.get("diarys").size() > 0) {
                 for (DiaryDto diaryDto : data.get("diarys")) {
                     diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
                     diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
@@ -253,6 +254,52 @@ public class DiaryController {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
             if (diaryService.modifyDiary(diaryDto)) {
+                int diary_id = diaryDto.getId();
+                ArrayList<String> hash = new ArrayList<>();
+                List<HashtagDto> list = hashtagService.findHashtag(diary_id);
+                if (diaryDto.getHashtag() != null) {
+                    for (HashtagDto hashtagDto : diaryDto.getHashtag()) {
+                        if (hashtagDto.getId() == 0) { // 추가된 해시태그
+                            hash.add(hashtagDto.getHashtag());
+                        } else {// 기존 해시태그
+                            list.remove(hashtagDto.getId()); // 해시 목록에서 삭제
+                        }
+                    }
+                }
+                for (HashtagDto hashtagDto : list) { // 남아있는 해시태그 삭제 => 일기에서 삭제된 해시태그
+                    HashtagParamDto hashtagParamDto = new HashtagParamDto();
+                    hashtagParamDto.setDiary_id(diary_id);
+                    hashtagParamDto.setHashtag(hashtagDto.getHashtag());
+                    hashtagService.removeHashtagDiary(hashtagParamDto);
+                }
+                for (String hashtag : hash) { // 추가된 해시태그 넣기
+                    HashtagParamDto hashtagParamDto = new HashtagParamDto();
+                    hashtagParamDto.setDiary_id(diary_id);
+                    hashtagParamDto.setHashtag(hashtag);
+                    hashtagService.addHashtagtoDiary(hashtagParamDto);
+                }
+
+                ArrayList<String> photos = new ArrayList<>();
+                List<PhotoDto> list2 = photoService.findPhoto(diary_id);
+                if (diaryDto.getPhoto() != null) {
+                    for (PhotoDto photoDto : diaryDto.getPhoto()) {
+                        if (photoDto.getId() == 0) {
+                            photos.add(photoDto.getPhoto());
+                        } else {
+                            list2.remove(photoDto.getId());
+                        }
+                    }
+                }
+                for (PhotoDto photoDto : list2) { // 남아있는 사진 삭제 => 일기에서 삭제된 사진
+                    photoService.removePhoto(photoDto.getId());
+                }
+                for (String photo : photos) { // 추가된 사진 넣기
+                    PhotoParamDto paramDto = new PhotoParamDto();
+                    paramDto.setDiary_id(diary_id);
+                    paramDto.setPhoto(photo);
+                    photoService.addPhoto(paramDto);
+                }
+
                 response.setMessage("일기 수정 성공");
                 data.put("isModify", true);
                 response.setData(data);
@@ -271,5 +318,5 @@ public class DiaryController {
 
         return new ResponseEntity<>(response, status);
     }
-    
+
 }

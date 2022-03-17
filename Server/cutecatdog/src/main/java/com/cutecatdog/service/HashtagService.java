@@ -19,4 +19,6 @@ public interface HashtagService {
 
     public Integer findHashtagId(String hashtag) throws Exception;
 
+    public boolean removeHashtagDiary(HashtagParamDto hashtagParamDto) throws Exception;
+
 }

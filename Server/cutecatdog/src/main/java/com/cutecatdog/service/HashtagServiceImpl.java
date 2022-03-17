@@ -45,5 +45,10 @@ public class HashtagServiceImpl implements HashtagService {
     public Integer findHashtagId(String hashtag) throws Exception {
         return sqlSession.getMapper(HashtagMapper.class).selectHashtagId(hashtag);
     }
+
+    @Override
+    public boolean removeHashtagDiary(HashtagParamDto hashtagParamDto) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).deleteHashtagDiary(hashtagParamDto);
+    }
     
 }

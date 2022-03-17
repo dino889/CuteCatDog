@@ -22,4 +22,7 @@ public interface HashtagMapper {
     public boolean insertHashtagDiary(HashtagParamDto hashtagParamDto) throws SQLException;
 
     public Integer selectHashtagId(String hashtag) throws SQLException;
+
+    public boolean deleteHashtagDiary(HashtagParamDto hashtagParamDto) throws SQLException;
+
 }

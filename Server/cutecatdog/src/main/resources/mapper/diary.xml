@@ -11,7 +11,7 @@
 	</select>
 
 	<select id="selectDiaryDesc" parameterType="int" resultType="DiaryDto">
-		SELECT id, title, content, datetime
+		SELECT id, user_id, title, content, datetime
 		FROM tbl_diary
         WHERE user_id = #{userId}
         order by datetime desc
@@ -24,7 +24,7 @@
 
     <update id="updateDiary" parameterType="DiaryDto">
         UPDATE tbl_diary
-        SET user_id = #{userId}, title = #{title}, content = #{content}, datetime = #{datetime}
+        SET title = #{title}, content = #{content}
         WHERE id = #{id}
     </update>
 
@@ -53,7 +53,7 @@
 	</select>
 
 	<select id="selectDiaryDetali" parameterType="int" resultType="DiaryDto">
-		SELECT id, title, content, datetime
+		SELECT id, user_id, title, content, datetime
 		FROM tbl_diary
         WHERE id = #{id}
 	</select>

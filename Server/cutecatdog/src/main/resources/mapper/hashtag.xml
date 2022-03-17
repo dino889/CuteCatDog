@@ -34,4 +34,9 @@
 		DELETE FROM tbl_hashtag WHERE id = #{id}
 	</delete>
 
+	<delete id="deleteHashtagDiary" parameterType="HashtagParamDto">
+		DELETE FROM tbl_hashtag_in_diary
+		WHERE diary_id = #{diary_id} and hashtag_id = (select id from tbl_hashtag where hashtag = #{hashtag})
+	</delete>
+
 </mapper>
