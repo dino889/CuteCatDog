@@ -132,7 +132,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 Log.d(TAG, "onViewCreated: INSERT")
                 insertPet(pet)
             }else{
-                if(mainViewModel.uploadedImageUri == null ){
+                if(mainViewModel.uploadedImageUri == null || mainViewModel.uploadedImageUri.toString() == "" ){
                     fileName = ""
                 }else{
                     timeName = System.currentTimeMillis().toString();
@@ -188,7 +188,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 var storageRef = storage.reference
                 storageRef.child("${it.photoPath}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
                     override fun onSuccess(p0: Uri?) {
-                        binding.addPEtFragmentIvPetImage.setImageURI(it.photoPath.toUri())
+                        binding.addPEtFragmentIvPetImage.setImageURI(p0)
                     }
 
                 }).addOnFailureListener(object: OnFailureListener {
@@ -275,8 +275,12 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        addFireBase()
-                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        if(mainViewModel.uploadedImageUri != null){
+                            addFireBase()
+                        }
+                        mainActivity.runOnUiThread(Runnable {
+                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        })
                     }else{
                         Log.d(TAG, "insertPet: ${res.message}")
                     }
@@ -298,7 +302,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                         if(mainViewModel.uploadedImageUri != null){
                             addFireBase()
                         }
-                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        mainActivity.runOnUiThread(Runnable {
+                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+                        })
                     }else{
                         Log.d(TAG, "updatePet: ${res.message}")
                     }

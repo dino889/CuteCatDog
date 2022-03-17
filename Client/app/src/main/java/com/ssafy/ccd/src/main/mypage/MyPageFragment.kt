@@ -50,7 +50,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
-//            mainViewModel.myPetsList.value?.get(0)?.let { mainViewModel.getPetDetailList(it.id) }
         }
         val myPetsList = mainViewModel.myPetsList.value
         if(myPetsList?.size!! > 0){
