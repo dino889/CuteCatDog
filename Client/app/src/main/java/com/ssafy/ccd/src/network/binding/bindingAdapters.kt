@@ -17,6 +17,7 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
+import com.ssafy.ccd.util.CommonUtils
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,9 +46,6 @@ fun bindImagePets(imgView: ImageView, imgUrl:String?){
             }
         })
     }
-//    Glide.with(imgView.context)
-//        .load("${ApplicationClass.IMGS_URL}${imgUrl}")
-//        .into(imgView)
 }
 
 @BindingAdapter("petListData")
@@ -63,27 +61,40 @@ fun bindPetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     adapter.petList = data as MutableList<Pet>
     adapter.notifyDataSetChanged()
 }
-
+@BindingAdapter("myPageConvertBirth")
+fun bindPetConvertBirth(textView: TextView,data:String?){
+    if( data == null || data == ""){
+        textView.text = ""
+    }else{
+        textView.text = CommonUtils.makeBirthString(data)
+    }
+}
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("myPagePetInfo")
 fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
     var result = ""
-    var now = LocalDate.now()
+    if(data != null){
+        var now = LocalDate.now()
 
 //    var parseBirth = LocalDate.parse(data?.birth, DateTimeFormatter.ISO_DATE)
-    var birthYear = data?.birth.toString().substring(0,4)
-    var curyearInt = Integer.parseInt(now.year.toString())
-    var birthyearInt = Integer.parseInt(birthYear.toString())
+        var birthYear = data?.birth.toString().substring(0,4)
+        var curyearInt = Integer.parseInt(now.year.toString())
+        var birthyearInt = Integer.parseInt(birthYear.toString())
 
-    var age = curyearInt - birthyearInt + 1
+        var age = curyearInt - birthyearInt + 1
 
-    result += "${age}세 "
-    if(data?.gender == 0){
-        result += "남아"
+        result += "${age}세 "
+        if(data?.gender == 0){
+            result += "남아"
+        }else{
+            result += "여아"
+        }
+        textView.text = result
     }else{
-        result += "여아"
+        textView.text = ""
     }
-    textView.text = result
+
+
 }
 
 @BindingAdapter("myPageInfoNeut")
