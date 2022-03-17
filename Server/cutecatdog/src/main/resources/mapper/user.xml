@@ -11,7 +11,7 @@
 	<select id="selectUser" parameterType="int" resultType="userDto">
 		SELECT id, email, password, nickname, profile_image, social_type
 		FROM tbl_user
-		WHERE id = #{userid}
+		WHERE id = #{userid} AND is_withdrawal = 0
 	</select>
 	
 	<update id= "modifyUser" parameterType="userDto">
