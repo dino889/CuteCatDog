@@ -106,6 +106,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     implementation 'com.google.firebase:firebase-ml-modeldownloader-ktx'
     implementation 'com.google.firebase:firebase-storage'
+
+    // google login
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+
+    // 카카오 로그인
+    implementation "com.kakao.sdk:v2-user-rx:2.4.2"
+
     // TedPermission
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.2.3'
 

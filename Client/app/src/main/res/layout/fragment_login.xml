@@ -195,7 +195,7 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/loginFragment_btnGoogle"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@android:color/transparent"
@@ -206,7 +206,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/loginFragment_btnKakao"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="10dp"
@@ -214,20 +214,20 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/kakao"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageButton"
+                app:layout_constraintStart_toEndOf="@+id/loginFragment_btnGoogle"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/loginFragment_btnNaver"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                android:src="@drawable/glogin"
+                android:src="@drawable/naver"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageButton2"
+                app:layout_constraintStart_toEndOf="@+id/loginFragment_btnKakao"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

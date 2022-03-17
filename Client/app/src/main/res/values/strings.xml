@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <string name="google_login_key">437810809249-5cfg3fpnjsmktlda6s2b9tce8a3iasr2.apps.googleusercontent.com</string>
 </resources>

@@ -4,7 +4,7 @@ data class User(
     val id: Int,
     val email: String,
     val nickname: String,
-    val password: String,
+    var password: String,
     val profileImage: String,
     val deviceToken: String,
     val socialType : String
