@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
@@ -22,6 +23,10 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding>(FragmentDiaryBinding::b
 
         binding.fragmentDiarySearch.setOnClickListener {
             showSortDialog()
+        }
+
+        binding.fragmentDiaryWrite.setOnClickListener {
+            this@DiaryFragment.findNavController().navigate(R.id.action_diaryFragment_to_diaryWriteFragment)
         }
     }
     fun showSortDialog(){
