@@ -1,6 +1,8 @@
 package com.ssafy.ccd.config
 
 import android.app.Application
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ssafy.ccd.config.intercepter.AddCookiesInterceptor
@@ -11,11 +13,12 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.security.KeyPairGenerator
 import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
     companion object{
-        
+//        const val SERVER_URL = "http://61.85.38.39:8889/"
         const val SERVER_URL = "https://j6d103.p.ssafy.io/"
         const val IMGS_URL = "${SERVER_URL}imgs/"
 
@@ -24,6 +27,9 @@ class ApplicationClass : Application() {
 
         // JWT Token Header 키 값
         const val X_ACCESS_TOKEN = "X-ACCESS-TOKEN"
+
+        // 키 alias
+        const val KEY_ALIAS = "cutecatdog"
 
     }
 
@@ -34,7 +40,7 @@ class ApplicationClass : Application() {
 
         val okHttpClient = OkHttpClient.Builder()
 //            .addInterceptor(AddCookiesInterceptor())
-//            .addInterceptor(ReceivedCookiesInterceptor())
+////            .addInterceptor(ReceivedCookiesInterceptor())
             .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
             .connectTimeout(30, TimeUnit.SECONDS).build()
 
@@ -50,6 +56,19 @@ class ApplicationClass : Application() {
             .client(okHttpClient)
             .build()
 
+        // 인증키 생성
+        val kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore")
+
+        val parameterSpec: KeyGenParameterSpec = KeyGenParameterSpec.Builder(
+            KEY_ALIAS,
+            KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
+        ).run {
+            setDigests(KeyProperties.DIGEST_SHA256)
+            build()
+        }
+
+        kpg.initialize(parameterSpec)
+        val kp = kpg.generateKeyPair()
     }
 
 }

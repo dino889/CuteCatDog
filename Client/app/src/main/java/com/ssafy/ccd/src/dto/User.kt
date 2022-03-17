@@ -6,12 +6,12 @@ data class User(
     val nickname: String,
     val password: String,
     val profileImage: String,
-    val deviceToken: String
+    val deviceToken: String,
+    val socialType : String
 ) {
-    constructor() : this(0, "", "", "", "", "")
-    constructor(id: Int) : this(id, "", "", "", "", "")
-    constructor(id: Int, deviceToken: String) : this(id, "", "", "", "", deviceToken)
-    constructor(email: String, password: String) : this(0, email, "", password, "", "")
-    constructor(email: String, nickname: String, password: String, profileImage: String) : this(0, email, nickname, password, profileImage, "")
-    constructor(id:Int, email: String, nickname: String, password: String, profileImage: String) : this(0, email, nickname, password, profileImage, "")
+    constructor() : this(0, "", "", "", "", "", "")
+    constructor(id: Int) : this(id, "", "", "", "", "", "")
+    constructor(id: Int, deviceToken: String) : this(id, "", "", "", "", deviceToken, "")
+    constructor(email: String, password: String) : this(0, email, "", password, "", "", "")
+    constructor(email: String, nickname: String, password: String, profileImage: String, socialType: String) : this(0, email, nickname, password, profileImage, "", socialType)
 }

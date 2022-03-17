@@ -73,8 +73,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
     private fun login(email: String, password: String) : Message{
         var result = Message()
+        val encPw = loginActivity.sha256(password)
+
         runBlocking {
-            result = mainViewModel.login(User(email, password))
+            result = mainViewModel.login(User(email, encPw))
         }
         return result
     }

@@ -1,9 +1,7 @@
 package com.ssafy.ccd.src.login
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,6 +19,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import android.widget.ArrayAdapter
+
 
 
 private const val TAG = "JoinFragment_ccd"
@@ -56,12 +55,16 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
     // 이메일 중복 확인 버튼 클릭 이벤트
     private fun dupChkEmailClickEvent() {
         binding.fragmentJoinBtnDupChkEmail.setOnClickListener {
+
             val res = existEmailChk(validatedEmail())
             if(res == true) {
                 showConfirmDialog()
 //                certBtnClickEvent()
+            } else {
+                showCustomToast("중복된 이메일입니다.")
             }
         }
+
     }
 
     /**
@@ -106,11 +109,6 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         }
 
         if(existEmailRes.data["isExisted"] == false && existEmailRes.message == "중복된 이메일 없음") {
-//            binding.fragmentJoinTilEmail.isEnabled = false
-//            binding.fragmentJoinTilDomain.isEnabled = false
-//            binding.fragmentJoinBtnDupChkEmail.visibility = View.GONE
-//            binding.fragmentJoinBtnAuthOk.visibility = View.VISIBLE
-//            binding.joinFragmentClCertNum.visibility = View.VISIBLE
             return true
         } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {
             binding.joinFragmentClCertNum.visibility = View.GONE
@@ -148,9 +146,9 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             val password = binding.fragmentJoinEtPw.text.toString()
 //            val email = "${binding.fragmentJoinEtEmail.text}@${binding.fragmentJoinEtDomain.text}"
             val email = validatedEmail()
-            val user = isAvailable(nickname, password, email)
+            val user = isAvailable(nickname, password, email, "none")
             if(user != null) {
-                val joinRes = join(email!!, nickname, password)
+                val joinRes = join(email!!, nickname, password, "none")
 
                 if(joinRes.data["isSignup"] == true && joinRes.message == "회원가입 성공") {
                     showCustomToast("회원가입이 완료되었습니다. 다시 로그인 해주세요.")
@@ -171,10 +169,12 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
     }
 
     // 회원가입
-    private fun join(email: String, nickname: String, password: String) : Message {
+    private fun join(email: String, nickname: String, password: String, socialType: String) : Message {
         var result = Message()
+        val encPw = loginActivity.sha256(password)
+
         runBlocking {
-            result = mainViewModel.join(User(email, nickname, password, "default.png"))
+            result = mainViewModel.join(User(email, nickname, encPw, "default.png", socialType))
         }
         return result
     }
@@ -183,9 +183,9 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
      * 필수 데이터 email 유효성 검사 및 중복 확인, pw, nickname 유효성 통과 여부 확인
      * @return 가입 가능한 상태이면 user 객체를 반환
      */
-    private fun isAvailable(nickname: String, password: String, email: String?) : User? {
+    private fun isAvailable(nickname: String, password: String, email: String?, socialType: String) : User? {
         if(validatedNickname(nickname) && validatedPw(password) && email != null && isEmailPossible) {
-            return User(email, nickname, password, "default.png")
+            return User(email, nickname, password, "default.png", socialType)
         } else {
             return null
         }
@@ -320,13 +320,6 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         return editTextSubscription  // Disposable 반환
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!editTextSubscription.isDisposed()) {
-            editTextSubscription.dispose()
-        }
-    }
-
     private fun showConfirmDialog() {
         AlertDialog.Builder(requireContext())
             .setTitle("이메일 사용 확인")
@@ -350,6 +343,13 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
 //            })
             .create()
             .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!editTextSubscription.isDisposed()) {
+            editTextSubscription.dispose()
+        }
     }
 
 }
