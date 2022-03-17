@@ -67,11 +67,11 @@ public class PhotoController {
             status = HttpStatus.OK;
             if (photoService.addPhoto(paramDto)) {
                 response.setMessage("사진 등록 성공");
-                data.put("isAdd", true);
+                data.put("isSuccess", true);
                 response.setData(data);
             } else {
                 response.setMessage("사진 등록 실패");
-                data.put("isAdd", false);
+                data.put("isSuccess", false);
                 response.setData(data);
             }
         } catch (Exception e) {

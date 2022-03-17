@@ -71,12 +71,12 @@ public class DiaryController {
                     photoService.addPhoto(paramDto);
                 }
                 response.setMessage("일기 등록 완료");
-                data.put("isAdd", true);
+                data.put("isSuccess", true);
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("일기 등록 실패");
-                data.put("isAdd", false);
+                data.put("isSuccess", false);
                 response.setData(data);
                 status = HttpStatus.OK;
             }
@@ -194,12 +194,12 @@ public class DiaryController {
             HashMap<String, Boolean> data = new HashMap<>();
             if (diaryService.removeDiary(id)) {
                 response.setMessage("일기 삭제 성공");
-                data.put("isDelete", true);
+                data.put("isSuccess", true);
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("일기 삭제 실패");
-                data.put("isDelete", false);
+                data.put("isSuccess", false);
                 response.setData(data);
                 status = HttpStatus.OK;
             }
@@ -301,12 +301,12 @@ public class DiaryController {
                 }
 
                 response.setMessage("일기 수정 성공");
-                data.put("isModify", true);
+                data.put("isSuccess", true);
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("일기 수정 실패");
-                data.put("isModify", false);
+                data.put("isSuccess", false);
                 response.setData(data);
                 status = HttpStatus.OK;
             }

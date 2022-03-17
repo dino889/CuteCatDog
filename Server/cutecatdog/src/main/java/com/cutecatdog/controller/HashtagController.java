@@ -91,12 +91,12 @@ public class HashtagController {
             HashMap<String, Boolean> data = new HashMap<>();
             if (hashtagService.addHashtag(hashtag)) {
                 response.setMessage("해시태그 등록 성공");
-                data.put("isAdd", true);
+                data.put("isSuccess", true);
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("해시태그 등록 실패");
-                data.put("isAdd", false);
+                data.put("isSuccess", false);
                 response.setData(data);
                 status = HttpStatus.OK;
             }
@@ -122,26 +122,26 @@ public class HashtagController {
                 if (hashtagService.addHashtag(hashtagParamDto.getHashtag())) { //해시태그 등록
                     if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
                         response.setMessage("다이어리에 해시태그 등록 성공");
-                        data.put("isAdd", true);
+                        data.put("isSuccess", true);
                         response.setData(data);
                     } else {
                         response.setMessage("다이어리에 해시태그 등록 실패");
-                        data.put("isAdd", false);
+                        data.put("isSuccess", false);
                         response.setData(data);
                     }
                 }else{
                     response.setMessage("해시태그 등록 실패");
-                    data.put("isAdd", false);
+                    data.put("isSuccess", false);
                     response.setData(data);
                 }
             }else{
                 if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
                     response.setMessage("다이어리에 해시태그 등록 성공");
-                    data.put("isAdd", true);
+                    data.put("isSuccess", true);
                     response.setData(data);
                 } else {
                     response.setMessage("다이어리에 해시태그 등록 실패");
-                    data.put("isAdd", false);
+                    data.put("isSuccess", false);
                     response.setData(data);
                 }
             }
