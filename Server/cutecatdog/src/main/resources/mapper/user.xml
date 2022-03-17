@@ -4,14 +4,14 @@
 <mapper namespace="com.cutecatdog.mapper.UserMapper">
 	
 	<insert id="insertUser" parameterType="userDto">
-		insert into tbl_user (email, password, nickname, profile_image)
-		values (#{email}, #{password}, #{nickname}, #{profileImage})
+		INSERT INTO tbl_user (email, password, nickname, profile_image, social_type)
+		VALUSE (#{email}, #{password}, #{nickname}, #{profileImage}, #{socialType})
 	</insert>
 
 	<select id="selectUser" parameterType="int" resultType="userDto">
-		select id, email, password, nickname, profile_image
-		from tbl_user
-		where id = #{userid}
+		SELECT id, email, password, nickname, profile_image, social_type
+		FROM tbl_user
+		WHERE id = #{userid}
 	</select>
 	
 	<update id= "modifyUser" parameterType="userDto">
@@ -39,7 +39,7 @@
     </select> -->
 
 	<select id="loginUser" parameterType="accountDto" resultType="userDto">
-		SELECT id, email, nickname, profile_image, SNS_token, device_token
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
 		FROM tbl_user
 		WHERE email = #{email} AND password = #{password} AND is_withdrawal = 0
 	</select>
