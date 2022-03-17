@@ -113,7 +113,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         }
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
             if(flag==1){
-                if(mainViewModel.uploadedImageUri == null ){
+                if(mainViewModel.uploadedImageUri == null || mainViewModel.uploadedImageUri.toString() == ""){
                     fileName = ""
                 }else{
                     timeName = System.currentTimeMillis().toString();

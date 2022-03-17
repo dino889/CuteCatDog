@@ -41,4 +41,8 @@ class PetService {
     suspend fun kindsAllListService():Response<Message>{
         return RetrofitUtil.petService.kindsAllList()
     }
+
+    suspend fun kindsById(kindId:Int):Response<Message> {
+        return RetrofitUtil.petService.kindsbyId(kindId)
+    }
 }

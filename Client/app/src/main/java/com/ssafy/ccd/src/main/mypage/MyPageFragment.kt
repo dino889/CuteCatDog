@@ -59,6 +59,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             }
             binding.myPageFragmentCvPetImage.visibility = View.VISIBLE
             binding.myPageFragmentCvPetEmpty.visibility = View.INVISIBLE
+
+
         }else{
             binding.myPageFragmentCvPetImage.visibility = View.INVISIBLE
             binding.myPageFragmentCvPetEmpty.visibility = View.VISIBLE

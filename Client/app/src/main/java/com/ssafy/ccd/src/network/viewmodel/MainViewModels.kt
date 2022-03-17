@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.reflect.TypeToken
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.dto.PetKind
@@ -148,6 +148,7 @@ class MainViewModels : ViewModel() {
     private val _myPetsList = MutableLiveData<MutableList<Pet>>()
     private val _pet = MutableLiveData<Pet>()
     private val _kinds = MutableLiveData<MutableList<PetKind>>()
+    private val _kind = MutableLiveData<PetKind>()
     var petId:Int = -1
 
     val petsList : LiveData<MutableList<Pet>>
@@ -158,6 +159,8 @@ class MainViewModels : ViewModel() {
         get() = _pet
     val kinds : LiveData<MutableList<PetKind>>
         get() = _kinds
+    val kind : LiveData<PetKind>
+        get() = _kind
 
     fun setPetList(list:MutableList<Pet>) = viewModelScope.launch {
         _petsList.value = list
@@ -170,6 +173,9 @@ class MainViewModels : ViewModel() {
     }
     fun setKinds(list:MutableList<PetKind>) = viewModelScope.launch {
         _kinds.value = list
+    }
+    fun setKind(kind:PetKind) = viewModelScope.launch {
+        _kind.value = kind
     }
 
     suspend fun getPetsAllList(){
@@ -257,7 +263,25 @@ class MainViewModels : ViewModel() {
             }
         }
     }
-
+    suspend fun getKindbyId(kindId:Int){
+        val response = PetService().kindsById(kindId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object:TypeToken<PetKind?>() {}.type
+                        var kind = CommonUtils.parseDto<PetKind>(res.data.get("kinds")!!,type)
+                        setKind(kind)
+                    }else{
+                        Log.d(TAG, "getKindbyId: ${res.message}")
+                    }
+                }else{
+                    Log.d(TAG, "getKindbyId: ${response.message()}")
+                }
+            }
+        }
+    }
     /**
      * AI View Model
      * @Author Jueun

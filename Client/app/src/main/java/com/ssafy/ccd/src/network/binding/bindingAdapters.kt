@@ -17,6 +17,7 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
 import java.lang.Exception
 import java.time.LocalDate
@@ -77,7 +78,7 @@ fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
         var now = LocalDate.now()
 
 //    var parseBirth = LocalDate.parse(data?.birth, DateTimeFormatter.ISO_DATE)
-        var birthYear = data?.birth.toString().substring(0,4)
+        var birthYear = CommonUtils.makeBirthString(data?.birth).substring(0,4)
         var curyearInt = Integer.parseInt(now.year.toString())
         var birthyearInt = Integer.parseInt(birthYear.toString())
 
@@ -100,9 +101,9 @@ fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
 @BindingAdapter("myPageInfoNeut")
 fun bindPetConvertNeutering(textView:TextView, neuter:Int){
     if(neuter == 0){
-        textView.text = "O"
-    }else{
         textView.text = "X"
+    }else{
+        textView.text = "O"
     }
 }
 

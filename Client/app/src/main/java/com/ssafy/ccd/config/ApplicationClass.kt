@@ -1,8 +1,10 @@
 package com.ssafy.ccd.config
 
 import android.app.Application
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ssafy.ccd.config.intercepter.AddCookiesInterceptor
@@ -33,6 +35,7 @@ class ApplicationClass : Application() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate() {
         super.onCreate()
         //shared preference 초기화

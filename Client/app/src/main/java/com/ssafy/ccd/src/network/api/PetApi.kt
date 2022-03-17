@@ -33,4 +33,7 @@ interface PetApi {
 
     @GET("/kinds")
     suspend fun kindsAllList() : Response<Message>
+
+    @GET("/kinds/{kind_id}")
+    suspend fun kindsbyId(@Path("kind_id")kindId:Int) : Response<Message>
 }
