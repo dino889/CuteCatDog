@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.diary.PhotoDto;
+import com.cutecatdog.model.diary.PhotoParamDto;
 import com.cutecatdog.service.PhotoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +17,34 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("/photo")
+@RequestMapping("/photos")
 @Api(tags = "Photo")
 public class PhotoController {
-    
+
     @Autowired
     private PhotoService photoService;
 
-    @ApiOperation(value = "다이어리 사진 조회", notes = "다이어리에 작성된 해시태그를 조회한다.", response = Map.class)
-    @GetMapping("/{id}")
-    public ResponseEntity<Message> photoList(@PathVariable(name = "diary_id") int diary_id) throws Exception{
+    @ApiOperation(value = "다이어리 사진 조회", notes = "다이어리에 첨부된 사진을 조회한다.", response = Map.class)
+    @GetMapping("/{diary_id}")
+    public ResponseEntity<Message> photoList(@PathVariable(name = "diary_id") int diary_id) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
-        try{
+        try {
             response.setSuccess(true);
             HashMap<String, List<PhotoDto>> data = new HashMap<>();
             data.put("photos", photoService.findPhoto(diary_id));
             response.setData(data);
             status = HttpStatus.OK;
-            if (data.get("photos").size()>0) {
+            if (data.get("photos").size() > 0) {
                 response.setMessage("사진 조회 성공");
-            }else{
+            } else {
                 response.setMessage("사진이 없습니다.");
             }
         } catch (Exception e) {
@@ -57,22 +58,21 @@ public class PhotoController {
 
     @ApiOperation(value = "사진 등록", notes = "", response = Map.class)
     @PostMapping
-    public ResponseEntity<Message> photoAdd(@RequestParam(value = "diary_id") int diary_id, @RequestParam(value = "photo") String photo) throws Exception {
+    public ResponseEntity<Message> photoAdd(@RequestBody(required = true) PhotoParamDto paramDto) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
-            if (photoService.addPhoto(diary_id, photo)) {
+            status = HttpStatus.OK;
+            if (photoService.addPhoto(paramDto)) {
                 response.setMessage("사진 등록 성공");
                 data.put("isAdd", true);
                 response.setData(data);
-                status = HttpStatus.OK;
             } else {
                 response.setMessage("사진 등록 실패");
                 data.put("isAdd", false);
                 response.setData(data);
-                status = HttpStatus.OK;
             }
         } catch (Exception e) {
             response.setSuccess(false);
@@ -92,15 +92,17 @@ public class PhotoController {
             status = HttpStatus.OK;
             response.setSuccess(true);
             if (photoService.removePhoto(id)) {
-                response.setMessage("사진 삭제 성공");
+                response.setMessage("해시태그 삭제 성공");
             } else {
-                response.setMessage("사진 삭제 실패");
+                response.setMessage("해시태그 삭제 실패");
             }
         } catch (Exception e) {
             response.setSuccess(false);
             response.setMessage(e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
+
         return new ResponseEntity<>(response, status);
     }
+
 }

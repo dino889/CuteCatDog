@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cutecatdog.mapper.PhotoMapper;
 import com.cutecatdog.model.diary.PhotoDto;
+import com.cutecatdog.model.diary.PhotoParamDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class PhotoServiceImpl implements PhotoService {
     private SqlSession sqlSession;
 
     @Override
-    public boolean addPhoto(int diary_id, String photo) throws Exception {
-        return sqlSession.getMapper(PhotoMapper.class).insertPhoto(diary_id, photo);
+    public boolean addPhoto(PhotoParamDto paramDto) throws Exception {
+        return sqlSession.getMapper(PhotoMapper.class).insertPhoto(paramDto);
     }
 
     @Override

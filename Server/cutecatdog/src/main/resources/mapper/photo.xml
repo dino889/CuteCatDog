@@ -4,17 +4,17 @@
 <mapper namespace="com.cutecatdog.mapper.PhotoMapper">
 	
 	<select id="selectPhoto" parameterType="int" resultType="PhotoDto">
-		SELECT photo
+		SELECT id, photo
         FROM tbl_diary_photo
         WHERE diary_id = #{diary_id}
 	</select>
 
-  <insert id="insertPhoto" parameterType="String">
+  	<insert id="insertPhoto" parameterType="PhotoParamDto">
 		INSERT INTO tbl_diary_photo (diary_id, photo)
 		VALUE (#{diary_id}, #{photo})
-  </insert>
+  	</insert>
 
-  <delete id="deletePhoto" parameterType="int">
+  	<delete id="deletePhoto" parameterType="int">
 		DELETE FROM tbl_diary_photo WHERE id = #{id}
 	</delete>
 

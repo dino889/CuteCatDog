@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cutecatdog.mapper.HashtagMapper;
 import com.cutecatdog.model.diary.HashtagDto;
+import com.cutecatdog.model.diary.HashtagParamDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,23 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public boolean addHashtagtoDiary(int diary_id, String hashtag) throws Exception {
-        return sqlSession.getMapper(HashtagMapper.class).insertHashtagDiary(diary_id, hashtag);
+    public boolean addHashtagtoDiary(HashtagParamDto hashtagParamDto) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).insertHashtagDiary(hashtagParamDto);
     }
 
     @Override
     public List<HashtagDto> findHashtagList() throws Exception {
         return sqlSession.getMapper(HashtagMapper.class).selectHashtagList();
+    }
+
+    @Override
+    public Integer findHashtagId(String hashtag) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).selectHashtagId(hashtag);
+    }
+
+    @Override
+    public boolean removeHashtagDiary(HashtagParamDto hashtagParamDto) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).deleteHashtagDiary(hashtagParamDto);
     }
     
 }
