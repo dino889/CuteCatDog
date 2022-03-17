@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KindDto {
+public class KindResponseDto {
   Integer id;
   String name;
-  Integer typeId;
   String type;
 }
