@@ -29,83 +29,84 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/board")
 @Api(tags = "Board")
 public class BoardController {
-  
+
   @Autowired
   private BoardService boardService;
 
   @ApiOperation(value = "게시글 전체 보기", notes = "", response = List.class)
   @GetMapping()
-  public ResponseEntity<Message> boardList() throws Exception{
+  public ResponseEntity<Message> boardList() throws Exception {
     HttpStatus status = HttpStatus.OK;
-		Message message = new Message();
+    Message message = new Message();
 
-    List<BoardDto> boards = new ArrayList();
-		boards = boardService.findBoard();
-		HashMap<String,List<BoardDto>> map = new HashMap<>();
-		map.put("boards", boards);
-		message.setData(map);
-		message.setSuccess(true);
-		return new ResponseEntity<Message>(message, status);
+    List<BoardDto> boards = new ArrayList<BoardDto>();
+    boards = boardService.findBoard();
+    HashMap<String, List<BoardDto>> map = new HashMap<>();
+    map.put("boards", boards);
+    message.setData(map);
+    message.setSuccess(true);
+    return new ResponseEntity<Message>(message, status);
   }
 
   @ApiOperation(value = "게시글 등록", notes = "게시글을 등록한다.", response = List.class)
   @PostMapping()
   public ResponseEntity<Message> boardAdd(@RequestBody BoardAddRequestDto boardAddRequestDto) throws Exception {
     Message message = new Message();
-		HttpStatus status = null;
-    HashMap<String,Boolean> map = new HashMap<>();
-		if (boardService.addBoard(boardAddRequestDto)) {
-			status = HttpStatus.OK;
+    HttpStatus status = null;
+    HashMap<String, Boolean> map = new HashMap<>();
+    if (boardService.addBoard(boardAddRequestDto)) {
+      status = HttpStatus.OK;
       map.put("isSuccess", true);
-			message.setSuccess(true);
+      message.setSuccess(true);
       message.setData(map);
-			return new ResponseEntity<Message>(message, status);
-		}
+      return new ResponseEntity<Message>(message, status);
+    }
     map.put("isSuccess", false);
-		message.setSuccess(false);
+    message.setSuccess(false);
     message.setData(map);
-		status = HttpStatus.OK;
-		return new ResponseEntity<Message>(message, status);
+    status = HttpStatus.OK;
+    return new ResponseEntity<Message>(message, status);
   }
 
   @ApiOperation(value = "게시글 수정", notes = "게시글을 수정한다.", response = List.class)
   @PutMapping()
-  public ResponseEntity<Message> boardModify(@RequestBody BoardModifyRequestDto boardModifyRequestDto) throws Exception {
+  public ResponseEntity<Message> boardModify(@RequestBody BoardModifyRequestDto boardModifyRequestDto)
+      throws Exception {
     Message message = new Message();
-		HttpStatus status = null;
-    HashMap<String,Boolean> map = new HashMap<>();
+    HttpStatus status = null;
+    HashMap<String, Boolean> map = new HashMap<>();
 
-		if (boardService.modifyBoard(boardModifyRequestDto)) {
-			status = HttpStatus.OK;
+    if (boardService.modifyBoard(boardModifyRequestDto)) {
+      status = HttpStatus.OK;
       map.put("isSuccess", true);
-			message.setSuccess(true);
+      message.setSuccess(true);
       message.setData(map);
-			return new ResponseEntity<Message>(message, status);
-		}
+      return new ResponseEntity<Message>(message, status);
+    }
     map.put("isSuccess", false);
-		message.setSuccess(false);
+    message.setSuccess(false);
     message.setData(map);
-		status = HttpStatus.OK;
-		return new ResponseEntity<Message>(message, status);
+    status = HttpStatus.OK;
+    return new ResponseEntity<Message>(message, status);
   }
 
   @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제한다.", response = List.class)
   @DeleteMapping("{id}")
   public ResponseEntity<Message> boardRemove(@PathVariable("id") int id) throws Exception {
     Message message = new Message();
-		HttpStatus status = null;
-    HashMap<String,Boolean> map = new HashMap<>();
-		if (boardService.removeBoard(id)) {
-			status = HttpStatus.OK;
+    HttpStatus status = null;
+    HashMap<String, Boolean> map = new HashMap<>();
+    if (boardService.removeBoard(id)) {
+      status = HttpStatus.OK;
       map.put("isSuccess", true);
-			message.setSuccess(true);
+      message.setSuccess(true);
       message.setData(map);
-			return new ResponseEntity<Message>(message, status);
-		}
+      return new ResponseEntity<Message>(message, status);
+    }
     map.put("isSuccess", false);
-		message.setSuccess(false);
+    message.setSuccess(false);
     message.setData(map);
-		status = HttpStatus.OK;
-		return new ResponseEntity<Message>(message, status);
+    status = HttpStatus.OK;
+    return new ResponseEntity<Message>(message, status);
   }
 }

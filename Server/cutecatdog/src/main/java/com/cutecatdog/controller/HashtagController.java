@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/hashtags")
@@ -111,15 +111,16 @@ public class HashtagController {
 
     @ApiOperation(value = "일기 해시태그 등록", notes = "", response = Map.class)
     @PostMapping
-    public ResponseEntity<Message> hashtagAddtoDiary(@RequestBody(required = true) HashtagParamDto hashtagParamDto) throws Exception {
+    public ResponseEntity<Message> hashtagAddtoDiary(@RequestBody(required = true) HashtagParamDto hashtagParamDto)
+            throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
             status = HttpStatus.OK;
-            if (hashtagService.findHashtagId(hashtagParamDto.getHashtag()) == null) { //등록되지 않은 해시태그
-                if (hashtagService.addHashtag(hashtagParamDto.getHashtag())) { //해시태그 등록
+            if (hashtagService.findHashtagId(hashtagParamDto.getHashtag()) == null) { // 등록되지 않은 해시태그
+                if (hashtagService.addHashtag(hashtagParamDto.getHashtag())) { // 해시태그 등록
                     if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
                         response.setMessage("다이어리에 해시태그 등록 성공");
                         data.put("isSuccess", true);
@@ -129,12 +130,12 @@ public class HashtagController {
                         data.put("isSuccess", false);
                         response.setData(data);
                     }
-                }else{
+                } else {
                     response.setMessage("해시태그 등록 실패");
                     data.put("isSuccess", false);
                     response.setData(data);
                 }
-            }else{
+            } else {
                 if (hashtagService.addHashtagtoDiary(hashtagParamDto)) {
                     response.setMessage("다이어리에 해시태그 등록 성공");
                     data.put("isSuccess", true);
