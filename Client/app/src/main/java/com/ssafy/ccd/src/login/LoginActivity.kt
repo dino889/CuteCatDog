@@ -13,9 +13,14 @@ import com.ssafy.ccd.src.main.MainActivity
 import android.security.keystore.KeyGenParameterSpec
 import android.util.Base64
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.google.android.gms.common.util.Base64Utils
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.config.ApplicationClass.Companion.sharedPreferencesUtil
+import com.ssafy.ccd.src.network.service.UserService
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import kotlinx.coroutines.runBlocking
 import java.security.*
 import java.util.*
 import kotlin.experimental.and
@@ -23,13 +28,35 @@ import kotlin.experimental.and
 
 private const val TAG = "LoginActivity_ccd"
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate){
+    val mainViewModels: MainViewModels by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_login_layout, LoginFragment())
-            .commit()
+        var userId = -1
+        if(sharedPreferencesUtil.getAutoLogin() != null) {
+            userId = sharedPreferencesUtil.getAutoLogin()!!
+        }
+        //로그인 상태 확인. id가 있다면 로그인 된 상태 -> 가장 첫 화면은 홈 화면의 Fragment로 지정
+        if (userId != null || userId != -1){
+            var isPossible = 0
+            runBlocking {
+                isPossible = mainViewModels.getUserInfo(userId, true)
+            }
+            if(isPossible == 1) {
+                openFragment(1)
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_login_layout, LoginFragment())
+                    .commit()
+            }
+
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_login_layout, LoginFragment())
+                .commit()
+        }
 
     }
 
