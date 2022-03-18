@@ -18,6 +18,10 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
+            
+        }
     }
 
     companion object {
