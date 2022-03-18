@@ -9,15 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
-import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.dto.Pet
-import com.ssafy.ccd.src.dto.PetKind
-import com.ssafy.ccd.src.dto.User
+import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
+import java.net.URI
 
 private const val TAG = "MainViewModels_ccd"
 class MainViewModels : ViewModel() {
@@ -282,6 +280,26 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+    /**
+     * Diary View Model
+     * @author BOYEON
+     * @Date 2022-03-18
+     * */
+    private val _photoUriList = MutableLiveData<ArrayList<Uri>>()
+    private val _photoList = MutableLiveData<ArrayList<Photo>>()
+    var uploadImages : Uri? = null
+    val photoUriList : LiveData<ArrayList<Uri>>
+        get() = _photoUriList
+    val photoList : LiveData<ArrayList<Photo>>
+        get() = _photoList
+
+    fun setPhotoUriList(list:ArrayList<Uri>) = viewModelScope.launch {
+        _photoUriList.value = list
+    }
+    fun setPhotoList(list:ArrayList<Photo>) = viewModelScope.launch {
+        _photoList.value = list
+    }
+
     /**
      * AI View Model
      * @Author Jueun

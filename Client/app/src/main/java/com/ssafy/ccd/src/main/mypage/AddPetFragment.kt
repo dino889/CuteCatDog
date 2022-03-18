@@ -88,7 +88,6 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
-
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

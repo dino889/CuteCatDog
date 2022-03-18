@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -53,6 +54,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     private val CAMERA_CODE = 98
     private val STORAGE_CODE = 99
     private val GALLERY_CODE = 10
+    private val DIARY_CODE = 20
     // Dialog
     private lateinit var photoDialog:Dialog
     private lateinit var photoDialogView: View
@@ -185,6 +187,14 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
             }
+
+            DIARY_CODE -> {
+                for (grant in grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("저장소 권한을 승인해 주세요.")
+                    }
+                }
+            }
         }
     }
 
@@ -236,16 +246,12 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         photoDialog.dismiss()
                     }
                 }
+
                 GALLERY_CODE -> {
                     mainViewModels.uploadedImageUri = data?.data
                     // 이미지 검사
                     if (mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
-//                        val source = ImageDecoder.createSource(
-//                            this.contentResolver,
-//                            mainViewModels.uploadedImageUri!!
-//                        )
-//                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
@@ -261,6 +267,31 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
 
+                DIARY_CODE -> {
+                    mainViewModels.photoUriList.observe(this, {
+                        data?.data?.let { it1 -> it.add(it1) }
+                        mainViewModels.setPhotoUriList(it)
+                    })
+                    mainViewModels.uploadImages = data?.data
+                    if (mainViewModels.uploadImages == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                    else {
+                        Log.d(TAG, "onActivityResult: this?")
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                Log.d(TAG, "onActivityResult: here?")
+                                mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(
+                                    contentResolver, mainViewModels.uploadImages!!
+                                ))
+                            } else {
+                                Log.d(TAG, "onActivityResult: here2?")
+                                mainViewModels.uploadedImage = MediaStore.Images.Media.getBitmap(
+                                    contentResolver, mainViewModels.uploadImages)
+                            }
+                        } catch ( e: IOException) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
     }
