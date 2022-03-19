@@ -287,24 +287,23 @@ class MainViewModels : ViewModel() {
      * */
 
     val _photoUriList = arrayListOf<Uri>()
-    private val _photoList = MutableLiveData<ArrayList<Photo>>()
+    private val _photoList = arrayListOf<Photo>()
 
     var uploadImages : Uri? = null
 
     val photoUriList = MutableLiveData<ArrayList<Uri>>().apply{
         value = _photoUriList
     }
-
+    val photoList = MutableLiveData<ArrayList<Photo>>().apply {
+        value = _photoList
+    }
     fun insertPhotoUriList(uri:Uri){
         _photoUriList.add(uri)
         photoUriList.value = _photoUriList
     }
-
-    val photoList : LiveData<ArrayList<Photo>>
-        get() = _photoList
-
-    fun setPhotoList(list:ArrayList<Photo>) = viewModelScope.launch {
-        _photoList.value = list
+    fun insertPhotoList(photo:Photo){
+        _photoList.add(photo)
+        photoList.value = _photoList
     }
 
     /**

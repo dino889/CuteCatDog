@@ -1,7 +1,6 @@
 package com.ssafy.ccd.src.network.api
 
 import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.dto.Message2
 import com.ssafy.ccd.src.dto.Pet
 import retrofit2.Response
 import retrofit2.http.*

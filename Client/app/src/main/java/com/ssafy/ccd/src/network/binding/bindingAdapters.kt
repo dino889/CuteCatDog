@@ -23,6 +23,22 @@ import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+@BindingAdapter("imageUrlDiary")
+fun bindImageDiary(imgView: ImageView, imgUrl: String?){
+    var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+    var storageRef = storage.reference
+    storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+        override fun onSuccess(p0: Uri?) {
+            Glide.with(imgView.context)
+                .load(p0)
+                .into(imgView)
+        }
+
+    }).addOnFailureListener(object : OnFailureListener {
+        override fun onFailure(p0: Exception) {
+        }
+    })
+}
 @BindingAdapter("imageUrlDiaryWrite")
 fun bindImageDiaryWrite(imgView: ImageView, imgUrl: String?) {
     var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")

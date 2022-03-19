@@ -68,7 +68,7 @@ public class UserController {
             response.setMessage(e.getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<>(response, status);
+        return new ResponseEntity<Message>(response, status);
     }
 
     @ApiOperation(value = "회원 정보 조회", notes = "", response = Map.class)

@@ -1,7 +1,6 @@
 package com.ssafy.ccd.src.network.service
 
 import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.dto.Message2
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
