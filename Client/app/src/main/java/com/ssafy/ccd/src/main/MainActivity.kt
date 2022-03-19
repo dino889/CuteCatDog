@@ -268,11 +268,12 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                 }
 
                 DIARY_CODE -> {
-                    mainViewModels.photoUriList.observe(this, {
-                        data?.data?.let { it1 -> it.add(it1) }
-                        mainViewModels.setPhotoUriList(it)
-                    })
+//                    mainViewModels.photoUriList.observe(this, {
+//                        data?.data?.let { it1 -> it.add(it1) }
+//                        mainViewModels.setPhotoUriList(it)
+//                    })
                     mainViewModels.uploadImages = data?.data
+                    data?.data?.let { mainViewModels.insertPhotoUriList(it) }
                     if (mainViewModels.uploadImages == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
                         Log.d(TAG, "onActivityResult: this?")
