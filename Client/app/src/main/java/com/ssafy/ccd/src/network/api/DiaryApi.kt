@@ -1,7 +1,7 @@
 package com.ssafy.ccd.src.network.api
 
-import android.os.Message
 import com.ssafy.ccd.src.dto.Diary
+import com.ssafy.ccd.src.dto.Message
 import retrofit2.Response
 import retrofit2.http.*
 
