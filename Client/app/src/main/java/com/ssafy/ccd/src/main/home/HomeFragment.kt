@@ -25,24 +25,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel
         runBlocking {
-            mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+            val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            mainViewModel.getMyPetsAllList(userId)
+            mainViewModel.getUserInfo(userId, true)
         }
+        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
+            binding.loginUser = it
+        })
 
         initAdapter()
+
+        userInfoBtnClickEvent()
     }
-    fun initAdapter(){
+
+    private fun initAdapter(){
         mainViewModel.myPetsList.observe(viewLifecycleOwner, {
             petAdapter = HomeProfilePetsAdapter(it)
             binding.fragmentHomeRvPets.apply {
@@ -54,23 +61,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             petAdapter.setAddClickListener(object : HomeProfilePetsAdapter.AddClickListener {
                 override fun onClick(view: View, position: Int) {
                     this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_addPetFragment)
-
                 }
             })
 
             petAdapter.setItemClickListener(object :HomeProfilePetsAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
-                }
 
+                }
             })
         })
     }
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+
+    private fun userInfoBtnClickEvent() {
+        binding.fragmentHomeUserImg.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
+        }
     }
 }

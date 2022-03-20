@@ -4,9 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/activity_login.xml" value="0.1925925925925926" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_add_pet.xml" value="0.12760416666666666" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_home.xml" value="0.536" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_join.xml" value="0.1925925925925926" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_login.xml" value="0.32421875" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_reset_password.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_user_profile.xml" value="0.264" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_calender_pets_footer.xml" value="0.536" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/ai_dialog_button_background.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/bottomsheet_background_rounded.xml" value="0.25" />
@@ -36,7 +39,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender_write.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_sortbottom_sheet.xml" value="0.5" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.33" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.22" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_join.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_know_board.xml" value="0.33" />
@@ -71,15 +74,6 @@
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_ai_dialog.xml" value="0.4" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_ai_select.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_my_page.xml" value="0.11255862428348098" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/activity_login.xml" value="0.2" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/activity_main.xml" value="0.176" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_diary.xml" value="0.1" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.264" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_login.xml" value="0.2" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/item_diary_list.xml" value="0.264" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/item_diary_photo.xml" value="0.264" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/item_diary_photo_list.xml" value="0.16614583333333333" />
-        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/item_pet_list.xml" value="0.1" />
       </map>
     </option>
   </component>

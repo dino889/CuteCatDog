@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
+            name="loginUser"
+            type="com.ssafy.ccd.src.dto.User" />
+        <variable
             name="viewModel"
             type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
     </data>
