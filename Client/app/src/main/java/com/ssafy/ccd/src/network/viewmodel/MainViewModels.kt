@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.*
+import com.ssafy.ccd.src.network.service.DiaryService
 import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
 import com.ssafy.ccd.util.CommonUtils
@@ -203,6 +204,7 @@ class MainViewModels : ViewModel() {
             val res = response.body()
             if(response.code() == 200){
                 if(res!=null){
+                    Log.d(TAG, "getMyPetsAllList: ${res}")
                     if(res.success){
                         if(res.data.get("pets")!=null){
                             var type = object : TypeToken<MutableList<Pet?>?>() {}.type
@@ -288,14 +290,27 @@ class MainViewModels : ViewModel() {
 
     val _photoUriList = arrayListOf<Uri>()
     private val _photoList = arrayListOf<Photo>()
-
     var uploadImages : Uri? = null
+    private val _diaryList = MutableLiveData<MutableList<Diary>>()
+    private val _diaryPhotoList = MutableLiveData<MutableList<Photo>>()
+
+    val diaryList : LiveData<MutableList<Diary>>
+        get() = _diaryList
+    val diaryPhotoList : LiveData<MutableList<Photo>>
+        get() = _diaryPhotoList
 
     val photoUriList = MutableLiveData<ArrayList<Uri>>().apply{
         value = _photoUriList
     }
     val photoList = MutableLiveData<ArrayList<Photo>>().apply {
         value = _photoList
+    }
+
+    fun setDiaryList(list:MutableList<Diary>) = viewModelScope.launch {
+        _diaryList.value = list
+    }
+    fun setDiaryPhotoList(list:MutableList<Photo>) = viewModelScope.launch {
+        _diaryPhotoList.value = list
     }
     fun insertPhotoUriList(uri:Uri){
         _photoUriList.add(uri)
@@ -305,7 +320,35 @@ class MainViewModels : ViewModel() {
         _photoList.add(photo)
         photoList.value = _photoList
     }
+    suspend fun getDiaryList(userId:Int){
+        val response = DiaryService().diaryListbyDescService(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    Log.d(TAG, "getDiaryList: ${res}")
+                    if(res.success){
+                        var type = object:TypeToken<MutableList<Diary?>?>() {}.type
+                        var type2 = object:TypeToken<MutableList<Photo?>?>() {}.type
+                        var diary = CommonUtils.parseDto<MutableList<Diary>>(res.data.get("diarys")!!,type)
+                        var photos = listOf<Photo>()
+                        for(i in 0..diary.size-1){
+//                            var photo = diary[i].photo.toMutableList()
+//                            photo[i] = photo
+//                            photos.add(photo)
+                            setDiaryPhotoList(diary[i].photo.toMutableList())
+                        }
+                        setDiaryList(diary)
 
+                    }else{
+                        Log.d(TAG, "getDiaryList: ${res.message}")
+                    }
+                }else{
+                    Log.d(TAG, "getDiaryList: ${response.message()}")
+                }
+            }
+        }
+    }
     /**
      * AI View Model
      * @Author Jueun
