@@ -91,6 +91,38 @@ fun bindImagePets(imgView: ImageView, imgUrl:String?){
     }
 }
 
+@BindingAdapter("imageUrlUser")
+fun bindImageUser(imgView: ImageView, imgUrl: String?) {
+    if(imgUrl == null || imgUrl == ""){
+        Glide.with(imgView.context)
+            .load(R.drawable.defaultimg)
+            .into(imgView)
+
+    } else if(imgUrl.contains("https://")) {
+        Glide.with(imgView.context)
+            .load(imgUrl)
+//            .circleCrop()
+            .into(imgView)
+
+    }
+    else {
+        val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+        val storageRef = storage.reference
+        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+            override fun onSuccess(p0: Uri?) {
+                Glide.with(imgView.context)
+                    .load(p0)
+//                    .circleCrop()
+                    .into(imgView)
+            }
+
+        }).addOnFailureListener(object : OnFailureListener {
+            override fun onFailure(p0: Exception) {
+            }
+        })
+    }
+}
+
 @BindingAdapter("petListData")
 fun bindPetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     var adapter = recyclerView.adapter as PetListRecyclerviewAdapter

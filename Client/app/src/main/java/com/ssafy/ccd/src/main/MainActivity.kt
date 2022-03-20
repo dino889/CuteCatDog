@@ -94,6 +94,21 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     }
 
     /**
+     * BottomNavigation show/hide 설정
+     * true - hide
+     * false - show
+     */
+    fun hideBottomNavi(state : Boolean) {
+        if(state == true) {
+            binding.bottomAppBar.visibility = View.GONE
+            binding.activityMainFabCam.visibility = View.GONE
+        } else {
+            binding.bottomAppBar.visibility = View.VISIBLE
+            binding.activityMainFabCam.visibility = View.VISIBLE
+        }
+    }
+
+    /**
      * 인스턴스를 정의하는 함수
      */
     @SuppressLint("InflateParams")
