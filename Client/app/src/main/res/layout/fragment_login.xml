@@ -17,10 +17,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:src="@drawable/logo3"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_login_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_login_email"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/fragment_login_email"
@@ -33,10 +33,10 @@
             android:ems="10"
             android:hint="E-MAIL"
             android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_login_pw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_login_pw"/>
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <EditText
             android:id="@+id/fragment_login_pw"
@@ -49,10 +49,10 @@
             android:ems="10"
             android:hint="PW"
             android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/loginFragment_clAutoAndForgotPW"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_login_email"
-            app:layout_constraintBottom_toTopOf="@+id/loginFragment_clAutoAndForgotPW"/>
+            app:layout_constraintTop_toBottomOf="@+id/fragment_login_email" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/loginFragment_clAutoAndForgotPW"
@@ -77,6 +77,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
+                android:id="@+id/view12"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -103,20 +104,20 @@
             android:layout_marginEnd="30dp"
             android:backgroundTint="@color/main_500"
             android:text="Login"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginFragment_clAutoAndForgotPW"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/loginFragment_clAutoAndForgotPW" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_login_btnLogin"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/fragment_login_btnLogin">
 
             <TextView
                 android:id="@+id/textView2"
@@ -145,10 +146,10 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
             <View
                 android:id="@+id/view"
@@ -180,7 +181,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -217,13 +217,13 @@
                 app:layout_constraintStart_toEndOf="@+id/loginFragment_btnGoogle"
                 app:layout_constraintTop_toTopOf="parent" />
 
-<!--            <com.facebook.login.widget.LoginButton-->
-<!--                android:id="@+id/login_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:layout_marginTop="30dp"-->
-<!--                android:layout_marginBottom="30dp" />-->
+            <!--            <com.facebook.login.widget.LoginButton-->
+            <!--                android:id="@+id/login_button"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center_horizontal"-->
+            <!--                android:layout_marginTop="30dp"-->
+            <!--                android:layout_marginBottom="30dp" />-->
             <ImageButton
                 android:id="@+id/loginFragment_btnFacebook"
                 android:layout_width="60dp"

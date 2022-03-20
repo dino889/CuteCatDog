@@ -11,18 +11,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/fragment_diary_Img"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_diary_ImgRv"
             android:layout_width="370dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/defaultimg" />
+            app:diaryPhotoListData = "@{diary.photo}"/>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/fragment_diary_Img"-->
+<!--            android:layout_width="370dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:scaleType="fitXY"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:srcCompat="@drawable/defaultimg" />-->
 
         <TextView
             android:id="@+id/fragment_diary_TvBigDate"
@@ -36,14 +48,14 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_diary_Img" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_diary_ImgRv" />
 
         <TextView
             android:id="@+id/fragment_diary_TvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="TextView"
+            android:text="@{diary.title}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/fragment_diary_TvBigDate"
@@ -55,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="10dp"
-            android:text="TextView"
+            android:text="@{diary.content}"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/fragment_diary_TvTitle"
@@ -68,7 +80,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:text="TextView"
+            app:myPageConvertBirth="@{diary.datetime}"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

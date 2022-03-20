@@ -14,7 +14,11 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.dto.Diary
 import com.ssafy.ccd.src.dto.Pet
+import com.ssafy.ccd.src.dto.Photo
+import com.ssafy.ccd.src.main.diary.DiaryAdapter
+import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
@@ -25,19 +29,26 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 @BindingAdapter("imageUrlDiary")
 fun bindImageDiary(imgView: ImageView, imgUrl: String?){
-    var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
-    var storageRef = storage.reference
-    storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-        override fun onSuccess(p0: Uri?) {
-            Glide.with(imgView.context)
-                .load(p0)
-                .into(imgView)
-        }
+    if(imgUrl == null || imgUrl == ""){
+        Glide.with(imgView.context)
+            .load(R.drawable.defaultimg)
+            .into(imgView)
+    }else{
+        var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+        var storageRef = storage.reference
+        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+            override fun onSuccess(p0: Uri?) {
+                Glide.with(imgView.context)
+                    .load(p0)
+                    .into(imgView)
+            }
 
-    }).addOnFailureListener(object : OnFailureListener {
-        override fun onFailure(p0: Exception) {
-        }
-    })
+        }).addOnFailureListener(object : OnFailureListener {
+            override fun onFailure(p0: Exception) {
+            }
+        })
+    }
+
 }
 @BindingAdapter("imageUrlDiaryWrite")
 fun bindImageDiaryWrite(imgView: ImageView, imgUrl: String?) {
@@ -150,4 +161,30 @@ fun bindHomePetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
 
     adapter.list = data as MutableList<Pet>
     adapter.notifyDataSetChanged()
+}
+@BindingAdapter("diaryPhotoListData")
+fun bindDiaryPhotoRecyclerView(recyclerView: RecyclerView, data:List<Photo>?){
+    var adapter = recyclerView.adapter as DiaryPhotoRvAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as DiaryPhotoRvAdapter
+    }
+    adapter.list = data as MutableList<Photo>
+    adapter.notifyDataSetChanged()
+}
+
+@BindingAdapter("diaryListData")
+fun bindDiaryRecyclerView(recyclerView: RecyclerView, data:List<Diary>?){
+    var adapter = recyclerView.adapter as DiaryAdapter
+    if(recyclerView.adapter ==null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as DiaryAdapter
+    }
+    adapter.list = data as MutableList<Diary>
+    adapter.notifyDataSetChanged()
+
 }

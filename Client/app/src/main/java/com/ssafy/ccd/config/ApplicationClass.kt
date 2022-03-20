@@ -24,6 +24,7 @@ class ApplicationClass : Application() {
     companion object{
 //        const val SERVER_URL = "http://61.85.38.39:8889/"
         const val SERVER_URL = "https://j6d103.p.ssafy.io/"
+//        const val SERVER_URL = "http://suho.asuscomm.com:3000"
         const val IMGS_URL = "${SERVER_URL}imgs/"
 
         lateinit var sharedPreferencesUtil: SharedPreferencesUtil
