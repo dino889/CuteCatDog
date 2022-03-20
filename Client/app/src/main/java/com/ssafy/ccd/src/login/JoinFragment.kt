@@ -78,12 +78,10 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             runBlocking {
                 codeRes = mainViewModel.sendCodeToEmail(validatedEmail()!!)
             }
-            Log.d(TAG, "certBtnClickEvent: $codeRes")
+
             if(codeRes.data["code"] != null && codeRes.message == "이메일 인증 요청 성공") {
 
-                certCode = codeRes.data["code"] as String
                 okBtnClickEvent(codeRes.data["code"] as String)
-                Log.d(TAG, "certBtnClickEvent: $certCode")
 
             } else if(codeRes.data["code"] == null && codeRes.message == "이메일 인증 요청 실패") {
 
@@ -264,11 +262,12 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
 
         val email = "$inputEmail@$inputDomain"
 
+        if(inputDomain.trim().isEmpty()) {
+            binding.fragmentJoinTilDomain.error = "Required Domain Field"
+            return null
+        }
         if(inputEmail.trim().isEmpty()) {
             binding.fragmentJoinTilEmail.error = "Required Email Field"
-            return null
-        } else if(inputDomain.trim().isEmpty()) {
-            binding.fragmentJoinTilDomain.error = "Required Domain Field"
             return null
         }
         else if(!Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z].{2,25}\$", email)) {

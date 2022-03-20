@@ -62,11 +62,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
         super.onAttach(context)
         loginActivity = context as LoginActivity
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fragmentLoginSignup.setOnClickListener {
             loginActivity.openFragment(3)
+        }
+
+        binding.fragmentLoginForgot.setOnClickListener {
+            loginActivity.openFragment(4)
         }
 
         callbackManager = CallbackManager.Factory.create()
@@ -76,6 +81,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
         kakaoLoginBtnClickEvent()
         facebookLoginBtnClickEvent()
     }
+
 
     private fun loginBtnClickEvent() {
         binding.fragmentLoginBtnLogin.setOnClickListener {

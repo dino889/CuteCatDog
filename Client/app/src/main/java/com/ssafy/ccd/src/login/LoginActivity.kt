@@ -94,6 +94,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 transaction.replace(R.id.frame_login_layout, JoinFragment())
                     .addToBackStack(null)
             }
+            4-> {
+                transaction.replace(R.id.frame_login_layout, ResetPasswordFragment())
+                    .addToBackStack(null)
+            }
         }
         transaction.commit()
     }
@@ -110,4 +114,5 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
         return Base64.encodeToString(hash, Base64.NO_WRAP)
     }
+
 }
