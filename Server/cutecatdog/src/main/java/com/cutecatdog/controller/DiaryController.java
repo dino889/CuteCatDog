@@ -62,6 +62,7 @@ public class DiaryController {
                 hashtagParamDto.setDiary_id(diaryDto.getId());
                 for (HashtagDto hashtagDto : diaryDto.getHashtag()) { // 해시태그 등록
                     hashtagParamDto.setHashtag(hashtagDto.getHashtag());
+                    hashtagService.addHashtag(hashtagDto.getHashtag());
                     hashtagService.addHashtagtoDiary(hashtagParamDto);
                 }
                 PhotoParamDto paramDto = new PhotoParamDto();
