@@ -15,7 +15,7 @@
 	</select>
 
     <insert id="insertHashtag" parameterType="String">
-		INSERT INTO tbl_hashtag (hashtag)
+		INSERT IGNORE INTO tbl_hashtag (hashtag)
 		VALUE (#{hashtag})
   	</insert>
 
