@@ -59,6 +59,30 @@
           }
         },
         {
+          "client_id": "437810809249-8gtbuu9qs8cvt4susuv84o81fjrs9nfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.ccd",
+            "certificate_hash": "1ff236d7553484482f3677734f0264c6e05dd91b"
+          }
+        },
+        {
+          "client_id": "437810809249-jhj42hd916ap8uol1dhr561d1lq60qbo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.ccd",
+            "certificate_hash": "7911a82fb567fc6b5e399d9fca4acc64ab4bc9ce"
+          }
+        },
+        {
+          "client_id": "437810809249-prpdtlgtnndcgu98sfgb6okmcjqbejga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.ccd",
+            "certificate_hash": "292430648c7d83a9ffe2ccfdf62a8e7429d44d82"
+          }
+        },
+        {
           "client_id": "437810809249-5cfg3fpnjsmktlda6s2b9tce8a3iasr2.apps.googleusercontent.com",
           "client_type": 3
         }
