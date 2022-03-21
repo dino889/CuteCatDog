@@ -135,6 +135,10 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
 
         }
+
+        binding.fragmentDiaryWriteBack.setOnClickListener {
+            this@DiaryWriteFragment.findNavController().popBackStack()
+        }
     }
     fun initData(){
         runBlocking {
