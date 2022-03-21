@@ -81,20 +81,40 @@ public class CalendarController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "반려동물 접종/산책 일정 조회", notes = "해당 id에 해당하는 반려동물의 1: 접종/2: 산책 일정을 모두 조회한다.", response = Map.class)
-    @GetMapping("/{pet_id}/{type}")
-    public ResponseEntity<Message> scheduleListIno(@PathVariable(name = "pet_id") int pet_id, @PathVariable(name = "type") int type) throws Exception {
+    @ApiOperation(value = "반려동물 접종 일정 조회", notes = "해당 id에 해당하는 반려동물의 접종 일정을 모두 조회한다.", response = Map.class)
+    @GetMapping("/inoculation/{pet_id}")
+    public ResponseEntity<Message> scheduleListIno(@PathVariable(name = "pet_id") int pet_id) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             HashMap<String, List<ScheduleDto>> data = new HashMap<>();
-            if (type == 1) {
-                data.put("schedules", scheduleService.findScheduleIno(pet_id));
-            }else if(type == 2){
-                data.put("schedules", scheduleService.findScheduleWalk(pet_id));
+            data.put("schedules", scheduleService.findScheduleIno(pet_id));
+            response.setData(data);
+            status = HttpStatus.OK;
+            if (data.get("schedules").size() > 0) {
+                response.setMessage("일정 조회 성공");
+            } else {
+                response.setMessage("일정이 없습니다.");
             }
-            
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ApiOperation(value = "반려동물 산책 일정 조회", notes = "해당 id에 해당하는 반려동물의 산책 일정을 모두 조회한다.", response = Map.class)
+    @GetMapping("/walk/{pet_id}")
+    public ResponseEntity<Message> scheduleListWalk(@PathVariable(name = "pet_id") int pet_id) throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<ScheduleDto>> data = new HashMap<>();
+            data.put("schedules", scheduleService.findScheduleWalk(pet_id));
             response.setData(data);
             status = HttpStatus.OK;
             if (data.get("schedules").size() > 0) {
