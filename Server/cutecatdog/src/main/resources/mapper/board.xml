@@ -3,18 +3,25 @@
 
 <mapper namespace="com.cutecatdog.mapper.BoardMapper">
 	
-	<select id="selectBoard" resultType="BoardDto">
+	<select id="selectBoard" resultType="BoardResponsDto">
     SELECT *
     FROM tbl_board
+    
+	</select>
+
+  <select id="selectTypeBoard" resultType="BoardDto" parameterType="int">
+    SELECT *
+    FROM tbl_board
+    WHERE type_id = #{typeId}
 	</select>
 
   <insert id="insertBoard" parameterType="BoardAddRequestDto">
-    INSERT INTO tbl_board (user_id,title,content,author) VALUES(#{userId},#{title},#{content},#{author})
+    INSERT INTO tbl_board (user_id,title,content,author,type_id) VALUES(#{userId},#{title},#{content},#{author},#{typeId})
   </insert>
 
   <update id="updateBoard" parameterType="BoardModifyRequestDto">
     UPDATE tbl_board
-    SET title = #{title} , content = #{content} 
+    SET title = #{title} , content = #{content}  , type_id = #{typeId}
     WHERE id = #{id}
   </update>
 
@@ -23,4 +30,17 @@
     FROM tbl_board
     WHERE id = #{id}
   </delete>
+
+	<select id="selectComment" parameterType="int" resultType="commentDto">
+    SELECT id,parent,comment,dept,seq
+    FROM tbl_comment
+    WHERE board_id = #{id}
+    ORDER BY IF(ISNULL(parent), id, parent), seq
+	</select>
+
+  <select id="selectDetailBoard" parameterType="int" resultType="BoardDetailDto">
+    SELECT  title,content,author
+    FROM tbl_board
+    WHERE id = #{id}
+  </select>
 </mapper>

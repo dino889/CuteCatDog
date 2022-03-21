@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BoardModifyRequestDto {
+public class BoardTypeDto {
   Integer id;
+  Integer userId;
   String title;
-  String content;
-  Integer typeId;
+  String author;
 }
