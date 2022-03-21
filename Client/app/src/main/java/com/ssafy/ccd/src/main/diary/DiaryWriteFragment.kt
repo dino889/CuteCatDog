@@ -21,8 +21,11 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
@@ -49,6 +52,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     private lateinit var photoAdapter:DiaryPhotoAdapter
     private val GALLERY_CODE = 20
     private val fileNames = arrayListOf<String>()
+    private var mauth = FirebaseAuth.getInstance()
     var curDate = Date()
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
     private lateinit var contentResolver : ContentResolver
@@ -77,6 +81,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         runBlocking {
             mainViewModel.getHashTags()
         }
+
         FirebaseAuth.getInstance().signInAnonymously()
         if(flag==2){
             initData()
@@ -293,6 +298,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     }
 
     private fun getFilterHashTag(){
+
         var fullText = binding.fragmentDiaryWriteHashTag.text.toString()
         var text = fullText.split(" ")
         for(i in 0..text.size-1){
@@ -364,6 +370,23 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        var user = mauth.currentUser
+        if(user!=null){
+
+        }else{
+            signInAnonymously()
+        }
+    }
+    private fun signInAnonymously(){
+        mauth.signInAnonymously().addOnSuccessListener(requireActivity(), OnSuccessListener<AuthResult>() {
+            
+        }).addOnFailureListener(mainActivity) {
+            Log.e(TAG, "signInAnonymously: ",)
+        }
     }
     companion object {
         @JvmStatic
