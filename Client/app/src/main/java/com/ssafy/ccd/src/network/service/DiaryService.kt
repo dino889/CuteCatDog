@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.network.service
 
 import com.ssafy.ccd.src.dto.Diary
+import com.ssafy.ccd.src.dto.Hashtag
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
@@ -33,5 +34,9 @@ class DiaryService {
 
     suspend fun deleteDiaryService(id:Int):Response<Message> {
         return RetrofitUtil.diaryService.diaryDelete(id)
+    }
+
+    suspend fun getHashTagService():Response<Message>{
+        return RetrofitUtil.diaryService.hashTagList()
     }
 }

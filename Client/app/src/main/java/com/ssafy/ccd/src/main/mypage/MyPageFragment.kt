@@ -92,7 +92,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             }
             return false
         }
-
     }
     fun DeletePets(petId:Int){
         GlobalScope.launch {

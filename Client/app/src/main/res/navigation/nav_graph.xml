@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
             app:destination="@id/diaryWriteFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryDetailFragment"
+            app:destination="@id/diaryDetailFragment" />
     </fragment>
 
     <fragment
@@ -81,5 +84,20 @@
         android:name="com.ssafy.ccd.src.main.home.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/diaryDetailFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryDetailFragment"
+        android:label="DiaryDetailFragment" >
+        <action
+            android:id="@+id/action_diaryDetailFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <argument
+            android:name="diaryId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_diaryDetailFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
+    </fragment>
 
 </navigation>

@@ -3,6 +3,7 @@ package com.ssafy.ccd.src.main.diary
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
@@ -44,11 +45,23 @@ class DiaryAdapter(val context: Context,val viewModel:MainViewModels, val owner:
 //                })
                 photoListAdapter.list = list[position].photo as MutableList<Photo>
             }
+            itemView.setOnClickListener {
+                itemClickListener.onClick(it,position,list[position].id)
+            }
 
         }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+    interface ItemClickListener{
+        fun onClick(view: View, position: Int, id: Int)
+    }
+
+    private lateinit var itemClickListener : ItemClickListener
+
+    fun setItemClickListener(itemClickListener: ItemClickListener){
+        this.itemClickListener = itemClickListener
     }
 }

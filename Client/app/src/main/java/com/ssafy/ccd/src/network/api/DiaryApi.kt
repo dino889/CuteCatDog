@@ -27,4 +27,7 @@ interface DiaryApi {
 
     @PUT("/diary")
     suspend fun diaryUpdate(@Body diaryDto:Diary):Response<Message>
+
+    @GET("/hashtags")
+    suspend fun hashTagList():Response<Message>
 }
