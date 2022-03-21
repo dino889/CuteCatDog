@@ -1,4 +1,4 @@
-package com.cutecatdog.model;
+package com.cutecatdog.model.Calendar;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
