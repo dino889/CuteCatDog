@@ -331,13 +331,14 @@ class MainViewModels : ViewModel() {
                         var type = object:TypeToken<MutableList<Diary?>?>() {}.type
                         var type2 = object:TypeToken<MutableList<Photo?>?>() {}.type
                         var diary = CommonUtils.parseDto<MutableList<Diary>>(res.data.get("diarys")!!,type)
-                        var photos = listOf<Photo>()
-                        for(i in 0..diary.size-1){
-//                            var photo = diary[i].photo.toMutableList()
-//                            photo[i] = photo
-//                            photos.add(photo)
-                            setDiaryPhotoList(diary[i].photo.toMutableList())
-                        }
+
+//                        var photos = listOf<Photo>()
+//                        for(i in 0..diary.size-1){
+////                            var photo = diary[i].photo.toMutableList()
+////                            photo[i] = photo
+////                            photos.add(photo)
+//                            setDiaryPhotoList(diary[i].photo.toMutableList())
+//                        }
                         setDiaryList(diary)
 
                     }else{

@@ -50,7 +50,7 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding>(FragmentDiaryBinding::b
     fun initAdapter(){
         mainViewModel.diaryList.observe(viewLifecycleOwner, {
             Log.d(TAG, "initAdapter: ${it}")
-            diaryAdapter = DiaryAdapter(requireContext())
+            diaryAdapter = DiaryAdapter(requireContext(),mainViewModel,viewLifecycleOwner)
             diaryAdapter.list = it
             binding.fragmentDiaryRv.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)

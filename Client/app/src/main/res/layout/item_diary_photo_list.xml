@@ -15,12 +15,12 @@
         <ImageView
             android:id="@+id/fragmentDiary_img_item"
             android:layout_width="370dp"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:scaleType="fitXY"
+            app:imageUrlDiary="@{photo.photo}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:imageUrlDiary = "@{photo.photo}" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
