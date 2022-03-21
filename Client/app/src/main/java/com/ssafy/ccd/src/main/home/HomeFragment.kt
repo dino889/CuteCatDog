@@ -40,9 +40,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
         }
-        mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
+        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
             binding.loginUser = it
-        }
+        })
 
         initAdapter()
 
@@ -50,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     private fun initAdapter(){
-        mainViewModel.myPetsList.observe(viewLifecycleOwner) {
+        mainViewModel.myPetsList.observe(viewLifecycleOwner, {
             petAdapter = HomeProfilePetsAdapter(it)
             binding.fragmentHomeRvPets.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

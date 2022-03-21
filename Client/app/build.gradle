@@ -28,7 +28,6 @@ android {
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
-        exclude 'mozilla/public-suffix-list.txt'
     }
 
     compileOptions {
