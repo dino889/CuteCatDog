@@ -59,7 +59,7 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
         imageView = binding.fragmentAiImage
         analygyBtn = binding.fragmentAiSelectBtnAnaylsis
         mainViewModels = (requireActivity() as MainActivity).mainViewModels
-        backBtn = binding.fragmentAiBack
+        backBtn = binding.fragmentAiSelectIvBack
         radioGroup = binding.fragmentAiSelectRg
     }
 
