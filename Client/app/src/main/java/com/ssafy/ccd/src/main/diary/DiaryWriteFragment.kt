@@ -69,6 +69,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 flag= 2;
             }
         }
+        mainActivity.hideBottomNavi(true)
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -395,6 +396,12 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             Log.e(TAG, "signInAnonymously: ",)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.hideBottomNavi(false)
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
