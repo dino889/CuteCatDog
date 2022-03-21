@@ -258,12 +258,13 @@ public class DiaryController {
                 int diary_id = diaryDto.getId();
                 ArrayList<String> hash = new ArrayList<>();
                 List<HashtagDto> list = hashtagService.findHashtag(diary_id);
+                System.out.println(list);
                 if (diaryDto.getHashtag() != null) {
                     for (HashtagDto hashtagDto : diaryDto.getHashtag()) {
                         if (hashtagDto.getId() == 0) { // 추가된 해시태그
                             hash.add(hashtagDto.getHashtag());
                         } else {// 기존 해시태그
-                            list.remove(hashtagDto.getId()); // 해시 목록에서 삭제
+                            list.remove(list.indexOf(hashtagDto)); // 해시 목록에서 삭제
                         }
                     }
                 }
@@ -273,7 +274,8 @@ public class DiaryController {
                     hashtagParamDto.setHashtag(hashtagDto.getHashtag());
                     hashtagService.removeHashtagDiary(hashtagParamDto);
                 }
-                for (String hashtag : hash) { // 추가된 해시태그 넣기
+                for (String hashtag : hash) {
+                    hashtagService.addHashtag(hashtag); // 추가된 해시태그 넣기
                     HashtagParamDto hashtagParamDto = new HashtagParamDto();
                     hashtagParamDto.setDiary_id(diary_id);
                     hashtagParamDto.setHashtag(hashtag);
@@ -287,7 +289,7 @@ public class DiaryController {
                         if (photoDto.getId() == 0) {
                             photos.add(photoDto.getPhoto());
                         } else {
-                            list2.remove(photoDto.getId());
+                            list2.remove(list2.indexOf(photoDto));
                         }
                     }
                 }
