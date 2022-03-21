@@ -23,10 +23,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private lateinit var petAdapter:HomeProfilePetsAdapter
     private lateinit var mainActivity : MainActivity
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -46,7 +42,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
         initAdapter()
 
-        userInfoBtnClickEvent()
     }
 
     private fun initAdapter(){
@@ -72,9 +67,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         })
     }
 
-    private fun userInfoBtnClickEvent() {
-        binding.fragmentHomeUserImg.setOnClickListener {
-            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
-        }
-    }
 }
