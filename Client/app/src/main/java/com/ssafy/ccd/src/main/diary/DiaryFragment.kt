@@ -6,7 +6,9 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +59,17 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding>(FragmentDiaryBinding::b
                 adapter = diaryAdapter
                 adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
+            diaryAdapter.setItemClickListener(object : DiaryAdapter.ItemClickListener{
+                override fun onClick(view: View, position: Int, id: Int) {
+                    mainActivity.runOnUiThread(Runnable {
+                        Log.d(TAG, "onClick: ${id}")
+//                        setFragmentResult("diaryId", bundleOf("diaryId" to id))
+                        val diaryId = bundleOf("diaryId" to id)
+                        this@DiaryFragment.findNavController().navigate(R.id.action_diaryFragment_to_diaryDetailFragment, diaryId)
+                    })
+                }
+
+            })
         })
     }
 
