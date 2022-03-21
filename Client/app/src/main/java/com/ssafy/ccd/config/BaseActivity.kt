@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.google.android.youtube.player.YouTubeBaseActivity
 
 
 // 액티비티의 기본을 작성, 뷰 바인딩 활용

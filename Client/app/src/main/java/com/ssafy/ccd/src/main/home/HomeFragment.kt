@@ -64,12 +64,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
             })
 
-            petAdapter.setItemClickListener(object :HomeProfilePetsAdapter.ItemClickListener {
+            petAdapter.setItemClickListener(object : HomeProfilePetsAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
 
                 }
             })
-        })
+        }
     }
 
     private fun userInfoBtnClickEvent() {
