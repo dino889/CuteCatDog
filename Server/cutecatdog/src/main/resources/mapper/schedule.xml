@@ -4,7 +4,7 @@
 <mapper namespace="com.cutecatdog.mapper.ScheduleMapper">
 
     <insert id="insertSchedule" parameterType="ScheduleDto">
-		INSERT INTO tbl_schedule (user_id, pet_id, type, type, title, memo, datetime)
+		INSERT INTO tbl_schedule (user_id, pet_id, type, title, memo, datetime)
 		VALUES (#{userId}, #{petId}, #{type}, #{title}, #{memo}, #{datetime})
 	</insert>
 

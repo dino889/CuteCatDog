@@ -11,11 +11,11 @@ public class ScheduleDto {
     @ApiModelProperty(value = "ID")
     private int id;
     @ApiModelProperty(value = "사용자 id", required = true)
-    private String userId;
+    private int userId;
     @ApiModelProperty(value = "반려동물 id", required = true)
-    private String petId;
+    private int petId;
     @ApiModelProperty(value = "일정 종류(1: 접종 2: 산책)", required = true)
-    private String type;
+    private int type;
     @ApiModelProperty(value = "일정 제목", required = true)
     private String title;
     @ApiModelProperty(value = "메모", required = false)
