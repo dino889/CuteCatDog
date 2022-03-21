@@ -24,6 +24,7 @@ import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
 import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -179,6 +180,16 @@ fun bindPetConvertNeutering(textView:TextView, neuter:Int){
     }else{
         textView.text = "O"
     }
+}
+@BindingAdapter("diaryDate")
+fun bindDiaryConvertDate(textView:TextView, date:String){
+    var diary = CommonUtils.makeBirthString(date)
+    var monthTmp = diary.substring(6,8)
+    var dayTmp = diary.substring(9,12)
+    var months = CommonUtils.convertEnglishMonth(monthTmp.toInt())
+    var month = months.substring(0,3)
+    textView.text = "${dayTmp} \n ${month}"
+
 }
 
 @BindingAdapter("homePetListData")

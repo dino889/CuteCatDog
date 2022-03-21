@@ -320,6 +320,12 @@ class MainViewModels : ViewModel() {
         _photoList.add(photo)
         photoList.value = _photoList
     }
+    fun allClearPhotoUriList(){
+        _photoUriList.clear()
+    }
+    fun allClearPhotoList(){
+        _photoList.clear()
+    }
     suspend fun getDiaryList(userId:Int){
         val response = DiaryService().diaryListbyDescService(userId)
         viewModelScope.launch {

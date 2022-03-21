@@ -31,6 +31,7 @@ class DiaryAdapter(val context: Context,val viewModel:MainViewModels, val owner:
     override fun onBindViewHolder(holder: DiaryViewHolder, position: Int) {
         var photoListManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         var photoListAdapter = DiaryPhotoRvAdapter()
+
         holder.apply {
             bind(list[position])
             Log.d("DiaryAdapter", "onBindViewHolder: ${list[position].photo}")
