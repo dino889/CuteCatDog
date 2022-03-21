@@ -9,6 +9,5 @@ public class BoardDto {
   Integer id;
   Integer userId;
   String title;
-  String content;
   String author;
 }

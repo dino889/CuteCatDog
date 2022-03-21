@@ -6,9 +6,16 @@ import java.util.List;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.board.BoardAddRequestDto;
+import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
+import com.cutecatdog.model.board.BoardResponsDto;
+import com.cutecatdog.model.comment.CommentAddRequestDto;
+import com.cutecatdog.model.comment.CommentAddShowRequestDto;
+import com.cutecatdog.model.comment.CommentModifyRequestDto;
+import com.cutecatdog.model.comment.CommentRequestDto;
 import com.cutecatdog.service.BoardService;
+import com.cutecatdog.service.CommentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,14 +40,33 @@ public class BoardController {
   @Autowired
   private BoardService boardService;
 
+  @Autowired
+  private CommentService commentService;
+
+
   @ApiOperation(value = "게시글 전체 보기", notes = "", response = List.class)
   @GetMapping()
   public ResponseEntity<Message> boardList() throws Exception{
     HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 
-    List<BoardDto> boards = new ArrayList();
+    List<BoardResponsDto> boards;
 		boards = boardService.findBoard();
+		HashMap<String,List<BoardResponsDto>> map = new HashMap<>();
+		map.put("boards", boards);
+		message.setData(map);
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "게시글 타입 보기", notes = "", response = List.class)
+  @GetMapping("/type/{typeId}")
+  public ResponseEntity<Message> boardTypeList(@PathVariable("typeId") int typeId) throws Exception{
+    HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+
+    List<BoardDto> boards;
+		boards = boardService.findTypeBoard(typeId);
 		HashMap<String,List<BoardDto>> map = new HashMap<>();
 		map.put("boards", boards);
 		message.setData(map);
@@ -96,6 +122,103 @@ public class BoardController {
 		HttpStatus status = null;
     HashMap<String,Boolean> map = new HashMap<>();
 		if (boardService.removeBoard(id)) {
+			status = HttpStatus.OK;
+      map.put("isSuccess", true);
+			message.setSuccess(true);
+      message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+    map.put("isSuccess", false);
+		message.setSuccess(false);
+    message.setData(map);
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "게시글 상세 보기", notes = "", response = List.class)
+  @GetMapping("{id}")
+  public ResponseEntity<Message> commentList(@PathVariable("id") int id) throws Exception{
+    HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+
+    BoardDetailDto board;
+    HashMap<String,BoardDetailDto> map = new HashMap<>();
+		board = boardService.findDetailBoard(id);
+    map.put("board", board);
+    message.setData(map);
+    message.setSuccess(true);
+  
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "대댓글 등록", notes = "대댓글을 등록한다.", response = List.class)
+  @PostMapping("/comment/add")
+  public ResponseEntity<Message> commentAdd(@RequestBody CommentAddShowRequestDto commentAddShowRequestDto) throws Exception {
+    Message message = new Message();
+		HttpStatus status = null;
+    HashMap<String,Boolean> map = new HashMap<>();
+		if (commentService.addComment(commentAddShowRequestDto)) {
+			status = HttpStatus.OK;
+      map.put("isSuccess", true);
+			message.setSuccess(true);
+      message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+    map.put("isSuccess", false);
+		message.setSuccess(false);
+    message.setData(map);
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "댓글 등록", notes = "댓글을 등록한다.", response = List.class)
+  @PostMapping("/comment")
+  public ResponseEntity<Message> commentAdd(@RequestBody CommentRequestDto commentRequestDto) throws Exception {
+    Message message = new Message();
+		HttpStatus status = null;
+    HashMap<String,Boolean> map = new HashMap<>();
+		if (commentService.addRealComment(commentRequestDto)) {
+			status = HttpStatus.OK;
+      map.put("isSuccess", true);
+			message.setSuccess(true);
+      message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+    map.put("isSuccess", false);
+		message.setSuccess(false);
+    message.setData(map);
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "댓글 수정", notes = "댓글을 수정한다.", response = List.class)
+  @PutMapping("/comment")
+  public ResponseEntity<Message> commentModify(@RequestBody CommentModifyRequestDto commentModifyRequestDto) throws Exception {
+    Message message = new Message();
+		HttpStatus status = null;
+    HashMap<String,Boolean> map = new HashMap<>();
+		if (commentService.modifyComment(commentModifyRequestDto)) {
+			status = HttpStatus.OK;
+      map.put("isSuccess", true);
+			message.setSuccess(true);
+      message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+    map.put("isSuccess", false);
+		message.setSuccess(false);
+    message.setData(map);
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+  @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.", response = List.class)
+  @DeleteMapping("/comment/{id}")
+  public ResponseEntity<Message> commentRemove(@PathVariable("id") int id) throws Exception {
+    Message message = new Message();
+		HttpStatus status = null;
+    HashMap<String,Boolean> map = new HashMap<>();
+		if (commentService.removeComment(id)) {
 			status = HttpStatus.OK;
       map.put("isSuccess", true);
 			message.setSuccess(true);
