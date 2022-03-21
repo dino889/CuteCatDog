@@ -69,7 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
                 }
             })
-        }
+        })
     }
 
     private fun userInfoBtnClickEvent() {
