@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.ArrayAdapter
 import android.widget.MultiAutoCompleteTextView
+import android.widget.MultiAutoCompleteTextView.CommaTokenizer
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -305,6 +306,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             hashs.add(Hashtag(text[i],i))
         }
     }
+
     private fun initHashs(){
         var hashs = mutableListOf<String>()
         for(item in 0..mainViewModel.hashList.value!!.size-1){
@@ -314,10 +316,11 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         Log.d(TAG, "initHashs: ${hashs}")
         var adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_dropdown_item_1line,hashs)
 
-        binding.fragmentDiaryWriteHashTag.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
+        binding.fragmentDiaryWriteHashTag.setTokenizer(SpaceTokenizer())
         binding.fragmentDiaryWriteHashTag.setAdapter(adapter)
 
     }
+
     inner class SpaceTokenizer : MultiAutoCompleteTextView.Tokenizer {
         override fun findTokenStart(text: CharSequence?, cursor: Int): Int {
             var i = cursor
