@@ -151,6 +151,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 updatePets(pet)
             }
         }
+
+        binding.fragmentAddPetBack.setOnClickListener {
+            this@AddPetFragment.findNavController().popBackStack()
+        }
     }
     fun initData(){
         binding.fragmentAddPetSuccessBtn.setText("수정")

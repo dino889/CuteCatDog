@@ -128,7 +128,6 @@ class MainViewModels : ViewModel() {
 
         viewModelScope.launch {
             val res = response.body()
-            Log.d(TAG, "JoinFragment_ccd: $res")
             if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
                     result = res
@@ -263,6 +262,7 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+
     suspend fun getKindbyId(kindId:Int){
         val response = PetService().kindsById(kindId)
         viewModelScope.launch {

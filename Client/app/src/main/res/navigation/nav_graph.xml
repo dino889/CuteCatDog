@@ -10,9 +10,7 @@
         android:name="com.ssafy.ccd.src.main.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
+
         <action
             android:id="@+id/action_homeFragment_to_addPetFragment"
             app:destination="@id/addPetFragment" />
@@ -56,6 +54,9 @@
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_my_page">
         <action
+            android:id="@+id/action_homeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
             android:id="@+id/action_myPageFragment_to_addPetFragment"
             app:destination="@id/addPetFragment" />
     </fragment>
@@ -81,7 +82,7 @@
 
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.ssafy.ccd.src.main.home.UserProfileFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" />
     <fragment
