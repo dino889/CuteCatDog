@@ -33,7 +33,7 @@ public class CalendarController {
 
     @ApiOperation(value = "사용자 등록 일정 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
     @GetMapping("/user/{user_id}")
-    public ResponseEntity<Message> scheduleList(@PathVariable(name = "userId") int userId) throws Exception {
+    public ResponseEntity<Message> scheduleList(@PathVariable(name = "user_id") int userId) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
