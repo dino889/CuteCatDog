@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,30 +23,57 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     private lateinit var petAdapter:HomeProfilePetsAdapter
     private lateinit var mainActivity : MainActivity
-
+    
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
     }
 
+    // Binding items
+    private lateinit var ivKnowledge : ImageView
+    private lateinit var ivHomeUserImg : ImageView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = mainViewModel
+
+        setInstance()
+        setListener()
+
         runBlocking {
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
         }
-        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
+
+        mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
             binding.loginUser = it
-        })
+        }
 
         initAdapter()
+    }
+
+    private fun setListener() {
+        ivHomeUserImg.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
+        }
+
+        ivKnowledge.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.informationMainFragment)
+        }
+    }
+
+    private fun setInstance() {
+        mainActivity = context as MainActivity
+        binding.viewModel = mainViewModel
+
+        // binding
+        ivHomeUserImg = binding.fragmentHomeUserImg
+        ivKnowledge = binding.fragmentHomeIvKnowledge
 
     }
 
     private fun initAdapter(){
-        mainViewModel.myPetsList.observe(viewLifecycleOwner, {
+        mainViewModel.myPetsList.observe(viewLifecycleOwner) {
             petAdapter = HomeProfilePetsAdapter(it)
             binding.fragmentHomeRvPets.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -64,7 +92,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
                 }
             })
-        })
+        }
     }
-
 }

@@ -5,18 +5,12 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.KeyEvent
-import android.view.View
 import android.view.Window
-import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.FrameLayout
-import com.google.android.youtube.player.YouTubeBaseActivity
-import com.google.android.youtube.player.YouTubeInitializationResult
-import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayerView
 import com.ssafy.ccd.R
+import com.ssafy.ccd.src.main.information.util.FullscreenableChromeClient
 
 lateinit var wvYoutube : WebView
 
