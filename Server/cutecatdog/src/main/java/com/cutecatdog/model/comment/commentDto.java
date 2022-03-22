@@ -8,7 +8,10 @@ import lombok.Setter;
 public class commentDto {
   String nickname;
   String comment;
+  Integer parent;
   Integer dept;
   Integer seq;
   Integer id;
+  Integer boardId;
+  Integer userId;
 }

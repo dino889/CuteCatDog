@@ -1,6 +1,5 @@
 package com.cutecatdog.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,12 +9,13 @@ import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
-import com.cutecatdog.model.comment.CommentAddRequestDto;
 import com.cutecatdog.model.comment.CommentAddShowRequestDto;
 import com.cutecatdog.model.comment.CommentModifyRequestDto;
 import com.cutecatdog.model.comment.CommentRequestDto;
+import com.cutecatdog.model.like.LikeRequestDto;
 import com.cutecatdog.service.BoardService;
 import com.cutecatdog.service.CommentService;
+import com.cutecatdog.service.LikeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +42,9 @@ public class BoardController {
 
   @Autowired
   private CommentService commentService;
+
+  @Autowired
+  private LikeService likeService;
 
 
   @ApiOperation(value = "게시글 전체 보기", notes = "", response = List.class)
@@ -220,6 +223,26 @@ public class BoardController {
 		HttpStatus status = null;
     HashMap<String,Boolean> map = new HashMap<>();
 		if (commentService.removeComment(id)) {
+			status = HttpStatus.OK;
+      map.put("isSuccess", true);
+			message.setSuccess(true);
+      message.setData(map);
+			return new ResponseEntity<Message>(message, status);
+		}
+    map.put("isSuccess", false);
+		message.setSuccess(false);
+    message.setData(map);
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
+ @ApiOperation(value = "댓글 등록", notes = "댓글을 등록한다.", response = List.class)
+  @PostMapping("/likes")
+  public ResponseEntity<Message> likeAdd(@RequestBody LikeRequestDto likeRequestDto) throws Exception {
+    Message message = new Message();
+		HttpStatus status = null;
+    HashMap<String,Boolean> map = new HashMap<>();
+		if (likeService.addLike(likeRequestDto)) {
 			status = HttpStatus.OK;
       map.put("isSuccess", true);
 			message.setSuccess(true);

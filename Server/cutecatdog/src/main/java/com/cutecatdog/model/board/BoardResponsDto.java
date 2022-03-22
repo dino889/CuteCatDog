@@ -11,4 +11,5 @@ public class BoardResponsDto {
   String title;
   String author;
   Integer typeId;
+  String content;
 }

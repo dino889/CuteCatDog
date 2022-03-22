@@ -10,8 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoardDetailDto {
+  Integer userId;
   String title;
   String content;
   String author;
+  Integer typeId;
+  Integer id;
   List<commentDto> commentDto;
 }

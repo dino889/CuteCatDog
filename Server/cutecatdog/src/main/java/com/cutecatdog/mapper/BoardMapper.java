@@ -28,7 +28,5 @@ public interface BoardMapper {
   public BoardDetailDto selectDetailBoard(int id) throws SQLException;
 
   public List<commentDto> selectComment(int id) throws SQLException;
-
-  public boolean updateLikeBoard(int id) throws SQLException;
   
 }
