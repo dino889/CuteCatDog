@@ -23,7 +23,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     private lateinit var petAdapter:HomeProfilePetsAdapter
     private lateinit var mainActivity : MainActivity
-    
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -89,7 +89,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
             petAdapter.setItemClickListener(object : HomeProfilePetsAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
-
                 }
             })
         }
