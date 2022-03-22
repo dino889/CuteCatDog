@@ -3,18 +3,22 @@ package com.ssafy.ccd.src.main.ai
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentResolver
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiBinding
 import com.ssafy.ccd.src.main.MainActivity
+import com.ssafy.ccd.src.main.information.InformationActivity
+import com.ssafy.ccd.src.main.information.InformationMainFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
 import org.tensorflow.lite.DataType
@@ -40,6 +44,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private lateinit var mainViewModels: MainViewModels
     private lateinit var mainActivity: MainActivity
     private lateinit var contentResolver : ContentResolver
+    private lateinit var intent: Intent
 
     // 로딩바
     lateinit var progressDialog: ProgressDialog
@@ -49,6 +54,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private lateinit var imageView:ImageView
     private lateinit var tvEmotion:TextView
     private lateinit var tvSolution:TextView
+    private lateinit var ivBack : ImageView
+    private lateinit var clTrain : ConstraintLayout
+    private lateinit var clCon : ConstraintLayout
+    private lateinit var clMore : ConstraintLayout
 
     // 이미지 관련 객체
     private var imageSizeX = 0
@@ -70,10 +79,47 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         super.onViewCreated(view, savedInstanceState)
         runBlocking {
             setInstance()
+            setListener()
         }
 
         progressDialog.show()
         setInit()
+    }
+
+    private fun setListener() {
+        // 뒤로가기 버튼
+        ivBack.setOnClickListener {
+            childFragmentManager.popBackStack()
+        }
+
+        clTrain.setOnClickListener {
+            if (mainViewModel.aiType == 0) {
+                // 강아지 훈련
+                intent.putExtra("type", 0)
+                startActivity(intent)
+            }else{
+                // 고양이 훈련
+                intent.putExtra("type", 2)
+                startActivity(intent)
+            }
+        }
+
+        clCon.setOnClickListener {
+            if (mainViewModel.aiType == 0) {
+                // 강아지 교감
+                intent.putExtra("type", 1)
+                startActivity(intent)
+            }else{
+                // 고양이 교감
+                intent.putExtra("type", 3)
+                startActivity(intent)
+            }
+        }
+
+        clCon.setOnClickListener {
+            val intentIM = Intent(requireActivity(), InformationMainFragment::class.java)
+            startActivity(intentIM)
+        }
     }
 
     private fun setInstance() {
@@ -81,6 +127,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         mainActivity =  (requireActivity() as MainActivity)
         contentResolver = mainActivity.contentResolver
         mainViewModels = mainActivity.mainViewModels
+        intent = Intent(requireActivity(), InformationActivity::class.java)
 
         // 로딩바
         progressDialog = ProgressDialog(requireActivity())
@@ -94,6 +141,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         imageView.setImageURI(mainViewModels.uploadedImageUri)
         tvEmotion = binding.fragmentAiResultEmotion
         tvSolution = binding.fragmentAiResultSolution
+        ivBack = binding.fragmentAiIvBack
+        clTrain = binding.fragmentAiClTra
+        clCon = binding.fragmentAiClCon
+        clMore = binding.fragmentAiClMore
 
         // TensorFlow 객체
         try {

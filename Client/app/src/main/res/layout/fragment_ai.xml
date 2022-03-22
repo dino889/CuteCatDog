@@ -216,7 +216,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView37">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout18"
+                        android:id="@+id/fragmentAi_clCon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -251,12 +251,12 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout19"
+                        android:id="@+id/fragmentAi_clTra"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/constraintLayout18"
+                        app:layout_constraintStart_toEndOf="@+id/fragmentAi_clCon"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -287,11 +287,12 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/fragmentAi_clMore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/constraintLayout19"
+                        app:layout_constraintStart_toEndOf="@+id/fragmentAi_clTra"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
