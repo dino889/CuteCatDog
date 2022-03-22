@@ -1,6 +1,5 @@
 package com.ssafy.ccd.src.main.home.Information
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
-import com.ssafy.ccd.databinding.ItemLoadingBinding
 import com.ssafy.ccd.src.dto.ItemInfo
-import com.ssafy.ccd.src.dto.YoutubeInfo
-import com.ssafy.ccd.src.main.information.InformationActivity
-import com.ssafy.ccd.src.main.information.YoutubeDialog
 
 
 class InformationRecyclerViewAdapter(private var context: Context, private var datas: MutableList<ItemInfo>)
@@ -30,7 +25,7 @@ class InformationRecyclerViewAdapter(private var context: Context, private var d
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int ) : RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_youtube_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_information, parent, false)
         return InformationHolder(view)
     }
 
