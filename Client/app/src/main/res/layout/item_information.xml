@@ -8,7 +8,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,6 +25,7 @@
                 android:layout_width="100dp"
                 android:layout_height="80dp"
                 android:layout_margin="8dp"
+                app:srcCompat="@drawable/defaultimg"
                 tools:srcCompat="@drawable/defaultimg" />
 
             <TextView
