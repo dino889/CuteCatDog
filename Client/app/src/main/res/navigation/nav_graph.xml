@@ -100,5 +100,10 @@
             android:id="@+id/action_diaryDetailFragment_to_diaryWriteFragment"
             app:destination="@id/diaryWriteFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/informationMainFragment"
+        android:name="com.ssafy.ccd.src.main.information.InformationMainFragment"
+        android:label="fragment_information_main"
+        tools:layout="@layout/fragment_information_main" />
 
 </navigation>

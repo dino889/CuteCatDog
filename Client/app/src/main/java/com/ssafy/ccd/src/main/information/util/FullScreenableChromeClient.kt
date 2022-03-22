@@ -1,4 +1,4 @@
-package com.ssafy.ccd.src.main.information
+package com.ssafy.ccd.src.main.information.util
 
 import android.app.Activity
 import android.content.Context
