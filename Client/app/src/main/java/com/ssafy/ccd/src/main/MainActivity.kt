@@ -100,7 +100,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
      * false - show
      */
     fun hideBottomNavi(state : Boolean) {
-        if(state == true) {
+        if(state) {
             binding.bottomAppBar.visibility = View.GONE
             binding.activityMainFabCam.visibility = View.GONE
         } else {
