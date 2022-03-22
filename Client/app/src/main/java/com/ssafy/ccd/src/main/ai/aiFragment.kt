@@ -7,11 +7,18 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.kakao.kakaolink.v2.KakaoLinkResponse
+import com.kakao.kakaolink.v2.KakaoLinkService
+import com.kakao.message.template.*
+import com.kakao.network.ErrorResult
+import com.kakao.network.callback.ResponseCallback
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiBinding
 import com.ssafy.ccd.src.main.MainActivity
@@ -35,6 +42,7 @@ import java.nio.channels.FileChannel
 import java.util.*
 import kotlin.math.min
 
+private const val TAG = "aiFragment"
 open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,R.layout.fragment_ai) {
     // mainActivity 관련 객체
     private lateinit var mainViewModels: MainViewModels
@@ -74,6 +82,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         progressDialog.show()
         setInit()
+
+        binding.fragmentAiShare.setOnClickListener {
+            kakaoLink()
+        }
     }
 
     private fun setInstance() {
@@ -225,7 +237,56 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
 
     }
+    fun kakaoLink(){
+        val params = FeedTemplate
+            .newBuilder(
+                ContentObject.newBuilder(
+                    "ㅋㅋㄷ 감정분석",
+                    mainViewModels.uploadedImageUri.toString(),
+                    LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                        .setMobileWebUrl("https://developers.kakao.com").build()
+                )
+                    .setDescrption("내친구의 반려동물! 어떤 분석결과가 나왔는지 함께 확인하세요!!")
+                    .build()
+            )
+            .addButton(
+                ButtonObject(
+                    "웹에서 보기",
+                    LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                        .setMobileWebUrl("https://developers.kakako.com")
+                        .build()
+                )
+            )
+            .addButton(
+                ButtonObject(
+                    "앱에서 보기",
+                    LinkObject.newBuilder()
+                        .setWebUrl("https://developers.kakao.com")
+                        .setMobileWebUrl("https://developers.kakao.com")
+                        .setAndroidExecutionParams("key1=value1")
+                        .build()
+                )
+            ).build()
 
+        val serverCallbackArgs: MutableMap<String,String> = HashMap()
+        serverCallbackArgs["user_id"] = ApplicationClass.sharedPreferencesUtil.getUser().id.toString()
+        
+        KakaoLinkService.getInstance().sendDefault(
+            requireContext(),
+            params,
+            serverCallbackArgs,
+            object : ResponseCallback<KakaoLinkResponse?>(){
+                override fun onFailure(errorResult: ErrorResult?) {
+                    Log.d(TAG, "onFailure: ${errorResult.toString()}")
+                }
+
+                override fun onSuccess(result: KakaoLinkResponse?) {
+                }
+
+            }
+        )
+
+    }
     companion object {
         // TensorFlow 관련 Final 값
         private const val IMAGE_MEAN = 0.0f

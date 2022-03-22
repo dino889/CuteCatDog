@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.youtube.player.YouTubeBaseActivity
+import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
@@ -70,6 +71,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         setNavigation()
         setInstance()
         setListener()
+
     }
 
     /**
