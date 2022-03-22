@@ -32,14 +32,15 @@
   </delete>
 
 	<select id="selectComment" parameterType="int" resultType="commentDto">
-    SELECT id,parent,comment,dept,seq
-    FROM tbl_comment
-    WHERE board_id = #{id}
-    ORDER BY IF(ISNULL(parent), id, parent), seq
+    SELECT c.id,c.board_id,c.user_id,c.parent,c.comment,c.dept,c.seq,u.nickname
+    FROM tbl_comment c LEFT OUTER JOIN tbl_user u
+    ON c.user_id = u.id
+    WHERE c.board_id = #{id}
+    ORDER BY IF(ISNULL(c.parent), c.id, c.parent), c.seq
 	</select>
 
   <select id="selectDetailBoard" parameterType="int" resultType="BoardDetailDto">
-    SELECT  title,content,author
+    SELECT  *
     FROM tbl_board
     WHERE id = #{id}
   </select>
