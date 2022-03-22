@@ -9,6 +9,12 @@
         WHERE th.diary_id = #{diary_id} and th.hashtag_id = h.id
 	</select>
 
+	<select id="selectHashtagName" parameterType="int" resultType="String">
+		SELECT h.hashtag as hashtag
+        FROM tbl_hashtag h, tbl_hashtag_in_diary th
+        WHERE th.diary_id = #{diary_id} and th.hashtag_id = h.id
+	</select>
+
 	<select id="selectHashtagList" resultType="HashtagDto">
 		SELECT id, hashtag
         FROM tbl_hashtag

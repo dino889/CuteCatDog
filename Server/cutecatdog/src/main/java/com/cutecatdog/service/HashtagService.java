@@ -15,6 +15,8 @@ public interface HashtagService {
 
     public List<HashtagDto> findHashtag(int diary_id) throws Exception;
 
+    public List<String> findHashtagName(int diary_id) throws Exception;
+
     public List<HashtagDto> findHashtagList() throws Exception;
 
     public Integer findHashtagId(String hashtag) throws Exception;

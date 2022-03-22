@@ -32,6 +32,11 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
+    public List<String> findHashtagName(int diary_id) throws Exception {
+        return sqlSession.getMapper(HashtagMapper.class).selectHashtagName(diary_id);
+    }
+
+    @Override
     public boolean addHashtagtoDiary(HashtagParamDto hashtagParamDto) throws Exception {
         return sqlSession.getMapper(HashtagMapper.class).insertHashtagDiary(hashtagParamDto);
     }

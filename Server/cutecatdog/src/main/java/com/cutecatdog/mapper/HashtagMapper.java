@@ -17,6 +17,8 @@ public interface HashtagMapper {
 
     public List<HashtagDto> selectHashtag(int diary_id) throws SQLException;
 
+    public List<String> selectHashtagName(int diary_id) throws SQLException;
+
     public List<HashtagDto> selectHashtagList() throws SQLException;
     
     public boolean insertHashtagDiary(HashtagParamDto hashtagParamDto) throws SQLException;

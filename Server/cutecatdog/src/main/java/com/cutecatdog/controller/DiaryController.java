@@ -257,21 +257,20 @@ public class DiaryController {
             if (diaryService.modifyDiary(diaryDto)) {
                 int diary_id = diaryDto.getId();
                 ArrayList<String> hash = new ArrayList<>();
-                List<HashtagDto> list = hashtagService.findHashtag(diary_id);
-                System.out.println(list);
+                List<String> list = hashtagService.findHashtagName(diary_id);
                 if (diaryDto.getHashtag() != null) {
                     for (HashtagDto hashtagDto : diaryDto.getHashtag()) {
-                        if (hashtagDto.getId() == 0) { // 추가된 해시태그
+                        if (list.indexOf(hashtagDto.getHashtag())!=-1) {
+                            list.remove(list.indexOf(hashtagDto.getHashtag()));
+                        }else{
                             hash.add(hashtagDto.getHashtag());
-                        } else {// 기존 해시태그
-                            list.remove(list.indexOf(hashtagDto)); // 해시 목록에서 삭제
                         }
                     }
                 }
-                for (HashtagDto hashtagDto : list) { // 남아있는 해시태그 삭제 => 일기에서 삭제된 해시태그
+                for (String hashtag : list) { // 남아있는 해시태그 삭제 => 일기에서 삭제된 해시태그
                     HashtagParamDto hashtagParamDto = new HashtagParamDto();
                     hashtagParamDto.setDiary_id(diary_id);
-                    hashtagParamDto.setHashtag(hashtagDto.getHashtag());
+                    hashtagParamDto.setHashtag(hashtag);
                     hashtagService.removeHashtagDiary(hashtagParamDto);
                 }
                 for (String hashtag : hash) {
