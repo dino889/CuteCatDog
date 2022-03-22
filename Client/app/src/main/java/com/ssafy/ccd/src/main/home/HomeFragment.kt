@@ -32,6 +32,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     // Binding items
     private lateinit var ivKnowledge : ImageView
     private lateinit var ivHomeUserImg : ImageView
+    private lateinit var rvInformation : RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,6 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         // binding
         ivHomeUserImg = binding.fragmentHomeUserImg
         ivKnowledge = binding.fragmentHomeIvKnowledge
+        rvInformation = binding.fragmentHomeRvInformation
 
     }
 
