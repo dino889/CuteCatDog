@@ -15,9 +15,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.dto.Diary
+import com.ssafy.ccd.src.dto.Hashtag
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.dto.Photo
 import com.ssafy.ccd.src.main.diary.DiaryAdapter
+import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
 import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
@@ -102,22 +104,18 @@ fun bindImageUser(imgView: ImageView, imgUrl: String?) {
     } else if(imgUrl.contains("https://")) {
         Glide.with(imgView.context)
             .load(imgUrl)
-//            .circleCrop()
+            .circleCrop()
             .into(imgView)
 
-    }
-    else {
+    } else {
         val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
         val storageRef = storage.reference
-        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-            override fun onSuccess(p0: Uri?) {
-                Glide.with(imgView.context)
-                    .load(p0)
-//                    .circleCrop()
-                    .into(imgView)
-            }
-
-        }).addOnFailureListener(object : OnFailureListener {
+        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener { p0 ->
+            Glide.with(imgView.context)
+                .load(p0)
+                                    .circleCrop()
+                .into(imgView)
+        }.addOnFailureListener(object : OnFailureListener {
             override fun onFailure(p0: Exception) {
             }
         })
@@ -230,4 +228,17 @@ fun bindDiaryRecyclerView(recyclerView: RecyclerView, data:List<Diary>?){
     adapter.list = data as MutableList<Diary>
     adapter.notifyDataSetChanged()
 
+}
+
+@BindingAdapter("diaryHashListData")
+fun bindDiaryHashRecyclerView(recyclerView: RecyclerView, data:List<Hashtag>?){
+    var adapter = recyclerView.adapter as DiaryHashAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as DiaryHashAdapter
+    }
+    adapter.list = data as MutableList<Hashtag>
+    adapter.notifyDataSetChanged()
 }

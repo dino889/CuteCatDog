@@ -154,7 +154,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
      * @return Boolean 허용/거부
      * 권한을 확인하는 함수
      */
-    private fun checkPermission(permissions: Array<out String>, type: Int): Boolean
+    fun checkPermission(permissions: Array<out String>, type: Int): Boolean
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (permission in permissions) {

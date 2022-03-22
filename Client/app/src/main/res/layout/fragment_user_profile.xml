@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toTopOf="@+id/userProfileFragment_ivBack" />
 
             <Button
-                android:id="@+id/userProfileFragment_btnSuccess"
+                android:id="@+id/userProfileFragment_btnConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
@@ -59,10 +59,10 @@
                 android:textColor="@color/main"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:text="완료"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-<!--                android:text="완료"-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/userProfileFragment_clAppBar">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/userProfileFragment_cvPetImage"
+                android:id="@+id/userProfileFragment_cvUserImage"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_margin="10dp"
@@ -89,13 +89,12 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/userProfileFragment_ivPetImage"
+                    android:id="@+id/userProfileFragment_ivUserImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@color/main_30p"
-                    android:scaleType="centerCrop"
-                    app:imageUrlUser="@{user.profileImage}"/>
+                    android:scaleType="centerCrop"/>
 
 
             </com.google.android.material.card.MaterialCardView>
@@ -110,7 +109,6 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_camera_white_512px" />
         </FrameLayout>
-
 
         <LinearLayout
             android:layout_width="0dp"
@@ -134,24 +132,11 @@
                     android:id="@+id/userProfileFragment_etNick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@{user.nickname}"
                     android:background="@drawable/et_background_normal"
-                    android:hint="@{user.nickname}" />
+                    android:hint="NICKNAME" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            <com.google.android.material.textfield.TextInputLayout-->
-            <!--                android:id="@+id/userProfileFragment_tilPw"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="5dp"-->
-            <!--                app:boxBackgroundMode="outline">-->
-            <!--    -->
-            <!--                <com.google.android.material.textfield.TextInputEditText-->
-            <!--                    android:id="@+id/userProfileFragment_etPw"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:background="@drawable/et_background_normal"-->
-            <!--                    android:hint="PW" />-->
-            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -164,6 +149,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:boxBackgroundMode="outline"
+                    android:enabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView"
                     app:layout_constraintStart_toStartOf="parent"
@@ -195,6 +181,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     app:boxBackgroundMode="outline"
+                    android:enabled="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView"
@@ -211,22 +198,13 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/userProfileFragment_btnLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#99FF8A00"
-                android:text="로그아웃" />
-
-            <Button
-                android:id="@+id/userProfileFragment_btnWithdrawal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="#99FF8A00"
-                android:text="회원 탈퇴" />
-
+<!--            <Button-->
+<!--                android:id="@+id/userProfileFragment_btnConfirm"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:backgroundTint="#99FF8A00"-->
+<!--                android:text="확인" />-->
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

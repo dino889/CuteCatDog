@@ -128,7 +128,6 @@ class MainViewModels : ViewModel() {
 
         viewModelScope.launch {
             val res = response.body()
-            Log.d(TAG, "JoinFragment_ccd: $res")
             if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
                     result = res
@@ -263,6 +262,7 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+
     suspend fun getKindbyId(kindId:Int){
         val response = PetService().kindsById(kindId)
         viewModelScope.launch {
@@ -293,21 +293,31 @@ class MainViewModels : ViewModel() {
     var uploadImages : Uri? = null
     private val _diaryList = MutableLiveData<MutableList<Diary>>()
     private val _diaryPhotoList = MutableLiveData<MutableList<Photo>>()
+    private val _diary = MutableLiveData<Diary>()
+    private val _hashList = MutableLiveData<MutableList<Hashtag>>()
 
     val diaryList : LiveData<MutableList<Diary>>
         get() = _diaryList
     val diaryPhotoList : LiveData<MutableList<Photo>>
         get() = _diaryPhotoList
-
+    val diary : LiveData<Diary>
+        get() = _diary
+    val hashList : LiveData<MutableList<Hashtag>>
+        get() = _hashList
     val photoUriList = MutableLiveData<ArrayList<Uri>>().apply{
         value = _photoUriList
     }
-    val photoList = MutableLiveData<ArrayList<Photo>>().apply {
+    var photoList = MutableLiveData<ArrayList<Photo>>().apply {
         value = _photoList
     }
-
+    fun setHashtagList(list:MutableList<Hashtag>) = viewModelScope.launch {
+        _hashList.value = list
+    }
     fun setDiaryList(list:MutableList<Diary>) = viewModelScope.launch {
         _diaryList.value = list
+    }
+    fun setDiary(diary:Diary) = viewModelScope.launch {
+        _diary.value = diary
     }
     fun setDiaryPhotoList(list:MutableList<Photo>) = viewModelScope.launch {
         _diaryPhotoList.value = list
@@ -337,14 +347,6 @@ class MainViewModels : ViewModel() {
                         var type = object:TypeToken<MutableList<Diary?>?>() {}.type
                         var type2 = object:TypeToken<MutableList<Photo?>?>() {}.type
                         var diary = CommonUtils.parseDto<MutableList<Diary>>(res.data.get("diarys")!!,type)
-
-//                        var photos = listOf<Photo>()
-//                        for(i in 0..diary.size-1){
-////                            var photo = diary[i].photo.toMutableList()
-////                            photo[i] = photo
-////                            photos.add(photo)
-//                            setDiaryPhotoList(diary[i].photo.toMutableList())
-//                        }
                         setDiaryList(diary)
 
                     }else{
@@ -353,6 +355,41 @@ class MainViewModels : ViewModel() {
                 }else{
                     Log.d(TAG, "getDiaryList: ${response.message()}")
                 }
+            }
+        }
+    }
+    suspend fun getDiaryDetail(id:Int){
+        val response = DiaryService().diaryDetailService(id)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getDiaryDetail: ${res}")
+                        var type = object:TypeToken<Diary?>() {}.type
+                        var diary = CommonUtils.parseDto<Diary>(res.data.get("diary")!!,type)
+                        setDiary(diary)
+                    }
+                }
+            }else{
+                Log.d(TAG, "getDiaryDetail: ${response.code()}")
+            }
+        }
+    }
+    suspend fun getHashTags(){
+        val response = DiaryService().getHashTagService()
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object:TypeToken<MutableList<Hashtag>?>() {}.type
+                        var hashs = CommonUtils.parseDto<MutableList<Hashtag>>(res.data.get("hashtags")!!,type)
+                        setHashtagList(hashs)
+                    }
+                }
+            }else{
+                Log.d(TAG, "getHashTags: ${response.code()}")
             }
         }
     }
