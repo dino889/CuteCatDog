@@ -15,7 +15,6 @@ import com.cutecatdog.model.comment.CommentRequestDto;
 import com.cutecatdog.model.comment.commentDto;
 import com.cutecatdog.model.like.LikeDeleteDto;
 import com.cutecatdog.model.like.LikeRequestDto;
-import com.cutecatdog.model.like.LikeUserResponsDto;
 import com.cutecatdog.service.BoardService;
 import com.cutecatdog.service.CommentService;
 import com.cutecatdog.service.LikeService;
