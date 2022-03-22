@@ -5,13 +5,22 @@ import android.app.ProgressDialog
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.kakao.kakaolink.v2.KakaoLinkResponse
@@ -94,7 +103,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         setInit()
 
         binding.fragmentAiShare.setOnClickListener {
-            kakaoLink()
+            showBottomShareDialog()
         }
     }
 
@@ -287,6 +296,35 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         }
 
 
+    }
+    fun showBottomShareDialog(){
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val param = WindowManager.LayoutParams()
+        param.width = WindowManager.LayoutParams.MATCH_PARENT
+        param.height = WindowManager.LayoutParams.WRAP_CONTENT
+        val window = dialog.window
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_Diary).setOnClickListener {
+            Log.d(TAG, "showBottomShareDialog: ")
+            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+
+            var check = 3
+            val flag = bundleOf("flag" to check)
+            var navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.aiFragment)
+            var navController = navHostFragment?.findNavController()
+            navController?.navigate(R.id.action_aiFragment_to_diaryWriteFragment, flag)
+//            this@aiFragment.findNavController().navigate(R.id.action_aiFragment_to_diaryWriteFragment, flag)
+            Log.d(TAG, "showBottomShareDialog: eng?")
+            dialog.dismiss()
+        }
+        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_kakao).setOnClickListener {
+            kakaoLink()
+            dialog.dismiss()
+        }
     }
     fun kakaoLink(){
         val params = FeedTemplate
