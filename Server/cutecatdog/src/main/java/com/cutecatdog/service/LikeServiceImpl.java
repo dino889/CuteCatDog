@@ -1,6 +1,7 @@
 package com.cutecatdog.service;
 
 import com.cutecatdog.mapper.LikeMapper;
+import com.cutecatdog.model.like.LikeDeleteDto;
 import com.cutecatdog.model.like.LikeRequestDto;
 
 import org.apache.ibatis.session.SqlSession;
@@ -15,8 +16,33 @@ public class LikeServiceImpl implements LikeService{
 
   @Override
   public boolean addLike(LikeRequestDto likeRequestDto) throws Exception {
-    // TODO Auto-generated method stub
+    if(sqlSession.getMapper(LikeMapper.class).selectLike(likeRequestDto.getUserId()) != null){
+      return false;
+    }
     return sqlSession.getMapper(LikeMapper.class).insertLike(likeRequestDto);
+  }
+
+  @Override
+  public boolean removeLike(LikeDeleteDto dto) throws Exception {
+    return sqlSession.getMapper(LikeMapper.class).deleteLike(dto);
+  }
+
+  @Override
+  public boolean findBoardLikeByUID(LikeRequestDto likeRequestDto) throws Exception {
+    if(sqlSession.getMapper(LikeMapper.class).selectBoardLike(likeRequestDto) != null){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  @Override
+  public boolean findLike(LikeRequestDto likeRequestDto) throws Exception {
+    if(sqlSession.getMapper(LikeMapper.class).selectBoardLike(likeRequestDto) != null){
+      return false;
+    }else{
+      return true;
+    }
   }
   
 }

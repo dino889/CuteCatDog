@@ -120,6 +120,16 @@
         android:name="com.ssafy.ccd.src.main.information.InformationMainFragment"
         android:label="fragment_information_main"
         tools:layout="@layout/fragment_information_main" />
+    <fragment
+        android:id="@+id/aiFragment"
+        android:name="com.ssafy.ccd.src.main.ai.aiFragment"
+        android:label="fragment_ai"
+        tools:layout="@layout/fragment_ai" />
+    <fragment
+        android:id="@+id/aiSelectFragment"
+        android:name="com.ssafy.ccd.src.main.ai.aiSelectFragment"
+        android:label="fragment_ai_select"
+        tools:layout="@layout/fragment_ai_select" />
 
 
 </navigation>

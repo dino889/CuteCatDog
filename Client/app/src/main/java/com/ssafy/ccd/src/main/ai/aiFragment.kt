@@ -25,7 +25,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.kakao.kakaolink.v2.KakaoLinkResponse
 import com.kakao.kakaolink.v2.KakaoLinkService
-import com.kakao.message.template.*
+import com.kakao.message.template.ButtonObject
+import com.kakao.message.template.ContentObject
+import com.kakao.message.template.FeedTemplate
+import com.kakao.message.template.LinkObject
 import com.kakao.network.ErrorResult
 import com.kakao.network.callback.ResponseCallback
 import com.ssafy.ccd.R
@@ -37,7 +40,6 @@ import com.ssafy.ccd.src.main.information.InformationActivity
 import com.ssafy.ccd.src.main.information.InformationMainFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import kotlinx.coroutines.runBlocking
-import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
 import org.tensorflow.lite.support.common.TensorOperator
@@ -110,7 +112,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private fun setListener() {
         // 뒤로가기 버튼
         ivBack.setOnClickListener {
-            childFragmentManager.popBackStack()
+            this@aiFragment.findNavController().navigate(R.id.homeFragment)
         }
 
         clTrain.setOnClickListener {
@@ -137,9 +139,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             }
         }
 
-        clCon.setOnClickListener {
-            val intentIM = Intent(requireActivity(), InformationMainFragment::class.java)
-            startActivity(intentIM)
+        clMore.setOnClickListener {
+            this@aiFragment.findNavController().navigate(R.id.informationMainFragment)
         }
     }
 
@@ -326,6 +327,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             dialog.dismiss()
         }
     }
+
     fun kakaoLink(){
         val params = FeedTemplate
             .newBuilder(
