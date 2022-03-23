@@ -14,6 +14,8 @@ import com.ssafy.ccd.databinding.ItemLoadingBinding
 import com.ssafy.ccd.src.dto.YoutubeInfo
 import com.ssafy.ccd.src.main.information.InformationActivity
 import com.ssafy.ccd.src.main.information.YoutubeDialog
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val VIEW_TYPE_ITEM = 0
 private const val VIEW_TYPE_LOADING = 1
@@ -22,6 +24,7 @@ class InformationRecyclerViewAdapter (private val context: Context, private var 
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val dialog: YoutubeDialog = YoutubeDialog(context, (context as InformationActivity))
+    val format = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
 
     // 아이템이 들어가는 경우
     inner class InformationHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -80,12 +83,15 @@ class InformationRecyclerViewAdapter (private val context: Context, private var 
 
     @SuppressLint("NotifyDataSetChanged")
     fun addItems(data : MutableList<YoutubeInfo>) {
+        if(datas.size > 0 ) datas.removeAt(datas.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
         datas.addAll(data)
         datas.add(YoutubeInfo("", "", "", "", "", 1))
         notifyDataSetChanged()
     }
 
     fun deleteLoading(){
+        if(datas.size == 0) return
         datas.removeAt(datas.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
+        notifyDataSetChanged()
     }
 }
