@@ -425,7 +425,6 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         binding.activityMainFabCam.visibility = View.VISIBLE
     }
 
-
     /**
      * @author Jueun
      * bottomNavigation mainActivty resume 될 때
