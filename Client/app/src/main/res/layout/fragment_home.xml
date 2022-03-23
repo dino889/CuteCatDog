@@ -141,7 +141,7 @@
                         android:id="@+id/fragment_home_commuLocalRv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layoxsut_marginTop="10dp"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_home_commuLocalTop" />
 
