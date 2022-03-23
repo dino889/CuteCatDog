@@ -12,5 +12,5 @@ public class BoardDto {
   String author;
   Integer typeId;
   String content;
-
+  Integer count;
 }

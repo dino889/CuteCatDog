@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RadioGroup
+import androidx.navigation.fragment.findNavController
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiSelectBinding
@@ -21,8 +22,6 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
     private lateinit var radioGroup: RadioGroup
 
     private lateinit var mainViewModels: MainViewModels
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,14 +38,11 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
 
     private fun setListener() {
         backBtn.setOnClickListener{
-            parentFragmentManager.popBackStack()
+            this@aiSelectFragment.findNavController().navigate(R.id.homeFragment)
         }
 
         analygyBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.activity_main_navHost, aiFragment())
-                .addToBackStack(null)
-                .commit()
+            this@aiSelectFragment.findNavController().navigate(R.id.aiFragment)
         }
 
         radioGroup.setOnCheckedChangeListener { _, i ->

@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LikeUserResponsDto {
-  Integer userId;
-  Integer likeId;
+public class LikeDeleteDto {
   Integer boardId;
-  Integer id;
+  Integer userId;
 }

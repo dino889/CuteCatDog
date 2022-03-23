@@ -3,18 +3,25 @@
 
 <mapper namespace="com.cutecatdog.mapper.LikeMapper">
 	
-  <insert id="insertLikePlus">
-    INSERT INTO tbl_like (isLiked) VALUES(1)
-  </insert>
+  <select id="selectLike" parameterType="int" resultType="Integer">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE user_id = #{userId}
+  </select>
 
   <insert id="insertLike" parameterType="LikeRequestDto">
-    INSERT INTO tbl_like_management (board_id,user_id) VALUES(#{boardId},#{userId})
+    INSERT INTO tbl_like_management (board_id,user_id,like_id) VALUES(#{boardId},#{userId},2)
   </insert>
 
   <delete id="deleteLike" parameterType="int">
-    DELETE
-    FROM tbl_like
-    WHERE id = #{id}
+    DELETE FROM tbl_like_management
+    WHERE board_id = #{boardId} AND user_id = #{userId}
   </delete>
-
+	
+  <select id="selectBoardLike" parameterType="LikeRequestDto" resultType="Integer">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE user_id = #{userId} AND board_id = #{boardId}
+  </select>
+  
 </mapper>

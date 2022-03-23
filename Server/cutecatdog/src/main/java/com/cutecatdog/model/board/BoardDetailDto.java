@@ -16,5 +16,6 @@ public class BoardDetailDto {
   String author;
   Integer typeId;
   Integer id;
+  Integer count;
   List<commentDto> commentDto;
 }

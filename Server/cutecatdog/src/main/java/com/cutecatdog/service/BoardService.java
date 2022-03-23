@@ -1,6 +1,5 @@
 package com.cutecatdog.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.cutecatdog.model.board.BoardAddRequestDto;
