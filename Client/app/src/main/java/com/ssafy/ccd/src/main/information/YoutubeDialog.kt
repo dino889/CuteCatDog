@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.information
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -16,6 +17,7 @@ lateinit var wvYoutube : WebView
 
 class YoutubeDialog(val context:Context, val activity: Activity) {
 
+    @SuppressLint("SetJavaScriptEnabled")
     fun callDialog(id:String){
         val dlg = Dialog(context)
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)

@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.home
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -21,6 +22,7 @@ import com.ssafy.ccd.src.dto.ItemInfo
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.main.home.Information.InformationRecyclerViewAdapter
+import com.ssafy.ccd.src.main.information.InformationActivity
 import kotlinx.coroutines.runBlocking
 
 
@@ -87,10 +89,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         // Information
         rvAdapterinfo = InformationRecyclerViewAdapter(requireContext(), mutableListOf(
             // TODO 추후에 이미지 변경해야함.
-            ItemInfo("강아지 훈련 교실", "defaultimg.png"),
-            ItemInfo("강아지 교감 교실", "defaultimg.png"),
-            ItemInfo("고양이 훈련 교실", "defaultimg.png"),
-            ItemInfo("고양이 교감 교실", "defaultimg.png"),
+            ItemInfo("강아지 훈련 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 0)),
+            ItemInfo("강아지 교감 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 1)),
+            ItemInfo("고양이 훈련 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 2)),
+            ItemInfo("고양이 교감 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 3)),
         ))
     }
 
