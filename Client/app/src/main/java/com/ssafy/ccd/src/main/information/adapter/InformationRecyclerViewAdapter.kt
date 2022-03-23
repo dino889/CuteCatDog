@@ -14,8 +14,13 @@ import com.ssafy.ccd.databinding.ItemLoadingBinding
 import com.ssafy.ccd.src.dto.YoutubeInfo
 import com.ssafy.ccd.src.main.information.InformationActivity
 import com.ssafy.ccd.src.main.information.YoutubeDialog
+import com.ssafy.ccd.src.main.information.util.DateUtils
+import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.regex.Pattern
 
 private const val VIEW_TYPE_ITEM = 0
 private const val VIEW_TYPE_LOADING = 1
@@ -24,14 +29,15 @@ class InformationRecyclerViewAdapter (private val context: Context, private var 
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val dialog: YoutubeDialog = YoutubeDialog(context, (context as InformationActivity))
-    val format = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+    val dateUtil = DateUtils()
 
     // 아이템이 들어가는 경우
     inner class InformationHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bindInfo(data: YoutubeInfo) {
             Glide.with(context).load(data.imageUrl).into(view.findViewById(R.id.itemInfo_iv))
             view.findViewById<TextView>(R.id.itemInfo_tvTitle).text = data.title
-            view.findViewById<TextView>(R.id.itemInfo_tvDate).text = data.date
+            view.findViewById<TextView>(R.id.itemInfo_tvDate).text = format.format(dateUtil.parse(data.date)).toString()
             view.findViewById<TextView>(R.id.itemInfo_tvChannel).text = data.channel
             view.findViewById<ConstraintLayout>(R.id.itemDogTrainingList_cl).setOnClickListener {
                 dialog.callDialog(data.id)
