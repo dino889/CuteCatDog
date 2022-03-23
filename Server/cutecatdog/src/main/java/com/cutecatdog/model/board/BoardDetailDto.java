@@ -17,5 +17,8 @@ public class BoardDetailDto {
   Integer typeId;
   Integer id;
   Integer count;
+  String photoPath;
+  String time;
   List<commentDto> commentDto;
+  
 }

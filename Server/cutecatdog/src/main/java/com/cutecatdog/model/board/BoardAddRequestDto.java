@@ -11,4 +11,6 @@ public class BoardAddRequestDto {
   String content;
   String author;
   Integer typeId;
+  String time;
+  String photoPath;
 }
