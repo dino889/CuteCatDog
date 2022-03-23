@@ -248,6 +248,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
                 STORAGE_CODE -> {
                     mainViewModels.uploadedImageUri = data?.data
+
+                    Log.d(TAG, "onActivityResult: ${data?.data}")
                     // 이미지 검사
                     if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
@@ -312,7 +314,23 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             }
         }
     }
-
+    /**
+     * @author Boyeon
+     * 갤러리에서 사진가져올때 경로 꺼내오기
+     * */
+    fun getPath(uri:Uri):String{
+        var result = ""
+        var cursor = contentResolver.query(uri,null,null,null,null)
+        if(cursor == null){
+            result = uri.path.toString()
+        }else{
+            cursor.moveToFirst()
+            var idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
     /**
      * @author Jueun
      * 카메라 요청을 하였을 때 사용하는 함수

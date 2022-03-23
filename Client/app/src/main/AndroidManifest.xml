@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CuteCatDog"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".src.main.information.InformationActivity"
             android:exported="true">

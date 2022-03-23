@@ -1,17 +1,31 @@
 package com.ssafy.ccd.src.main.ai
 
+import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.kakao.kakaolink.v2.KakaoLinkResponse
@@ -42,10 +56,14 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.io.FileInputStream
+import java.io.*
+
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.log
 import kotlin.math.min
 
 private const val TAG = "aiFragment"
@@ -83,7 +101,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     // 결과
     private lateinit var result:String
-
+    private lateinit var filePath:File
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,7 +114,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         setInit()
 
         binding.fragmentAiShare.setOnClickListener {
-            kakaoLink()
+            showBottomShareDialog()
         }
     }
 
@@ -289,6 +307,37 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
 
     }
+    fun showBottomShareDialog(){
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val param = WindowManager.LayoutParams()
+        param.width = WindowManager.LayoutParams.MATCH_PARENT
+        param.height = WindowManager.LayoutParams.WRAP_CONTENT
+        val window = dialog.window
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_Diary).setOnClickListener {
+            Log.d(TAG, "showBottomShareDialog: ")
+            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+
+            var check = 3
+            val flag = bundleOf("flag" to check)
+            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
+            Log.d(TAG, "showBottomShareDialog: eng?")
+            dialog.dismiss()
+        }
+        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_kakao).setOnClickListener {
+            kakaoLink()
+            dialog.dismiss()
+        }
+        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_insta).setOnClickListener {
+            shareInstagram()
+            dialog.dismiss()
+        }
+
+    }
 
     fun kakaoLink(){
         val params = FeedTemplate
@@ -339,6 +388,56 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             }
         )
 
+    }
+
+    fun shareInstagram(){
+        mainActivity.checkPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),99)
+
+        Log.d(TAG, "shareInstagram: ${mainViewModels.uploadedImageUri}")
+        var bitmap = mainViewModels.uploadedImage
+        var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
+        var folderName = ""
+        var fileName = ""
+        var cnt = 0;
+        for(i in realPath.toString().length-1..0){
+            fileName += realPath!!.get(i)
+            cnt++;
+            if(realPath!!.get(i) == '/'){
+                break;
+            }
+        }
+        folderName = realPath!!.substring(0,realPath!!.length-cnt)
+        var fullPath = folderName
+        var img_dir = "${Environment.getExternalStorageDirectory()}/tmp"
+        try{
+            filePath = File(fullPath,fileName)
+            Log.d(TAG, "shareInstagram22: ${filePath}")
+            if(!filePath.isDirectory){
+                filePath.mkdir()
+            }
+            var fos = FileOutputStream(File(fullPath,fileName))
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.flush()
+            fos.close()
+        }catch (e:FileNotFoundException){
+            e.printStackTrace()
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+
+        var share = Intent(Intent.ACTION_SEND)
+        share.setType("image/*")
+        var uri = Uri.fromFile(File(fullPath,fileName))
+        try{
+            share.putExtra(Intent.EXTRA_STREAM,uri)
+            share.putExtra(Intent.EXTRA_TEXT,"텍스트는 지원안함")
+            share.setPackage("com.instagram.android")
+            startActivity(share)
+        }catch (e:ActivityNotFoundException){
+            showCustomToast("인스타그램을 설치해주세요")
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
     }
     companion object {
         // TensorFlow 관련 Final 값
