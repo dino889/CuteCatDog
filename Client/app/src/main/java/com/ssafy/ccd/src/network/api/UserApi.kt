@@ -28,6 +28,10 @@ interface UserApi {
     @GET("/users/exists")
     suspend fun existsUserEmail(@Query("email") email: String) : Response<Message>
 
+    // 모든 회원 id, profileImg, nickname 조회
+    @GET("/users/id")
+    suspend fun selectAllUserList() : Response<Message>
+
     // 로그인
     @POST("/users/login")
     suspend fun loginUser(@Body account: User) : Response<Message>

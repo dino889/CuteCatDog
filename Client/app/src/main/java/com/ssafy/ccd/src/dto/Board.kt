@@ -7,9 +7,12 @@ data class Board(
     val author: String, // 작성자 nickname - insert 시 nickname 같이 보내기
     val title: String,
     val content: String,
-    val commentList : List<Comment>
+    val commentList : List<Comment>,
+    val count: Int,
+    val time: String,
+    val photoPath: String
 ) {
-    constructor(userId: Int, typeId: Int, author: String, title: String, content: String) : this(0, userId, typeId, author, title, content, listOf()) // insert
-    constructor(id: Int, typeId: Int, title: String, content: String) : this(id, 0, typeId, "",  title, content, listOf())    // 게시글 수정 update
-
+    constructor(userId: Int, typeId: Int, author: String, title: String, content: String, time: String, photoPath: String) : this(0, userId, typeId, author, title, content, listOf(), 0, time, photoPath) // insert
+    constructor(id: Int, typeId: Int, title: String, content: String, photoPath: String) : this(id, 0, typeId, "",  title, content, listOf(), 0, "", photoPath)    // 게시글 수정 update
+    constructor(id: Int, userId: Int) : this(id, userId, 0, "",  "", "", listOf(), 0, "", "")    // 게시글 좋아요 클릭
 }

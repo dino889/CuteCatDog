@@ -18,6 +18,7 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentHomeBinding
+import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.ItemInfo
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
@@ -46,6 +47,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private var myHandler = MyHandler()
     private val intervalTime = 1500.toLong() // 몇초 간격으로 페이지를 넘길것인지 (1500 = 1.5초)
 
+    // community
+    private val BOARD_TYPE_TOWN = 1
+    private val BOARD_TYPE_QNA = 2
+    private val BOARD_TYPE_SHARE = 3
+
+    private lateinit var locBoardAdapter: BoardAdapter
+    private lateinit var qnaBoardAdapter: BoardAdapter
+    private lateinit var shareBoardAdapter: BoardAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,14 +71,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
+            mainViewModel.getAllPostList()
+            mainViewModel.getAllUserList()
+            mainViewModel.getLikePostsByUserId(userId)
         }
 
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
             binding.loginUser = it
         }
 
+        initPostList()
+
         initAdapter()
         initBanner()
+
+        moveBoardDetailClickEvent()
     }
 
     private fun setListener() {
@@ -176,5 +198,48 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0)
         myHandler.sendEmptyMessageDelayed(0, intervalTime)
+    }
+
+    /**
+     * @author Jiwoo
+     * @since 03/23/22
+     * 게시판 타입별 데이터 초기화
+     */
+    private fun initPostList() {
+        val localRv = binding.fragmentHomeCommuLocalRv
+        val qnaRv = binding.fragmentHomeCommuQnARv
+        val shareRv = binding.fragmentHomeCommuShareRv
+
+
+        localRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        qnaRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        shareRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        locBoardAdapter = BoardAdapter(mainViewModel.locPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        qnaBoardAdapter = BoardAdapter(mainViewModel.qnaPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        shareBoardAdapter = BoardAdapter(mainViewModel.sharePostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+
+        localRv.adapter = locBoardAdapter
+        qnaRv.adapter = qnaBoardAdapter
+        shareRv.adapter = shareBoardAdapter
+    }
+
+    /**
+     * @author Jiwoo
+     * @since 03/23/22
+     * 게시판 이동 버튼 클릭 이벤트
+     */
+    private fun moveBoardDetailClickEvent() {
+        binding.fragmentHomeCommuLocalBtnBack.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_LocalBoardFragment)
+        }
+
+        binding.fragmentHomeCommuQnABtnBack.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_QnABoardFragment)
+        }
+
+        binding.fragmentHomeCommuShareBtnBack.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_ShareBoardFragment)
+        }
     }
 }

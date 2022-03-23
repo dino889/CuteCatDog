@@ -17,6 +17,15 @@
         <action
             android:id="@+id/action_homeFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_LocalBoardFragment"
+            app:destination="@+id/localBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_QnABoardFragment"
+            app:destination="@+id/qnaBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ShareBoardFragment"
+            app:destination="@+id/shareBoardFragment" />
     </fragment>
 
     <fragment
@@ -146,5 +155,51 @@
             app:destination="@id/calenderFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/localBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.LocalBoardFragment"
+        android:label="LocalBoardFragment"
+        tools:layout="@layout/fragment_local_board">
+        <action
+            android:id="@+id/action_localBoardFragment_to_writeBoardFragment"
+            app:destination="@+id/writeBoardFragment" />
+        <argument
+            android:name="chk"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/qnaBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.QnABoardFragment"
+        android:label="QnABoardFragment"
+        tools:layout="@layout/fragment_qna_board">
+        <action
+            android:id="@+id/action_qnaBoardFragment_to_writeBoardFragment"
+            app:destination="@+id/writeBoardFragment" />
+        <argument
+            android:name="chk"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/shareBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.ShareBoardFragment"
+        android:label="ShareBoardFragment"
+        tools:layout="@layout/fragment_share_board">
+        <action
+            android:id="@+id/action_shareBoardFragment_to_writeBoardFragment"
+            app:destination="@+id/writeBoardFragment" />
+        <argument
+            android:name="chk"
+            app:argType="integer"
+            android:defaultValue="-1"/></fragment>
+
+    <fragment
+        android:id="@+id/writeBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteBoardFragment"
+        android:label="WirteBoardFragment"
+        tools:layout="@layout/fragment_write_board" />
 
 </navigation>
