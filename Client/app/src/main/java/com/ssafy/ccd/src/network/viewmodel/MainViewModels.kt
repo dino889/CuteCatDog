@@ -401,4 +401,6 @@ class MainViewModels : ViewModel() {
     lateinit var uploadedImage : Bitmap
     var uploadedImageUri : Uri? = null
     var aiType = 0
+    var emotions:String = ""
+
 }

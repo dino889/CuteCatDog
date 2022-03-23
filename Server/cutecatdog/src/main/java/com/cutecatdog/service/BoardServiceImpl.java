@@ -1,6 +1,5 @@
 package com.cutecatdog.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.cutecatdog.mapper.BoardMapper;
@@ -10,6 +9,7 @@ import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
 import com.cutecatdog.model.comment.commentDto;
+import com.cutecatdog.model.like.LikeUserResponsDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,10 @@ public class BoardServiceImpl implements BoardService{
 
   @Override
   public BoardDetailDto findDetailBoard(int id) throws Exception {
+    List<LikeUserResponsDto> likes = sqlSession.getMapper(BoardMapper.class).selectLike(id);
     List<commentDto> list= sqlSession.getMapper(BoardMapper.class).selectComment(id);
     BoardDetailDto data = sqlSession.getMapper(BoardMapper.class).selectDetailBoard(id);
+    data.setCount(likes.size());
     data.setCommentDto(list);
     return data;
     

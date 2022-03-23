@@ -44,6 +44,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -68,6 +70,11 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             if(diaryId > 0){
                 flag= 2;
             }
+            var check = getInt("flag")
+            if(check == 3){
+                flag = 3;
+            }
+            Log.d(TAG, "onCreate: ${check}")
         }
         mainActivity.hideBottomNavi(true)
     }
@@ -85,7 +92,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         }
 
         FirebaseAuth.getInstance().signInAnonymously()
-        if(flag==2){
+        if(flag==2 || flag == 3){
             initData()
         }
         initHashs()
@@ -102,7 +109,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             var content = binding.fragmentDiaryWriteContent.text.toString()
             var photos = mainViewModel.photoList.value!!
 
-            if(flag == 1){
+            if(flag == 1 || flag == 3){
                 //insert
                 convertFileName()
                 getFilterHashTag()
@@ -141,33 +148,46 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             this@DiaryWriteFragment.findNavController().popBackStack()
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun initData(){
-        runBlocking {
-            mainViewModel.getDiaryDetail(diaryId)
-        }
-        var diary = mainViewModel.diary.value!!
-        binding.fragmentDiaryWriteTitle.setText(diary.title)
-        binding.fragmentDiaryWriteDate.setText(CommonUtils.makeBirthString(diary.datetime))
-        binding.fragmentDiaryWriteContent.setText(diary.content)
-        var hashs = ""
-        for(hash in 0..diary.hashtag.size-1){
-            hashs += diary.hashtag[hash].hashtag+" "
-        }
-        var photoUpdateAdapter = DiaryPhotoUpdateAdapter()
-        photoUpdateAdapter.list = diary.photo as MutableList<Photo>
-        mainViewModel.allClearPhotoList()
+        if(flag == 2){
+            runBlocking {
+                mainViewModel.getDiaryDetail(diaryId)
+            }
+            var diary = mainViewModel.diary.value!!
+            binding.fragmentDiaryWriteTitle.setText(diary.title)
+            binding.fragmentDiaryWriteDate.setText(CommonUtils.makeBirthString(diary.datetime))
+            binding.fragmentDiaryWriteContent.setText(diary.content)
+            var hashs = ""
+            for(hash in 0..diary.hashtag.size-1){
+                hashs += diary.hashtag[hash].hashtag+" "
+            }
+            var photoUpdateAdapter = DiaryPhotoUpdateAdapter()
+            photoUpdateAdapter.list = diary.photo as MutableList<Photo>
+            mainViewModel.allClearPhotoList()
 
-        for(i in 0..diary.photo.size-1){
-            mainViewModel.insertPhotoList(diary.photo[i])
+            for(i in 0..diary.photo.size-1){
+                mainViewModel.insertPhotoList(diary.photo[i])
+            }
+
+            binding.fragmentDiaryWriteCameraRv.apply {
+                layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+                adapter = photoUpdateAdapter
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+            binding.fragmentDiaryWriteHashTag.setText(hashs)
+            binding.fragmentDiaryWriteSuccessBtn.setText("수정")
+        }else if(flag == 3){
+            var curTime = LocalDateTime.now()
+            val formmater = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+            var cur = curTime.format(formmater)
+
+            binding.fragmentDiaryWriteDate.setText(cur)
+            mainViewModel.uploadedImageUri?.let { mainViewModel.insertPhotoUriList(it) }
+            loadImage()
+            binding.fragmentDiaryWriteHashTag.setText("#${mainViewModel.emotions}")
         }
 
-        binding.fragmentDiaryWriteCameraRv.apply {
-            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-            adapter = photoUpdateAdapter
-            adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        }
-        binding.fragmentDiaryWriteHashTag.setText(hashs)
-        binding.fragmentDiaryWriteSuccessBtn.setText("수정")
     }
     fun setBirth(){
         val calendar:Calendar = Calendar.getInstance()

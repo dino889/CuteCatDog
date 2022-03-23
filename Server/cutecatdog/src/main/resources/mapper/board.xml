@@ -4,14 +4,13 @@
 <mapper namespace="com.cutecatdog.mapper.BoardMapper">
 	
 	<select id="selectBoard" resultType="BoardResponsDto">
-    SELECT *
-    FROM tbl_board
-    
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count
+    FROM tbl_board b 
 	</select>
 
   <select id="selectTypeBoard" resultType="BoardDto" parameterType="int">
-    SELECT *
-    FROM tbl_board
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count
+    FROM tbl_board b 
     WHERE type_id = #{typeId}
 	</select>
 
@@ -38,6 +37,13 @@
     WHERE c.board_id = #{id}
     ORDER BY IF(ISNULL(c.parent), c.id, c.parent), c.seq
 	</select>
+
+  <select id="selectLike" parameterType="int" resultType="LikeUserResponsDto">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE board_id = #{boardId}
+  </select>
+
 
   <select id="selectDetailBoard" parameterType="int" resultType="BoardDetailDto">
     SELECT  *
