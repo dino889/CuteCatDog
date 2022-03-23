@@ -19,6 +19,8 @@ class BoardService {
 
     suspend fun deletePost(id: Int) : Response<Message> = RetrofitUtil.boardService.deletePost(id)
 
+    suspend fun selectCommentList(postId: Int) = RetrofitUtil.boardService.selectCommentList(postId)
+
     suspend fun insertComment(commentRequestDto : Comment) = RetrofitUtil.boardService.insertComment(commentRequestDto)
 
     suspend fun updateComment(commentModifyRequestDto : Comment) = RetrofitUtil.boardService.updateComment(commentModifyRequestDto)
@@ -27,5 +29,11 @@ class BoardService {
 
     suspend fun insertReply(commentAddShowRequestDto: Comment) = RetrofitUtil.boardService.insertReply(commentAddShowRequestDto)
 
+    suspend fun selectPostIsLike(postId: Int, userId: Int) = RetrofitUtil.boardService.selectPostIsLike(postId, userId)
+
+    suspend fun insertOrDeletePostLike(likeRequestDto: Board) = RetrofitUtil.boardService.insertOrDeletePostLike(likeRequestDto)
+    
     suspend fun selectPostListByType(typeId: Int) = RetrofitUtil.boardService.selectPostListByType(typeId)
+
+    suspend fun selectLikePostsByUserId(userId: Int) = RetrofitUtil.boardService.selectLikePostsByUserId(userId)
 }

@@ -28,6 +28,10 @@ interface BoardApi {
     @DELETE("/board/{id}")
     suspend fun deletePost(@Path("id") id: Int) : Response<Message>
 
+    // 게시글에 해당하는 댓글 리스트만 조회
+    @GET("/board/{id}/comment")
+    suspend fun selectCommentList(@Path("id") id: Int) : Response<Message>
+
     // 댓글 등록
     @POST("/board/comment")
     suspend fun insertComment(@Body commentRequestDto : Comment) : Response<Message>
@@ -44,10 +48,20 @@ interface BoardApi {
     @POST("/board/comment/add")
     suspend fun insertReply(@Body commentAddShowRequestDto: Comment) : Response<Message>
 
+    // 게시글 1개에 대해 로그인한 유저가 좋아요 눌렀는 지 확인
+    @GET("/board/isLike")
+    suspend fun selectPostIsLike(@Query("boardId") boardId: Int, @Query("userId") userId: Int) : Response<Message>
+
+    // 게시글 좋아요 등록 및 삭제
+    @POST("/board/likes")
+    suspend fun insertOrDeletePostLike(@Body likeRequestDto: Board) : Response<Message>
+
     // 게시글 타입별 게시글 조회
     @GET("/board/type/{typeId}")
     suspend fun selectPostListByType(@Path("typeId") typeId: Int) : Response<Message>
 
-
+    // 로그인한 유저가 좋아요 누른 게시글 리스트 조회
+    @GET("/board/userid/{userId}")
+    suspend fun selectLikePostsByUserId(@Path("userId") userId: Int) : Response<Message>
 
 }

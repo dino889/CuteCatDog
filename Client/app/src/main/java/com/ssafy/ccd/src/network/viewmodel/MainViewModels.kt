@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.*
+import com.ssafy.ccd.src.network.service.BoardService
 import com.ssafy.ccd.src.network.service.CalendarService
 import com.ssafy.ccd.src.network.service.DiaryService
 import com.ssafy.ccd.src.network.service.PetService
@@ -25,24 +26,56 @@ class MainViewModels : ViewModel() {
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     /**
+     * @author Jiwoo
      * USER ViewModel
      */
+    private val _allUserList = MutableLiveData<MutableList<User>>()
     private val _loginUserInfo = MutableLiveData<User>()
+    private val _userInfo = MutableLiveData<User>()
+
+    val allUserList :  LiveData<MutableList<User>>
+        get() = _allUserList
 
     val loginUserInfo : LiveData<User>
         get() = _loginUserInfo
+
+    val userInformation : LiveData<User>
+        get() = _userInfo
+
 
     private fun setLoginUserInfo(user: User) = viewModelScope.launch {
         _loginUserInfo.value = user
     }
 
-    private val _userInfo = MutableLiveData<User>()
-
-    val userInformation : LiveData<User>
-        get() = _userInfo
-
     private fun setUserInfo(user: User) = viewModelScope.launch {
         _userInfo.value = user
+    }
+
+    private fun setAllUserList(userList : MutableList<User>) = viewModelScope.launch {
+        _allUserList.value = userList
+    }
+
+    suspend fun getAllUserList() {
+        val response = UserService().selectAllUsers()
+
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if(res.success) {
+                        if(res.data["user"] != null && res.message == "회원 정보 조회 성공") {
+                            val type = object : TypeToken<MutableList<User>>() {}.type
+                            val userList: MutableList<User> = CommonUtils.parseDto(res.data["user"]!!, type)
+                            setAllUserList(userList)
+                        } else {
+                            Log.e(TAG, "getAllUserList: ${res.message}", )  // 회원 정보 조회 실패
+                        }
+                    } else {
+                        Log.e(TAG, "getAllUserList: 서버 통신 실패 ${res.message}", )
+                    }
+                }
+            }
+        }
     }
 
     suspend fun getUserInfo(userId: Int, loginChk : Boolean) : Int {
@@ -137,6 +170,188 @@ class MainViewModels : ViewModel() {
         }
         return result
     }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * Board ViewModel
+     * @author Jiwoo
+     * @since 03.22.22.
+     */
+    private val _postAllList = MutableLiveData<MutableList<Board>>()
+    private val _postListByType = MutableLiveData<MutableList<Board>>()
+    private val _locPostList = MutableLiveData<MutableList<Board>>()
+    private val _qnaPostList = MutableLiveData<MutableList<Board>>()
+    private val _sharePostList = MutableLiveData<MutableList<Board>>()
+
+    private val _likePostsByUserId = MutableLiveData<MutableList<Int>>()
+
+    private val _postDetail = MutableLiveData<Board>()
+    private val _commentList = MutableLiveData<MutableList<Comment>>()
+
+    val postAllList : LiveData<MutableList<Board>>
+        get() = _postAllList
+
+    val postListByType : LiveData<MutableList<Board>>
+        get() = _postListByType
+
+    val locPostList : LiveData<MutableList<Board>>
+        get() = _locPostList
+
+    val qnaPostList : LiveData<MutableList<Board>>
+        get() = _qnaPostList
+
+    val sharePostList : LiveData<MutableList<Board>>
+        get() = _sharePostList
+
+    val likePostsByUserId : LiveData<MutableList<Int>>
+        get() = _likePostsByUserId
+
+    val postDetail : LiveData<Board>
+        get() = _postDetail
+
+    val commentList : LiveData<MutableList<Comment>>
+        get() = _commentList
+
+    private fun setAllPostList(postList : MutableList<Board>) = viewModelScope.launch {
+        _postAllList.value = postList
+    }
+
+    private fun setPostListByType(postList: MutableList<Board>) = viewModelScope.launch {
+        _postListByType.value = postList
+    }
+
+    private fun setLocPostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _locPostList.value = postList
+    }
+
+    private fun setQnaPostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _qnaPostList.value = postList
+    }
+
+    private fun setSharePostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _sharePostList.value = postList
+    }
+
+    private fun setLikePosts(postIdList : MutableList<Int>) = viewModelScope.launch {
+        _likePostsByUserId.value = postIdList
+    }
+
+    private fun setPostDetail(post : Board) = viewModelScope.launch {
+        _postDetail.value = post
+    }
+
+    private fun setCommentList(commentList : MutableList<Comment>) = viewModelScope.launch {
+        _commentList.value = commentList
+    }
+
+
+    suspend fun getAllPostList() {
+        val response = BoardService().selectAllPostList()
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.data["boards"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Board>>() {}.type
+                        val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+
+                        val locBoard : MutableList<Board> = mutableListOf()
+                        val qnaBoard : MutableList<Board> = mutableListOf()
+                        val shareBoard : MutableList<Board> = mutableListOf()
+                        for (i in postList) {
+                            when(i.typeId) {
+                                1 -> {
+                                    locBoard.add(i)
+                                }
+                                2 -> {
+                                    qnaBoard.add(i)
+                                }
+                                3 -> {
+                                    shareBoard.add(i)
+                                }
+                            }
+                        }
+
+                        setAllPostList(postList)
+                        setLocPostList(locBoard)
+                        setQnaPostList(qnaBoard)
+                        setSharePostList(shareBoard)
+
+                    } else {
+                        Log.e(TAG, "getAllPostList: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getPostListByType(typeId: Int) {
+        val response = BoardService().selectPostListByType(typeId)
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.data["boards"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Board>>() {}.type
+                        val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+                        if (typeId == 1) {
+                            setLocPostList(postList)
+                        } else if (typeId == 2) {
+                            setQnaPostList(postList)
+                        } else if (typeId == 3) {
+                            setSharePostList(postList)
+                        }
+                        setPostListByType(postList)
+                    } else {
+                        Log.e(TAG, "getPostListByType: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getLikePostsByUserId(userId: Int) {
+        val response = BoardService().selectLikePostsByUserId(userId)
+
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if (res.data["board"] != null && res.success == true) {
+                        setLikePosts(res.data["board"] as MutableList<Int>)
+                    } else {
+                        Log.e(TAG, "getLikePostsByUserId: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getPostDetail(id: Int) {
+        val response = BoardService().selectPostDetail(id)
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if (res.data["board"] != null && res.success == true) {
+                        val type = object : TypeToken<Board>() {}.type
+                        val post: Board = CommonUtils.parseDto(res.data["board"]!!, type)
+                        setPostDetail(post)
+                        setCommentList(post.commentList as MutableList<Comment>)
+                    } else {
+                        Log.e(TAG, "getPostDetail: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------

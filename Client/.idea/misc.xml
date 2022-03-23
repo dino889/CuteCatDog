@@ -3,23 +3,38 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/drawable/ic_btn_in_camera.xml" value="0.21145833333333333" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/activity_login.xml" value="0.1925925925925926" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/activity_main.xml" value="0.13125" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_add_pet.xml" value="0.12760416666666666" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_ai.xml" value="0.4" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_diary.xml" value="0.4013840830449827" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.264" />
-        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_home.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_home.xml" value="0.3631484794275492" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_join.xml" value="0.1925925925925926" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_local_board.xml" value="0.32770745428973275" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_login.xml" value="0.32421875" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_my_page.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_qna_board.xml" value="0.6" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_reset_password.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_share_board.xml" value="0.3333333333333333" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_user_profile.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_write_board.xml" value="0.22589167767503301" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_write_local_board.xml" value="0.264" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_calendar_detail_list.xml" value="0.1" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_calender_pets_footer.xml" value="0.536" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_home_commu_know.xml" value="0.6" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_home_commu_local.xml" value="0.4" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_home_commu_qna.xml" value="0.28794326241134754" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_home_commu_share.xml" value="0.35802469135802467" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_know_list.xml" value="0.17291666666666666" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_local_list.xml" value="0.4386317907444668" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_qna_list.xml" value="0.37937384898710863" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/item_share_list.xml" value="0.264" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/menu/popup_user_menu.xml" value="0.12083333333333333" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/ai_dialog_button_background.xml" value="0.27314814814814814" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/bottomsheet_background_rounded.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/calendar_dialog_background.xml" value="0.2518518518518518" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/calendar_point.xml" value="0.18177083333333333" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/calender_button_background.xml" value="0.2518518518518518" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/calender_day_click.xml" value="0.3508682328907048" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/drawable/calender_day_pressed.xml" value="0.3508682328907048" />
@@ -39,11 +54,10 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_ai.xml" value="0.33" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_ai_bottom_dialog.xml" value="0.4401244167962675" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_ai_dialog.xml" value="0.4976671850699845" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender.xml" value="0.2073170731707317" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender_day_dialog.xml" value="0.33" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender_write.xml" value="0.1" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_calender_write.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_detail.xml" value="0.33" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_diary_sortbottom_sheet.xml" value="0.5" />
@@ -57,8 +71,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_my_schedule.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_qna_board.xml" value="0.5" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_share_board.xml" value="0.30416666666666664" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calendar_detail_list.xml" value="0.67" />
-        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_day.xml" value="0.67" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_day.xml" value="0.75" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_month.xml" value="0.25" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_pets.xml" value="0.67" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_pets_footer.xml" value="0.1" />
@@ -94,7 +107,6 @@
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_information_main.xml" value="0.3912483912483912" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_my_page.xml" value="0.11255862428348098" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/fragment_training.xml" value="0.13645833333333332" />
-        <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_banner_list.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_dog_training_list.xml" value="0.264" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_youtube_list.xml" value="0.15833333333333333" />
       </map>

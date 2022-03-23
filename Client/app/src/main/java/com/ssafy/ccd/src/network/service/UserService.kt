@@ -53,6 +53,12 @@ class UserService {
     }
 
     /**
+     * 모든 회원의 id, nickname, 프로필 이미지 조회
+     * @return Response<Message>
+     */
+    suspend fun selectAllUsers() = RetrofitUtil.userService.selectAllUserList()
+    
+    /**
      * 로그인
      * @param account
      */
