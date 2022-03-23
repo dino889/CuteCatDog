@@ -14,13 +14,11 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
-import com.ssafy.ccd.src.dto.Diary
-import com.ssafy.ccd.src.dto.Hashtag
-import com.ssafy.ccd.src.dto.Pet
-import com.ssafy.ccd.src.dto.Photo
+import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.src.main.diary.DiaryAdapter
 import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
 import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
+import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
@@ -37,19 +35,13 @@ fun bindImageDiary(imgView: ImageView, imgUrl: String?){
             .load(R.drawable.defaultimg)
             .into(imgView)
     }else{
-        var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
-        var storageRef = storage.reference
-        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-            override fun onSuccess(p0: Uri?) {
-                Glide.with(imgView.context)
-                    .load(p0)
-                    .into(imgView)
-            }
-
-        }).addOnFailureListener(object : OnFailureListener {
-            override fun onFailure(p0: Exception) {
-            }
-        })
+        val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+        val storageRef = storage.reference
+        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener { p0 ->
+            Glide.with(imgView.context)
+                .load(p0)
+                .into(imgView)
+        }.addOnFailureListener { }
     }
 
 }
@@ -135,6 +127,7 @@ fun bindPetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     adapter.petList = data as MutableList<Pet>
     adapter.notifyDataSetChanged()
 }
+
 @BindingAdapter("myPageConvertBirth")
 fun bindPetConvertBirth(textView: TextView,data:String?){
     if( data == null || data == ""){
@@ -143,6 +136,7 @@ fun bindPetConvertBirth(textView: TextView,data:String?){
         textView.text = CommonUtils.makeBirthString(data)
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("myPagePetInfo")
 fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
@@ -167,8 +161,6 @@ fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
     }else{
         textView.text = ""
     }
-
-
 }
 
 @BindingAdapter("myPageInfoNeut")
@@ -179,6 +171,7 @@ fun bindPetConvertNeutering(textView:TextView, neuter:Int){
         textView.text = "O"
     }
 }
+
 @BindingAdapter("diaryDate")
 fun bindDiaryConvertDate(textView:TextView, date:String){
     var diary = CommonUtils.makeBirthString(date)
@@ -187,7 +180,11 @@ fun bindDiaryConvertDate(textView:TextView, date:String){
     var months = CommonUtils.convertEnglishMonth(monthTmp.toInt())
     var month = months.substring(0,3)
     textView.text = "${dayTmp} \n ${month}"
+}
 
+@BindingAdapter("userNick")
+fun bindUserNick(textView: TextView, userNick: String) {
+    textView.text = userNick +  "님"
 }
 
 @BindingAdapter("homePetListData")
@@ -203,6 +200,7 @@ fun bindHomePetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     adapter.list = data as MutableList<Pet>
     adapter.notifyDataSetChanged()
 }
+
 @BindingAdapter("diaryPhotoListData")
 fun bindDiaryPhotoRecyclerView(recyclerView: RecyclerView, data:List<Photo>?){
     var adapter = recyclerView.adapter as DiaryPhotoRvAdapter
@@ -240,5 +238,33 @@ fun bindDiaryHashRecyclerView(recyclerView: RecyclerView, data:List<Hashtag>?){
         adapter = recyclerView.adapter as DiaryHashAdapter
     }
     adapter.list = data as MutableList<Hashtag>
+    adapter.notifyDataSetChanged()
+}
+
+/**
+ * board 관련 bindingAdapter
+ */
+@BindingAdapter("homePostList") // BoardFragment + BoardAdapter
+fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
+
+    var adapter = recyclerView.adapter as BoardAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as BoardAdapter
+    }
+
+    val tmp = mutableListOf<Board>()
+    if(data != null) {
+        if (data.size >= 5) {
+            for (i in 0 until 5) {
+                tmp.add(data[i])
+            }
+            adapter.postList = tmp as MutableList<Board>
+        } else {
+            adapter.postList = data as MutableList<Board>
+        }
+    }
     adapter.notifyDataSetChanged()
 }

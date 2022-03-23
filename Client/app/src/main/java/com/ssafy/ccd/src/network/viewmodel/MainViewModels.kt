@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.*
+import com.ssafy.ccd.src.network.service.BoardService
 import com.ssafy.ccd.src.network.service.DiaryService
 import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.service.UserService
@@ -136,6 +137,156 @@ class MainViewModels : ViewModel() {
         }
         return result
     }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * Board ViewModel
+     * @author Jiwoo
+     * @since 03.22.22.
+     */
+    private val _postAllList = MutableLiveData<MutableList<Board>>()
+    private val _postListByType = MutableLiveData<MutableList<Board>>()
+    private val _locPostList = MutableLiveData<MutableList<Board>>()
+    private val _qnaPostList = MutableLiveData<MutableList<Board>>()
+    private val _sharePostList = MutableLiveData<MutableList<Board>>()
+
+    private val _postDetail = MutableLiveData<Board>()
+    private val _commentList = MutableLiveData<MutableList<Comment>>()
+
+    val postAllList : LiveData<MutableList<Board>>
+        get() = _postAllList
+
+    val postListByType : LiveData<MutableList<Board>>
+        get() = _postListByType
+
+    val locPostList : LiveData<MutableList<Board>>
+        get() = _locPostList
+
+    val qnaPostList : LiveData<MutableList<Board>>
+        get() = _qnaPostList
+
+    val sharePostList : LiveData<MutableList<Board>>
+        get() = _sharePostList
+
+
+    val postDetail : LiveData<Board>
+        get() = _postDetail
+
+    val commentList : LiveData<MutableList<Comment>>
+        get() = _commentList
+
+    private fun setAllPostList(postList : MutableList<Board>) = viewModelScope.launch {
+        _postAllList.value = postList
+    }
+
+    private fun setPostListByType(postList: MutableList<Board>) = viewModelScope.launch {
+        _postListByType.value = postList
+    }
+
+    private fun setLocPostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _locPostList.value = postList
+    }
+
+    private fun setQnaPostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _qnaPostList.value = postList
+    }
+
+    private fun setSharePostList(postList: MutableList<Board>) = viewModelScope.launch {
+        _sharePostList.value = postList
+    }
+
+    private fun setPostDetail(post : Board) = viewModelScope.launch {
+        _postDetail.value = post
+    }
+
+    private fun setCommentList(commentList : MutableList<Comment>) = viewModelScope.launch {
+        _commentList.value = commentList
+    }
+
+
+    suspend fun getAllPostList() {
+        val response = BoardService().selectAllPostList()
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.data["boards"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Board>>() {}.type
+                        val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+
+                        val locBoard : MutableList<Board> = mutableListOf()
+                        val qnaBoard : MutableList<Board> = mutableListOf()
+                        val shareBoard : MutableList<Board> = mutableListOf()
+                        for (i in postList) {
+                            when(i.typeId) {
+                                1 -> {
+                                    locBoard.add(i)
+                                }
+                                2 -> {
+                                    qnaBoard.add(i)
+                                }
+                                3 -> {
+                                    shareBoard.add(i)
+                                }
+                            }
+                        }
+
+                        setAllPostList(postList)
+                        setLocPostList(locBoard)
+                        setQnaPostList(qnaBoard)
+                        setSharePostList(shareBoard)
+
+                    } else {
+                        Log.e(TAG, "getAllPostList: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getPostListByType(typeId: Int) {
+        val response = BoardService().selectPostListByType(typeId)
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.data["boards"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Board>>() {}.type
+                        val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+                        setPostListByType(postList)
+                    } else {
+                        Log.e(TAG, "getPostListByType: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getPostDetail(id: Int) {
+        val response = BoardService().selectPostDetail(id)
+
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if (res.data["board"] != null && res.success == true) {
+                        val type = object : TypeToken<Board>() {}.type
+                        val post: Board = CommonUtils.parseDto(res.data["board"]!!, type)
+                        setPostDetail(post)
+                        setCommentList(post.commentList as MutableList<Comment>)
+                    } else {
+                        Log.e(TAG, "getPostDetail: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------

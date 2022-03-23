@@ -10,7 +10,7 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalBoardBinding
 
 class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocalBoardBinding::bind,R.layout.fragment_local_board) {
-
+//    tools:listitem="@layout/item_local_list"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {

@@ -84,12 +84,11 @@
                 android:id="@+id/fragment_home_commuQnATvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="작성 날짜"
+                app:myPageConvertBirth="@{post.time}"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
-<!--                app:myPageConvertBirth="@{post.}"-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -124,15 +123,14 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:lottie_autoPlay="true"
                         app:lottie_fileName="heart.json"
                         app:lottie_loop="false" />
+<!--                        app:lottie_autoPlay="true"-->
 
                     <TextView
                         android:id="@+id/fragment_home_commuQnATvLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:text="@{String.valueOf(post.count)}"
                         android:textColor="@color/black"
                         android:textSize="10sp"
@@ -145,7 +143,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
@@ -166,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@{post.commentList == null ? 0 : String.valueOf(post.commentList.size())}"
+                        android:text="@{post.commentList == null ? String.valueOf(0) : String.valueOf(post.commentList.size())}"
                         android:textColor="@color/black"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView5"

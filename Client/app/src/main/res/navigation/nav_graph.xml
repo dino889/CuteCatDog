@@ -17,6 +17,15 @@
         <action
             android:id="@+id/action_homeFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_LocalBoardFragment"
+            app:destination="@+id/localBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_QnABoardFragment"
+            app:destination="@+id/qnaBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ShareBoardFragment"
+            app:destination="@+id/shareBoardFragment" />
     </fragment>
 
     <fragment
@@ -130,6 +139,23 @@
         android:name="com.ssafy.ccd.src.main.ai.aiSelectFragment"
         android:label="fragment_ai_select"
         tools:layout="@layout/fragment_ai_select" />
+
+    <fragment
+        android:id="@+id/localBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.LocalBoardFragment"
+        android:label="LocalBoardFragment"
+        tools:layout="@layout/fragment_local_board"/>
+
+    <fragment
+        android:id="@+id/qnaBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.QnABoardFragment"
+        android:label="QnABoardFragment"
+        tools:layout="@layout/fragment_qna_board"/>
+
+    <fragment
+        android:id="@+id/shareBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.ShareBoardFragment"        android:label="LocalBoardFragment"
+        tools:layout="@layout/fragment_share_board"/>
 
 
 </navigation>
