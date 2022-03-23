@@ -10,4 +10,5 @@ public class BoardModifyRequestDto {
   String title;
   String content;
   Integer typeId;
+  String photoPath;
 }

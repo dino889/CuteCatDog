@@ -1,9 +1,11 @@
 package com.cutecatdog.mapper;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.cutecatdog.model.UserDto;
 import com.cutecatdog.model.user.AccountDto;
+import com.cutecatdog.model.user.UserResponseDto;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,5 +27,6 @@ public interface UserMapper {
     UserDto loginUser(AccountDto account) throws SQLException;
 
     int resetPassword(AccountDto account) throws SQLException;
-
+    
+    List<UserResponseDto> selectUserAll()throws SQLException;
 }

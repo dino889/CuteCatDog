@@ -13,4 +13,6 @@ public class BoardResponsDto {
   Integer typeId;
   String content;
   Integer count;
+  String time;
+  String photoPath;
 }

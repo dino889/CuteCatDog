@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.UserDto;
 import com.cutecatdog.model.mail.SendCodeByMailResultDto;
 import com.cutecatdog.model.user.AccountDto;
+import com.cutecatdog.model.user.UserResponseDto;
 import com.cutecatdog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class UserController {
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
-            if (!userService.checkEmail(userDto.getEmail())) {
+            if (userService.checkEmail(userDto.getEmail()) != null) {
                 if (userService.addUser(userDto)) {
                     response.setMessage("회원가입 성공");
                     data.put("isSignup", true);
@@ -100,6 +102,37 @@ public class UserController {
 
         return new ResponseEntity<>(response, status);
     }
+
+    @ApiOperation(value = "모든 회원 중 id,profile,nickname 보기", notes = "", response = Map.class)
+    @GetMapping("/id")
+    public ResponseEntity<Message> userIdList()
+            throws Exception {
+        Message response = new Message();
+        List<UserResponseDto> userDto = userService.findUserId();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<UserResponseDto>> data = new HashMap<>();
+            if (userDto != null) {
+                data.put("user", userDto);
+                response.setData(data);
+                response.setMessage("회원 정보 조회 성공");
+                status = HttpStatus.OK;
+            } else {
+                data.put("user", null);
+                response.setData(data);
+                response.setMessage("회원 정보 조회 실패");
+                status = HttpStatus.OK;
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
 
     @ApiOperation(value = "회원 정보 수정", notes = "", response = Map.class)
     @PutMapping
@@ -167,15 +200,16 @@ public class UserController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            HashMap<String, Boolean> data = new HashMap<>();
-            if (userService.checkEmail(val)) {
+            HashMap<String, String> data = new HashMap<>();
+            UserDto dto = userService.checkEmail(val);
+            if (dto != null) {
                 response.setMessage("이미 존재하는 이메일");
-                data.put("isExisted", true);
+                data.put("type",dto.getSocialType());
                 response.setData(data);
                 status = HttpStatus.OK;
             } else {
                 response.setMessage("중복된 이메일 없음");
-                data.put("isExisted", false);
+                data.put("type", "false");
                 response.setData(data);
                 status = HttpStatus.OK;
             }

@@ -1,11 +1,14 @@
 package com.cutecatdog.service;
 
+import java.util.List;
+
 import com.cutecatdog.common.Random.RandomCode;
 import com.cutecatdog.common.mail.SendMailHelper;
 import com.cutecatdog.mapper.UserMapper;
 import com.cutecatdog.model.UserDto;
 import com.cutecatdog.model.mail.SendCodeByMailResultDto;
 import com.cutecatdog.model.user.AccountDto;
+import com.cutecatdog.model.user.UserResponseDto;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkEmail(String email) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).checkEmail(email) != null;
+    public UserDto checkEmail(String email) throws Exception {
+        return sqlSession.getMapper(UserMapper.class).checkEmail(email);
     }
 
     @Override
@@ -76,4 +79,11 @@ public class UserServiceImpl implements UserService {
     public boolean resetPassword(AccountDto account) throws Exception {
         return sqlSession.getMapper(UserMapper.class).resetPassword(account) == 1;
     }
+
+    @Override
+    public List<UserResponseDto> findUserId() throws Exception {
+        return sqlSession.getMapper(UserMapper.class).selectUserAll();
+    }
+
+    
 }
