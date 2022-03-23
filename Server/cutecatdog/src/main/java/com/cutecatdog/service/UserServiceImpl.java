@@ -1,5 +1,7 @@
 package com.cutecatdog.service;
 
+import java.util.List;
+
 import com.cutecatdog.common.Random.RandomCode;
 import com.cutecatdog.common.mail.SendMailHelper;
 import com.cutecatdog.mapper.UserMapper;
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean modifyUser(UserDto userDto) throws Exception {
-        return sqlSession.getMapper(UserMapper.class).modifyUser(userDto) == 1;
+        return sqlSession.getMapper(UserMapper.class).updateUser(userDto) == 1;
     }
 
     @Override
@@ -75,5 +77,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean resetPassword(AccountDto account) throws Exception {
         return sqlSession.getMapper(UserMapper.class).resetPassword(account) == 1;
+    }
+
+    @Override
+    public UserDto findUserByToken(String targetToken) throws Exception {
+        return sqlSession.getMapper(UserMapper.class).selectUserbyToken(targetToken);
+    }
+
+    @Override
+    public boolean modifyTokenByUserId(UserDto user) throws Exception {
+        return sqlSession.getMapper(UserMapper.class).updateTokenByUserId(user) == 1;
+    }
+
+    @Override
+    public List<UserDto> findAllUser() throws Exception {
+        return sqlSession.getMapper(UserMapper.class).selectAllUser();
     }
 }

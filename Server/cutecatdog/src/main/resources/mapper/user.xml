@@ -14,7 +14,7 @@
 		WHERE id = #{userid} AND is_withdrawal = 0
 	</select>
 	
-	<update id= "modifyUser" parameterType="userDto">
+	<update id= "updateUser" parameterType="userDto">
 		update tbl_user
 		set nickname = #{nickname}, profile_image=#{profileImage}
 		where id = #{id}
@@ -48,6 +48,23 @@
 		UPDATE tbl_user
 		SET password = #{password}
 		WHERE email = #{email} AND is_withdrawal = 0
+	</update>
+
+	<select id="selectUserbyToken" parameterType="String" resultType="userDto">
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
+		FROM tbl_user
+		WHERE device_token = #{deviceToken} AND is_withdrawal = 0
+	</select>
+
+	<select id="selectAllUser" resultType="userDto">
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
+		FROM tbl_user
+	</select>
+
+	<update id="updateTokenByUserId" parameterType="userDto">
+		UPDATE tbl_user
+		SET device_token = #{deviceToken}
+		WHERE id = #{id} AND is_withdrawal = 0
 	</update>
 	
 </mapper>
