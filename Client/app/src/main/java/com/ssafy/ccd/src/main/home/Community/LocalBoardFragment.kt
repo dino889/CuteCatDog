@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
@@ -12,6 +13,11 @@ import com.ssafy.ccd.databinding.FragmentLocalBoardBinding
 import com.ssafy.ccd.src.main.home.BoardAdapter
 import kotlinx.coroutines.runBlocking
 
+/**
+ * @author Jiwoo
+ * @since 03/23/22
+ * '울동네' 게시판
+ */
 class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocalBoardBinding::bind,R.layout.fragment_local_board) {
     private lateinit var localBoardAdapter: LocalBoardAdapter
 
@@ -24,6 +30,8 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        backBtnClickEvent()
+        writeBtnClickEvent()
     }
 
     private fun initRecyclerView() {
@@ -37,5 +45,16 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         })
     }
 
+    private fun backBtnClickEvent() {
+        binding.fragmentLocalBack.setOnClickListener {
+            this@LocalBoardFragment.findNavController().popBackStack()
+        }
+    }
+
+    private fun writeBtnClickEvent() {
+        binding.fragmentLocalWrite.setOnClickListener {
+            this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_writeBoardFragment)
+        }
+    }
 
 }

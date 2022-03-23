@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/localFragment_clAppbar"
+            android:id="@+id/shareFragment_clAppbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +19,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/localFragment_ibBack"
+                android:id="@+id/shareFragment_ibBack"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="10dp"
@@ -33,54 +33,54 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/localFragment_tvTitle"
+                android:id="@+id/shareFragment_tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="공유해"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/localFragment_ibBack"
+                app:layout_constraintBottom_toBottomOf="@+id/shareFragment_ibBack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/localFragment_ibBack"
+                app:layout_constraintTop_toTopOf="@+id/shareFragment_ibBack"
                 app:layout_constraintVertical_bias="0.625" />
 
             <ImageButton
-                android:id="@+id/localFragment_ibSearch"
+                android:id="@+id/shareFragment_ibSearch"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/search"
-                app:layout_constraintBottom_toBottomOf="@+id/localFragment_tvTitle"
-                app:layout_constraintEnd_toStartOf="@+id/localFragment_ibWrite"
-                app:layout_constraintTop_toTopOf="@+id/localFragment_tvTitle" />
+                app:layout_constraintBottom_toBottomOf="@+id/shareFragment_tvTitle"
+                app:layout_constraintEnd_toStartOf="@+id/shareFragment_ibWrite"
+                app:layout_constraintTop_toTopOf="@+id/shareFragment_tvTitle" />
 
             <ImageButton
-                android:id="@+id/localFragment_ibWrite"
+                android:id="@+id/shareFragment_ibWrite"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/write"
-                app:layout_constraintBottom_toBottomOf="@+id/localFragment_ibSearch"
+                app:layout_constraintBottom_toBottomOf="@+id/shareFragment_ibSearch"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/localFragment_ibSearch" />
+                app:layout_constraintTop_toTopOf="@+id/shareFragment_ibSearch" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/localBoardFragment_rvPostList"
+            android:id="@+id/shareBoardFragment_rvPostList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/localFragment_clAppbar"
+            app:layout_constraintTop_toBottomOf="@+id/shareFragment_clAppbar"
             tools:listitem="@layout/item_share_list"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

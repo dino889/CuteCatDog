@@ -185,6 +185,8 @@ class MainViewModels : ViewModel() {
     private val _qnaPostList = MutableLiveData<MutableList<Board>>()
     private val _sharePostList = MutableLiveData<MutableList<Board>>()
 
+    private val _likePostsByUserId = MutableLiveData<MutableList<Int>>()
+
     private val _postDetail = MutableLiveData<Board>()
     private val _commentList = MutableLiveData<MutableList<Comment>>()
 
@@ -203,6 +205,8 @@ class MainViewModels : ViewModel() {
     val sharePostList : LiveData<MutableList<Board>>
         get() = _sharePostList
 
+    val likePostsByUserId : LiveData<MutableList<Int>>
+        get() = _likePostsByUserId
 
     val postDetail : LiveData<Board>
         get() = _postDetail
@@ -228,6 +232,10 @@ class MainViewModels : ViewModel() {
 
     private fun setSharePostList(postList: MutableList<Board>) = viewModelScope.launch {
         _sharePostList.value = postList
+    }
+
+    private fun setLikePosts(postIdList : MutableList<Int>) = viewModelScope.launch {
+        _likePostsByUserId.value = postIdList
     }
 
     private fun setPostDetail(post : Board) = viewModelScope.launch {
@@ -290,9 +298,33 @@ class MainViewModels : ViewModel() {
                     if(res.data["boards"] != null && res.success == true) {
                         val type = object : TypeToken<MutableList<Board>>() {}.type
                         val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+                        if (typeId == 1) {
+                            setLocPostList(postList)
+                        } else if (typeId == 2) {
+                            setQnaPostList(postList)
+                        } else if (typeId == 3) {
+                            setSharePostList(postList)
+                        }
                         setPostListByType(postList)
                     } else {
                         Log.e(TAG, "getPostListByType: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getLikePostsByUserId(userId: Int) {
+        val response = BoardService().selectLikePostsByUserId(userId)
+
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if (res.data["board"] != null && res.success == true) {
+                        setLikePosts(res.data["board"] as MutableList<Int>)
+                    } else {
+                        Log.e(TAG, "getLikePostsByUserId: ${res.message}", )
                     }
                 }
             }
