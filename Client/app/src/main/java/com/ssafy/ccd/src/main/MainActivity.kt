@@ -27,10 +27,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.youtube.player.YouTubeBaseActivity
+import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
@@ -71,6 +73,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         setNavigation()
         setInstance()
         setListener()
+
     }
 
     /**
@@ -237,29 +240,27 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                         else {
                             // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.activity_main_navHost, aiSelectFragment())
-                                .addToBackStack(null)
-                                .commit()
                             photoDialog.dismiss()
+                            binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
                         }
                     }
                 }
 
                 STORAGE_CODE -> {
                     mainViewModels.uploadedImageUri = data?.data
+
+                    Log.d(TAG, "onActivityResult: ${data?.data}")
                     // 이미지 검사
                     if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                     else {
-//                        val source = ImageDecoder.createSource(this.contentResolver, mainViewModels.uploadedImageUri!!)
-//                        mainViewModels.uploadedImage = ImageDecoder.decodeBitmap(source)
                         mainViewModels.uploadedImage = MediaStore.Images.Media.getBitmap(contentResolver, mainViewModels.uploadedImageUri)
 
                         // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.activity_main_navHost, aiSelectFragment())
-                            .addToBackStack(null)
-                            .commit()
+//                        supportFragmentManager.beginTransaction()
+//                            .replace(R.id.activity_main_navHost, aiSelectFragment())
+//                            .addToBackStack(null)
+//                            .commit()
+                        binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
                         photoDialog.dismiss()
                     }
                 }
@@ -313,7 +314,23 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             }
         }
     }
-
+    /**
+     * @author Boyeon
+     * 갤러리에서 사진가져올때 경로 꺼내오기
+     * */
+    fun getPath(uri:Uri):String{
+        var result = ""
+        var cursor = contentResolver.query(uri,null,null,null,null)
+        if(cursor == null){
+            result = uri.path.toString()
+        }else{
+            cursor.moveToFirst()
+            var idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
     /**
      * @author Jueun
      * 카메라 요청을 하였을 때 사용하는 함수

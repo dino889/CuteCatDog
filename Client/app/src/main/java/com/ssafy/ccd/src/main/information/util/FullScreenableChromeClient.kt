@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.information.util
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -14,7 +15,7 @@ import android.widget.FrameLayout
 
 import androidx.core.content.ContextCompat
 
-class FullscreenableChromeClient(activity: Activity) : WebChromeClient() {
+class FullscreenableChromeClient(activity: Activity, var dlg: Dialog) : WebChromeClient() {
     private var mActivity: Activity? = null
 
     private var mCustomView: View? = null
@@ -48,6 +49,7 @@ class FullscreenableChromeClient(activity: Activity) : WebChromeClient() {
             mCustomView = view
             setFullscreen(true)
             mCustomViewCallback = callback
+            dlg.dismiss()
         }
 
         super.onShowCustomView(view, callback)

@@ -10,4 +10,5 @@ public class BoardTypeDto {
   Integer userId;
   String title;
   String author;
+  
 }

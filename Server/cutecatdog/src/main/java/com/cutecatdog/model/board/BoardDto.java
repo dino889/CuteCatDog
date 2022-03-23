@@ -10,4 +10,7 @@ public class BoardDto {
   Integer userId;
   String title;
   String author;
+  Integer typeId;
+  String content;
+  Integer count;
 }
