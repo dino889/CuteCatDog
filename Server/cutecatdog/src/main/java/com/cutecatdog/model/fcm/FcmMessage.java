@@ -1,4 +1,4 @@
-package com.cutecatdog.common.fcm;
+package com.cutecatdog.model.fcm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

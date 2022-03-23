@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.cutecatdog.common.fcm.FcmMessage;
 import com.cutecatdog.model.UserDto;
 import com.cutecatdog.model.Notification.NotificationDto;
+import com.cutecatdog.model.fcm.FCMParamDto;
+import com.cutecatdog.model.fcm.FcmMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -40,6 +41,7 @@ public class FCMService {
 
     /**
      * FCM에 push 요청을 보낼 때 인증을 위해 Header에 포함시킬 AccessToken 생성
+     * 
      * @return
      * @throws IOException
      */
@@ -63,6 +65,7 @@ public class FCMService {
 
     /**
      * FCM 알림 메시지 생성
+     * 
      * @param targetToken
      * @param title
      * @param body
@@ -70,22 +73,21 @@ public class FCMService {
      * @return
      * @throws JsonProcessingException
      */
-    private String makeMessage(String targetToken, String title, String body, int type) throws JsonProcessingException {
+    private String makeMessage(FCMParamDto fcmParamDto) throws JsonProcessingException {
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
-                        .token(targetToken)
+                        .token(fcmParamDto.getToken())
                         .notification(FcmMessage.Notification.builder()
-                                .title(title)
-                                .body(body)
+                                .title(fcmParamDto.getTitle())
+                                .body(fcmParamDto.getContent())
                                 .image(null)
-                                .build()
-                        )
+                                .build())
                         // .data(FcmMessage.Data.builder()
-                        //         .path(path)
-                        //         .build()
+                        // .path(path)
+                        // .build()
                         // )
-                        .build()
-                ).validate_only(false).build();
+                        .build())
+                .validate_only(false).build();
 
         log.info(objectMapper.writeValueAsString(fcmMessage));
         return objectMapper.writeValueAsString(fcmMessage);
@@ -93,14 +95,15 @@ public class FCMService {
 
     /**
      * targetToken에 해당하는 device로 FCM 푸시 알림 전송
+     * 
      * @param targetToken
      * @param title
      * @param body
      * @param path
      * @throws Exception
      */
-    public void sendMessageTo(String targetToken, String title, String body, int type, String datetime) throws Exception {
-        String message = makeMessage(targetToken, title, body, type);
+    public void sendMessageTo(FCMParamDto fcmParamDto) throws Exception {
+        String message = makeMessage(fcmParamDto);
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get(("application/json; charset=utf-8")));
         Request request = new Request.Builder()
@@ -110,29 +113,32 @@ public class FCMService {
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
 
-        Response response  = client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 
         log.info(response.body().string());
 
-        if(response.isSuccessful()) {
+        if (response.isSuccessful()) {
             NotificationDto noti = new NotificationDto();
-            UserDto user = userService.findUserByToken(targetToken);
-            noti.setUserId(user.getId());
-            noti.setTitle(title);
-            noti.setContent(body);
-            noti.setType(type);
-            noti.setDatetime(datetime);
-            notificationService.addNotification(noti);
+            UserDto user = userService.findUserByToken(fcmParamDto.getToken());
+            if (user != null) {
+                noti.setUserId(user.getId());
+                noti.setTitle(fcmParamDto.getTitle());
+                noti.setContent(fcmParamDto.getContent());
+                noti.setType(fcmParamDto.getType());
+                noti.setDatetime(fcmParamDto.getDatetime());
+                notificationService.addNotification(noti);
+            }
         }
     }
 
     /**
      * client의 Token이 변경되면 user 테이블 값을 갱신한다.
+     * 
      * @param token
      * @param userId
      * @throws Exception
      */
-    public void modifyToken(String token, int userId) throws Exception{
+    public void modifyToken(String token, int userId) throws Exception {
         UserDto user = new UserDto();
         user.setId(userId);
         user.setDeviceToken(token);
@@ -141,20 +147,23 @@ public class FCMService {
 
     /**
      * 등록된 모든 토큰을 이용해서 broadcasting
+     * 
      * @param title
      * @param body
      * @return
      * @throws Exception
      */
-    public int broadCastMessage(String title, String body, int type, String datetime) throws Exception {
+    public int broadCastMessage(FCMParamDto fcmParamDto) throws Exception {
         // path는 application 초기 화면
         List<UserDto> users = userService.findAllUser();
-        for(int i = 0; i < users.size(); i++) {
+        for (int i = 0; i < users.size(); i++) {
             UserDto user = users.get(i);
-            if(user.getDeviceToken() != null) {
-//            if(user != null && !user.getToken().isEmpty() && user.getToken() != null) {
-                log.debug("broadcastmessage : {},{},{}", user.getDeviceToken(), title, body);
-                sendMessageTo(user.getDeviceToken(), title, body, type, datetime);
+            if (user.getDeviceToken() != null) {
+                // if(user != null && !user.getToken().isEmpty() && user.getToken() != null) {
+                log.debug("broadcastmessage : {},{},{}", user.getDeviceToken(), fcmParamDto.getTitle(),
+                        fcmParamDto.getContent());
+                fcmParamDto.setToken(user.getDeviceToken());
+                sendMessageTo(fcmParamDto);
             }
         }
         return users.size();
