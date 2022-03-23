@@ -49,5 +49,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     public boolean removeSchedule(int id) throws Exception {
         return sqlSession.getMapper(ScheduleMapper.class).deleteSchedule(id);
     }
+
+    @Override
+    public List<ScheduleDto> findScheduleDetail(ScheduleDto scheduleDto) throws Exception {
+        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleDetail(scheduleDto);
+    }
     
 }

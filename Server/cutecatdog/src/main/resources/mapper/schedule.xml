@@ -14,6 +14,12 @@
 		WHERE user_id = #{userId}
 	</select>
 
+	<select id="selectScheduleDetail" parameterType="ScheduleDto" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE user_id = #{userId} and datetime=#{datetime}
+	</select>
+
     <select id="selectSchedulePet" parameterType="int" resultType="ScheduleDto">
 		SELECT id, user_id, pet_id, type, title, memo, datetime, place
 		FROM tbl_schedule

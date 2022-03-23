@@ -56,6 +56,34 @@ public class CalendarController {
         return new ResponseEntity<>(response, status);
     }
 
+    @ApiOperation(value = "사용자 등록 일정 날짜별 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
+    @GetMapping("/{user_id}/{datetime}")
+    public ResponseEntity<Message> scheduleDetail(@PathVariable(name = "user_id", required = true)int userId, @PathVariable(name = "datetime", required = true)String datetime) throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<ScheduleDto>> data = new HashMap<>();
+            ScheduleDto sch = new ScheduleDto();
+            sch.setDatetime(datetime);
+            sch.setUserId(userId);
+            data.put("schedules", scheduleService.findScheduleDetail(sch));
+            response.setData(data);
+            status = HttpStatus.OK;
+            if (data.get("schedules").size() > 0) {
+                response.setMessage(datetime+" 일정 조회 성공");
+            } else {
+                response.setMessage("해당 날짜의 일정이 없습니다.");
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
     @ApiOperation(value = "반려동물 일정 조회", notes = "해당 id에 해당하는 반려동물의 일정을 모두 조회한다.", response = Map.class)
     @GetMapping("/pet/{pet_id}")
     public ResponseEntity<Message> scheduleListPet(@PathVariable(name = "pet_id") int pet_id) throws Exception {
