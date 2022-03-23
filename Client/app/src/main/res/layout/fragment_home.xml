@@ -30,17 +30,18 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
+                app:imageUrlUser="@{loginUser.profileImage}"
                 android:src="@drawable/logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/fragment_home_userNick"
+                android:id="@+id/fragment_home_tvHi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
-                android:text="반가워요, 최주은님"
+                android:text="반가워요, "
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -48,15 +49,40 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragment_home_userImg" />
 
             <TextView
+                android:id="@+id/fragment_home_userNick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:userNick="@{loginUser.nickname}"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_home_tvHi"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_home_tvHi"
+                app:layout_constraintTop_toTopOf="@+id/fragment_home_tvHi" />
+
+
+            <TextView
+                android:id="@+id/fragment_home_userNick2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:userNick="@{loginUser.nickname}"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_home_tvHi"/>
+
+            <TextView
                 android:id="@+id/fragment_home_userNickPets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:text="최주은님의 아이들"
+                android:text="의 아이들"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_home_userNick" />
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_home_userNick2"
+                app:layout_constraintStart_toEndOf="@+id/fragment_home_userNick2"
+                app:layout_constraintTop_toTopOf="@+id/fragment_home_userNick2" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_home_rvPets"
@@ -141,7 +167,8 @@
                         android:id="@+id/fragment_home_commuLocalRv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layoxsut_marginTop="10dp"
+                        android:layout_marginTop="10dp"
+                        app:homePostList="@{viewModel.locPostList}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_home_commuLocalTop" />
 
@@ -270,6 +297,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        app:homePostList="@{viewModel.qnaPostList}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_home_commuQnATop" />
 
@@ -319,6 +347,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        app:homePostList="@{viewModel.sharePostList}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/fragment_home_commuShareTop" />
 
