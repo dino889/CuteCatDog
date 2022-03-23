@@ -161,8 +161,8 @@
         android:label="LocalBoardFragment"
         tools:layout="@layout/fragment_local_board">
         <action
-            android:id="@+id/action_localBoardFragment_to_writeBoardFragment"
-            app:destination="@+id/writeBoardFragment" />
+            android:id="@+id/action_localBoardFragment_to_writeLocalBoardFragment"
+            app:destination="@+id/writeLocalBoardFragment" />
         <argument
             android:name="chk"
             app:argType="integer"
@@ -199,7 +199,14 @@
     <fragment
         android:id="@+id/writeBoardFragment"
         android:name="com.ssafy.ccd.src.main.home.Community.WriteBoardFragment"
-        android:label="WirteBoardFragment"
+        android:label="WriteBoardFragment"
         tools:layout="@layout/fragment_write_board" />
+
+    <fragment
+        android:id="@+id/writeLocalBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteLocalBoardFragment"
+        android:label="WriteLocalBoardFragment"
+        tools:layout="@layout/fragment_write_local_board" />
+
 
 </navigation>

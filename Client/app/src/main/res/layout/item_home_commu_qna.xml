@@ -84,7 +84,7 @@
                 android:id="@+id/fragment_home_commuQnATvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:myPageConvertBirth="@{post.time}"
+                app:unixToDateTime="@{post.time}"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

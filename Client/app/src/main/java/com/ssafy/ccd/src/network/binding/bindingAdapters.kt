@@ -231,6 +231,13 @@ fun bindUserNick(textView: TextView, userNick: String) {
     textView.text = userNick +  "님"
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("unixToDateTime")
+fun bindDateFormat(textView: TextView, unixTime: String) {
+    textView.text = CommonUtils.unixTimeToDateFormat(unixTime.toLong())
+}
+
+
 @BindingAdapter("homePetListData")
 fun bindHomePetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     var adapter = recyclerView.adapter as HomeProfilePetsAdapter

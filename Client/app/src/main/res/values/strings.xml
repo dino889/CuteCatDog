@@ -11,6 +11,6 @@
     <string name="fb_login_protocol_scheme">fb1094525324426176</string>
     <string name="facebook_client_token">ac713efe1c0f758c47a2dfc9d698b074</string>
 
-    <string name ="kakao_scheme">kakao78b660953c918503e1a723afddb4d6e8</string>
-    <string name = "kakaolink_host">kakaolink</string>
+    <string name="kakao_scheme">kakao78b660953c918503e1a723afddb4d6e8</string>
+    <string name="kakaolink_host">kakaolink</string>
 </resources>
