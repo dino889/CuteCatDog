@@ -72,6 +72,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
             mainViewModel.getAllPostList()
+            mainViewModel.getAllUserList()
         }
 
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {

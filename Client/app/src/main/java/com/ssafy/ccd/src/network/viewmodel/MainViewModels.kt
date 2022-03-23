@@ -26,24 +26,56 @@ class MainViewModels : ViewModel() {
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     /**
+     * @author Jiwoo
      * USER ViewModel
      */
+    private val _allUserList = MutableLiveData<MutableList<User>>()
     private val _loginUserInfo = MutableLiveData<User>()
+    private val _userInfo = MutableLiveData<User>()
+
+    val allUserList :  LiveData<MutableList<User>>
+        get() = _allUserList
 
     val loginUserInfo : LiveData<User>
         get() = _loginUserInfo
+
+    val userInformation : LiveData<User>
+        get() = _userInfo
+
 
     private fun setLoginUserInfo(user: User) = viewModelScope.launch {
         _loginUserInfo.value = user
     }
 
-    private val _userInfo = MutableLiveData<User>()
-
-    val userInformation : LiveData<User>
-        get() = _userInfo
-
     private fun setUserInfo(user: User) = viewModelScope.launch {
         _userInfo.value = user
+    }
+
+    private fun setAllUserList(userList : MutableList<User>) = viewModelScope.launch {
+        _allUserList.value = userList
+    }
+
+    suspend fun getAllUserList() {
+        val response = UserService().selectAllUsers()
+
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if(res.success) {
+                        if(res.data["user"] != null && res.message == "회원 정보 조회 성공") {
+                            val type = object : TypeToken<MutableList<User>>() {}.type
+                            val userList: MutableList<User> = CommonUtils.parseDto(res.data["user"]!!, type)
+                            setAllUserList(userList)
+                        } else {
+                            Log.e(TAG, "getAllUserList: ${res.message}", )  // 회원 정보 조회 실패
+                        }
+                    } else {
+                        Log.e(TAG, "getAllUserList: 서버 통신 실패 ${res.message}", )
+                    }
+                }
+            }
+        }
     }
 
     suspend fun getUserInfo(userId: Int, loginChk : Boolean) : Int {
