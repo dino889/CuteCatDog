@@ -4,23 +4,23 @@
 <mapper namespace="com.cutecatdog.mapper.BoardMapper">
 	
 	<select id="selectBoard" resultType="BoardResponsDto">
-    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time
     FROM tbl_board b 
 	</select>
 
   <select id="selectTypeBoard" resultType="BoardDto" parameterType="int">
-    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time
     FROM tbl_board b 
     WHERE type_id = #{typeId}
 	</select>
 
   <insert id="insertBoard" parameterType="BoardAddRequestDto">
-    INSERT INTO tbl_board (user_id,title,content,author,type_id) VALUES(#{userId},#{title},#{content},#{author},#{typeId})
+    INSERT INTO tbl_board (user_id,title,content,author,type_id,photo_path,time) VALUES(#{userId},#{title},#{content},#{author},#{typeId},#{photoPath},#{time})
   </insert>
 
   <update id="updateBoard" parameterType="BoardModifyRequestDto">
     UPDATE tbl_board
-    SET title = #{title} , content = #{content}  , type_id = #{typeId}
+    SET title = #{title} , content = #{content}  , type_id = #{typeId}, photo_path = #{photoPath}
     WHERE id = #{id}
   </update>
 
