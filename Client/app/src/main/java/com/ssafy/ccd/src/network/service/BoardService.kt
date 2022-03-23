@@ -34,4 +34,6 @@ class BoardService {
     suspend fun insertOrDeletePostLike(likeRequestDto: Board) = RetrofitUtil.boardService.insertOrDeletePostLike(likeRequestDto)
     
     suspend fun selectPostListByType(typeId: Int) = RetrofitUtil.boardService.selectPostListByType(typeId)
+
+    suspend fun selectLikePostsByUserId(userId: Int) = RetrofitUtil.boardService.selectLikePostsByUserId(userId)
 }

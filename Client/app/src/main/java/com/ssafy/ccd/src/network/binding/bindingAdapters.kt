@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 @BindingAdapter("imageUrlCalendarPets")
 fun bindImageCalendarPets(imgView: ImageView,imgUrl: String?){
     if(imgUrl == null || imgUrl == ""){

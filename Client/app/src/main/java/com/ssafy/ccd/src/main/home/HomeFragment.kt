@@ -73,6 +73,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             mainViewModel.getUserInfo(userId, true)
             mainViewModel.getAllPostList()
             mainViewModel.getAllUserList()
+            mainViewModel.getLikePostsByUserId(userId)
         }
 
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
@@ -214,9 +215,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         qnaRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         shareRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        locBoardAdapter = BoardAdapter(mainViewModel.locPostList.value!!, requireContext())
-        qnaBoardAdapter = BoardAdapter(mainViewModel.qnaPostList.value!!, requireContext())
-        shareBoardAdapter = BoardAdapter(mainViewModel.sharePostList.value!!, requireContext())
+        locBoardAdapter = BoardAdapter(mainViewModel.locPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        qnaBoardAdapter = BoardAdapter(mainViewModel.qnaPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        shareBoardAdapter = BoardAdapter(mainViewModel.sharePostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
 
         localRv.adapter = locBoardAdapter
         qnaRv.adapter = qnaBoardAdapter

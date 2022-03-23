@@ -60,6 +60,8 @@ interface BoardApi {
     @GET("/board/type/{typeId}")
     suspend fun selectPostListByType(@Path("typeId") typeId: Int) : Response<Message>
 
-
+    // 로그인한 유저가 좋아요 누른 게시글 리스트 조회
+    @GET("/board/userid/{userId}")
+    suspend fun selectLikePostsByUserId(@Path("userId") userId: Int) : Response<Message>
 
 }
