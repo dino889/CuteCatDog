@@ -25,7 +25,7 @@ class YoutubeDialog(val context:Context, val activity: Activity) {
 
         wvYoutube = dlg.findViewById(R.id.dialogYoutube_wb)
 
-        wvYoutube.webChromeClient = FullscreenableChromeClient(activity)
+        wvYoutube.webChromeClient = FullscreenableChromeClient(activity, dlg)
         wvYoutube.webViewClient = WebViewClient()
 
         wvYoutube.settings.apply {
