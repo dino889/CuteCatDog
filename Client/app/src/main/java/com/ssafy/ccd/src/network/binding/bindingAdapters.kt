@@ -18,6 +18,7 @@ import com.ssafy.ccd.src.dto.Diary
 import com.ssafy.ccd.src.dto.Hashtag
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.dto.Photo
+import com.ssafy.ccd.src.main.calender.CalendarWritePetAdapter
 import com.ssafy.ccd.src.main.diary.DiaryAdapter
 import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
 import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
@@ -30,6 +31,29 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+@BindingAdapter("imageUrlCalendarPets")
+fun bindImageCalendarPets(imgView: ImageView,imgUrl: String?){
+    if(imgUrl == null || imgUrl == ""){
+        Glide.with(imgView.context)
+            .load(R.drawable.logo)
+            .into(imgView)
+    }else{
+        var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+        var storageRef = storage.reference
+        storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+            override fun onSuccess(p0: Uri?) {
+                Glide.with(imgView.context)
+                    .load(p0)
+                    .circleCrop()
+                    .into(imgView)
+            }
+
+        }).addOnFailureListener(object : OnFailureListener {
+            override fun onFailure(p0: Exception) {
+            }
+        })
+    }
+}
 @BindingAdapter("imageUrlDiary")
 fun bindImageDiary(imgView: ImageView, imgUrl: String?){
     if(imgUrl == null || imgUrl == ""){
@@ -135,6 +159,22 @@ fun bindPetRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
     adapter.petList = data as MutableList<Pet>
     adapter.notifyDataSetChanged()
 }
+
+
+@BindingAdapter("petListCalendarData")
+fun bindPetCalendarRecyclerView(recyclerView: RecyclerView, data:List<Pet>?){
+    var adapter = recyclerView.adapter as CalendarWritePetAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as CalendarWritePetAdapter
+    }
+
+    adapter.list = data as MutableList<Pet>
+    adapter.notifyDataSetChanged()
+}
+
 @BindingAdapter("myPageConvertBirth")
 fun bindPetConvertBirth(textView: TextView,data:String?){
     if( data == null || data == ""){

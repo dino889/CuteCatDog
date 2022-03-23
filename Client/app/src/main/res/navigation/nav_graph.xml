@@ -60,6 +60,12 @@
         android:name="com.ssafy.ccd.src.main.calender.CalenderFragment"
         android:label="fragment_calender"
         tools:layout="@layout/fragment_calender">
+        <action
+            android:id="@+id/action_calenderFragment_to_calenderWriteFragment"
+            app:destination="@id/calenderWriteFragment" />
+        <action
+            android:id="@+id/action_calenderFragment_to_addPetFragment"
+            app:destination="@id/addPetFragment" />
     </fragment>
 
     <fragment
@@ -130,6 +136,15 @@
         android:name="com.ssafy.ccd.src.main.ai.aiSelectFragment"
         android:label="fragment_ai_select"
         tools:layout="@layout/fragment_ai_select" />
+    <fragment
+        android:id="@+id/calenderWriteFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderWriteFragment"
+        android:label="fragment_calender_write"
+        tools:layout="@layout/fragment_calender_write" >
+        <action
+            android:id="@+id/action_calenderWriteFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment" />
+    </fragment>
 
 
 </navigation>
