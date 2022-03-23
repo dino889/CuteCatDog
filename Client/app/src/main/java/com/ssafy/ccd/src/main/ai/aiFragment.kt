@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.ai
 
+import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
@@ -62,6 +63,7 @@ import java.nio.channels.FileChannel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.log
 import kotlin.math.min
 
 private const val TAG = "aiFragment"
@@ -389,6 +391,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     }
 
     fun shareInstagram(){
+        mainActivity.checkPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),99)
+
         Log.d(TAG, "shareInstagram: ${mainViewModels.uploadedImageUri}")
         var bitmap = mainViewModels.uploadedImage
         var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
@@ -404,9 +408,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         }
         folderName = realPath!!.substring(0,realPath!!.length-cnt)
         var fullPath = folderName
-
+        var img_dir = "${Environment.getExternalStorageDirectory()}/tmp"
         try{
-            filePath = File(fullPath)
+            filePath = File(fullPath,fileName)
+            Log.d(TAG, "shareInstagram22: ${filePath}")
             if(!filePath.isDirectory){
                 filePath.mkdir()
             }
