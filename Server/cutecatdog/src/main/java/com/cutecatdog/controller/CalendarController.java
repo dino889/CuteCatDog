@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.Calendar.ScheduleDto;
+import com.cutecatdog.service.PetService;
 import com.cutecatdog.service.ScheduleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class CalendarController {
     
     @Autowired
     ScheduleService scheduleService;
+
+    @Autowired
+    PetService petService;
 
     @ApiOperation(value = "사용자 등록 일정 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
     @GetMapping("/user/{user_id}")
@@ -63,11 +67,12 @@ public class CalendarController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            HashMap<String, List<ScheduleDto>> data = new HashMap<>();
+            HashMap<String, List<?>> data = new HashMap<>();
             ScheduleDto sch = new ScheduleDto();
             sch.setDatetime(datetime);
             sch.setUserId(userId);
             data.put("schedules", scheduleService.findScheduleDetail(sch));
+            data.put("pets", petService.findMyPetDetail(userId));
             response.setData(data);
             status = HttpStatus.OK;
             if (data.get("schedules").size() > 0) {
