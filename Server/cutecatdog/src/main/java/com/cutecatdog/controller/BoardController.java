@@ -160,6 +160,24 @@ public class BoardController {
 		return new ResponseEntity<Message>(message, status);
   }
 
+  @ApiOperation(value = "userId로 게시글 좋아요 여부 보기", notes = "", response = List.class)
+  @GetMapping("/userid/{userId}")
+  public ResponseEntity<Message> userBoardList(@PathVariable("userId") int userId) throws Exception{
+    HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+
+    List<Integer> board;
+    HashMap<String,List<Integer>> map = new HashMap<>();
+		board = likeService.findUserBoard(userId);
+    
+    map.put("board", board);
+    message.setData(map);
+    message.setSuccess(true);
+  
+		status = HttpStatus.OK;
+		return new ResponseEntity<Message>(message, status);
+  }
+
   @ApiOperation(value = "댓글 상세 보기", notes = "", response = List.class)
   @GetMapping("{id}/comment")
   public ResponseEntity<Message> commentShowList(@PathVariable("id") int id) throws Exception{
@@ -305,29 +323,6 @@ public class BoardController {
 
     
   }
-
-  // @ApiOperation(value = "좋아요 삭제", notes = "좋아요를 삭제한다.", response = List.class)
-  // @DeleteMapping("/likes")
-  // public ResponseEntity<Message> likeDelete(@RequestParam("boardId") int boardId,@RequestParam("userId") int userId ) throws Exception {
-  //   LikeDeleteDto dto = new LikeDeleteDto();
-  //   dto.setBoardId(boardId);
-  //   dto.setUserId(userId);
-  //   Message message = new Message();
-	// 	HttpStatus status = null;
-  //   HashMap<String,Boolean> map = new HashMap<>();
-	// 	if (likeService.removeLike(dto)) {
-	// 		status = HttpStatus.OK;
-  //     map.put("isSuccess", true);
-	// 		message.setSuccess(true);
-  //     message.setData(map);
-	// 		return new ResponseEntity<Message>(message, status);
-	// 	}
-  //   map.put("isSuccess", false);
-	// 	message.setSuccess(false);
-  //   message.setData(map);
-	// 	status = HttpStatus.OK;
-	// 	return new ResponseEntity<Message>(message, status);
-  // }
 
   @ApiOperation(value = "boardDetail like 확인", notes = "boardDetail like 확인")
   @GetMapping(value = "/isLike")

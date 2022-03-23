@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.src.dto.ItemInfo
+import com.ssafy.ccd.src.main.MainActivity
 
 
 class InformationRecyclerViewAdapter(private var context: Context, private var datas: MutableList<ItemInfo>)
@@ -20,6 +22,9 @@ class InformationRecyclerViewAdapter(private var context: Context, private var d
 
             view.findViewById<TextView>(R.id.itemInformation_tvTitle).text = data.title
             view.findViewById<ImageView>(R.id.itemInformation_iv).setImageResource(imageResource)
+            view.findViewById<CardView>(R.id.itemInformation_cv).setOnClickListener {
+                (context as MainActivity).startActivity(data.intent)
+            }
         }
     }
 

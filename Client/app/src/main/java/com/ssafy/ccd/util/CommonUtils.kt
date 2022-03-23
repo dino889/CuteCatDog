@@ -92,5 +92,23 @@ object CommonUtils {
         val jsonResult: String = Gson().toJson(data)
         return Gson().fromJson<T>(jsonResult, typeToken)
     }
-
+    
+    fun convertWeek(week:Int):String{
+        if(week == 0){
+            return "일요일"
+        }else if(week == 1){
+            return "월요일"
+        }else if(week == 2){
+            return "화요일"
+        }else if(week == 3){
+            return "수요일"
+        }else if(week == 4){
+            return "목요일"
+        }else if(week == 5){
+            return "금요일"
+        }else if(week == 6){
+            return "토요일"
+        }
+        return ""
+    }
 }

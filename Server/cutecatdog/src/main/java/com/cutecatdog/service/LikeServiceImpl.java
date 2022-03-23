@@ -1,5 +1,7 @@
 package com.cutecatdog.service;
 
+import java.util.List;
+
 import com.cutecatdog.mapper.LikeMapper;
 import com.cutecatdog.model.like.LikeDeleteDto;
 import com.cutecatdog.model.like.LikeRequestDto;
@@ -44,5 +46,12 @@ public class LikeServiceImpl implements LikeService{
       return true;
     }
   }
+
+  @Override
+  public List<Integer> findUserBoard(int userId) throws Exception {
+    return sqlSession.getMapper(LikeMapper.class).selectUserBoard(userId);
+  }
+
+  
   
 }

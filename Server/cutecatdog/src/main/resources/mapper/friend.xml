@@ -21,15 +21,12 @@
     FROM tbl_friend
     WHERE user_id = #{userId} AND friend_email = #{friendEmail}
   </delete>
-
-
   <select id="selectFriendList" resultType="FriendResponseDto" parameterType="int">
     SELECT f.friend_email,u.profile_image
     FROM tbl_friend f LEFT OUTER JOIN tbl_user u
     ON f.friend_email = u.email
     WHERE f.user_id = #{userId}
   </select>
-
   <select id="selectFriendByEmail" resultType="FriendResponseDto" parameterType="String">
     SELECT email as friendEmail,profile_image
     FROM tbl_user 

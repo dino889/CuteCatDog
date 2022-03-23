@@ -21,5 +21,6 @@ public interface BoardService {
   public boolean removeBoard(int id) throws Exception;
 
   public BoardDetailDto findDetailBoard(int id) throws Exception;
+
   
 }

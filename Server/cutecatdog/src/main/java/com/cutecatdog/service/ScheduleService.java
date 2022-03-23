@@ -16,6 +16,8 @@ public interface ScheduleService {
     
     List<ScheduleDto> findScheduleWalk(int petId) throws Exception;
 
+    List<ScheduleDto> findScheduleDetail(ScheduleDto scheduleDto) throws Exception;
+
     boolean modifySchedule(ScheduleDto scheduleDto) throws Exception;
 
     boolean removeSchedule(int id) throws Exception;

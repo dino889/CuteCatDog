@@ -22,5 +22,7 @@ public class ScheduleDto {
     private String memo;
     @ApiModelProperty(value = "날짜", required = true)
     private String datetime;
+    @ApiModelProperty(value = "장소")
+    private String place;
     
 }

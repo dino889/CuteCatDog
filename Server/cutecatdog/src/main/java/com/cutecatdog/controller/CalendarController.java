@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.Calendar.ScheduleDto;
+import com.cutecatdog.service.PetService;
 import com.cutecatdog.service.ScheduleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class CalendarController {
     @Autowired
     ScheduleService scheduleService;
 
+    @Autowired
+    PetService petService;
+
     @ApiOperation(value = "사용자 등록 일정 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
     @GetMapping("/user/{user_id}")
     public ResponseEntity<Message> scheduleList(@PathVariable(name = "user_id") int userId) throws Exception {
@@ -46,6 +50,35 @@ public class CalendarController {
                 response.setMessage("일정 조회 성공");
             } else {
                 response.setMessage("일정이 없습니다.");
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ApiOperation(value = "사용자 등록 일정 날짜별 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
+    @GetMapping("/{user_id}/{datetime}")
+    public ResponseEntity<Message> scheduleDetail(@PathVariable(name = "user_id", required = true)int userId, @PathVariable(name = "datetime", required = true)String datetime) throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, List<?>> data = new HashMap<>();
+            ScheduleDto sch = new ScheduleDto();
+            sch.setDatetime(datetime);
+            sch.setUserId(userId);
+            data.put("schedules", scheduleService.findScheduleDetail(sch));
+            data.put("pets", petService.findMyPetDetail(userId));
+            response.setData(data);
+            status = HttpStatus.OK;
+            if (data.get("schedules").size() > 0) {
+                response.setMessage(datetime+" 일정 조회 성공");
+            } else {
+                response.setMessage("해당 날짜의 일정이 없습니다.");
             }
         } catch (Exception e) {
             response.setSuccess(false);

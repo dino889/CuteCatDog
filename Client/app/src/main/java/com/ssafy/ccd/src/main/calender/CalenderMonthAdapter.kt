@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.util.CommonUtils
 import java.util.*
 
-class CalenderMonthAdapter(val context: Context):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
+class CalenderMonthAdapter(val context: Context,val date:String):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
     val center = Int.MAX_VALUE/2
     private var calender = Calendar.getInstance()
 
@@ -46,7 +47,8 @@ class CalenderMonthAdapter(val context: Context):RecyclerView.Adapter<CalenderMo
         }
 
         val dayListManager = GridLayoutManager(holder.layout.context,7)
-        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList)
+        Log.d("Adapter", "onBindViewHolder: ${date}")
+        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList,date)
 
         holder.layout.findViewById<RecyclerView>(R.id.fragment_calender_dayRv).apply {
             layoutManager = dayListManager
@@ -54,15 +56,17 @@ class CalenderMonthAdapter(val context: Context):RecyclerView.Adapter<CalenderMo
         }
 
         dayListAdapter.setItemClickListener(object : CalenderDayAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int, day: Int) {
-                showDetailDialog()
+            override fun onClick(view: View, position: Int, day: String, week: String) {
+                showDetailDialog(day,week)
             }
+
 
         })
     }
-    fun showDetailDialog(){
+    fun showDetailDialog(day:String, week:String){
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_calender_day_dialog,null)
         val dialog = Dialog(context)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setContentView(dialogView)
         val param = WindowManager.LayoutParams()
         param.width = WindowManager.LayoutParams.MATCH_PARENT
@@ -72,6 +76,9 @@ class CalenderMonthAdapter(val context: Context):RecyclerView.Adapter<CalenderMo
         dialogView.findViewById<ImageButton>(R.id.fragment_calender_dialog_cancle).setOnClickListener {
             dialog.dismiss()
         }
+        dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_week).setText(week)
+        dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_date).setText(day)
+
         dialog.show()
     }
     override fun getItemCount(): Int {

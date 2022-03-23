@@ -2,18 +2,28 @@ package com.ssafy.ccd.src.main.calender
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentCalenderBinding
+import com.ssafy.ccd.src.dto.Pet
+import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
+import com.ssafy.ccd.util.CommonUtils
+import kotlinx.coroutines.runBlocking
 
+private const val TAG = "CalenderFragment"
 class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderBinding::bind, R.layout.fragment_calender) {
-
+    private lateinit var petAdapter: CalendarWritePetAdapter
+    private lateinit var monthListAdapter : CalenderMonthAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -22,26 +32,58 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = mainViewModel
+        runBlocking {
+            mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+            mainViewModel.getCalendarListbyUser(ApplicationClass.sharedPreferencesUtil.getUser().id)
+        }
+        setListener()
 
-        initCalendar()
-
-//        binding.fragmentCalenderWrite.setOnClickListener {
-//            val intent = Intent(requireContext(),CalenderWriteFragment::class.java)
-//            startActivity(intent)
-//        }
+        binding.fragmentCalenderWrite.setOnClickListener {
+            this@CalenderFragment.findNavController().navigate(R.id.action_calenderFragment_to_calenderWriteFragment)
+        }
 
     }
-    fun initCalendar(){
-        val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
-        val monthListAdapter = CalenderMonthAdapter(requireContext())
+    fun setListener(){
+        initCalendar()
+        initAdapter()
+    }
+    fun initAdapter(){
+        mainViewModel.myPetsList.observe(viewLifecycleOwner, {
+            petAdapter = CalendarWritePetAdapter()
+            petAdapter.list = it
+            binding.fragmentCalenderPetsRv.apply{
+                layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+                adapter = petAdapter
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+            petAdapter.setItemClickListener(object: CalendarWritePetAdapter.ItemClickListener{
+                override fun onClick(view: View, position: Int, id: Int) {
+                    //필터링하기...
+                }
 
-        binding.fragmentCalenderCustomCalender.apply {
-            layoutManager = monthListManager
-            adapter = monthListAdapter
-            scrollToPosition(Int.MAX_VALUE/2)
-        }
-        val snap = PagerSnapHelper()
-        snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
+            })
+        })
+    }
+    fun initCalendar(){
+        mainViewModel.calendarList.observe(viewLifecycleOwner, {
+            val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
+            var date = ""
+            for(i in 0..it.size-1){
+                date = CommonUtils.makeBirthString(it[i].datetime)
+            }
+            Log.d(TAG, "initCalendar: ${date}")
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date)
+
+            binding.fragmentCalenderCustomCalender.apply {
+                layoutManager = monthListManager
+                adapter = monthListAdapter
+                scrollToPosition(Int.MAX_VALUE/2)
+            }
+            val snap = PagerSnapHelper()
+            snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
+        })
+
 
     }
     companion object {
