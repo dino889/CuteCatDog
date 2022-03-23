@@ -55,6 +55,5 @@ public class BoardServiceImpl implements BoardService{
   @Override
   public List<BoardDto> findTypeBoard(int typeId) throws Exception {
     return sqlSession.getMapper(BoardMapper.class).selectTypeBoard(typeId);
-  }
-  
+  }  
 }

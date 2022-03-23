@@ -24,4 +24,10 @@
     WHERE user_id = #{userId} AND board_id = #{boardId}
   </select>
   
+  <select id="selectUserBoard" parameterType="int" resultType="Integer">
+    SELECT board_id 
+    FROM tbl_like_management
+    WHERE user_id = #{userId}
+  </select>
+
 </mapper>
