@@ -32,6 +32,7 @@ class InformationActivity : YouTubeBaseActivity() {
     private lateinit var backBtn:ImageView
     private var pageToken = ""
     private var type = 0
+    private var endTrigger = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +88,12 @@ class InformationActivity : YouTubeBaseActivity() {
                 }
                 else {
                     runOnUiThread {
-                        Toast.makeText(applicationContext, "Youtube API 할당량을 초과하였습니다. 다음 달 서비스로 돌아오겠습니다. 감사합니다.", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(applicationContext, "Youtube API 할당량을 초과하였습니다. 다음 달 서비스로 돌아오겠습니다. 감사합니다.", Toast.LENGTH_SHORT).show()
+                        if(!endTrigger){
+                            recyclerAdapter.deleteLoading()
+                            endTrigger = true
+                        }
                     }
-                    finish()
                 }
             }
         }
@@ -104,11 +108,13 @@ class InformationActivity : YouTubeBaseActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition() // 화면에 보이는 마지막 아이템의 position
-                val itemTotalCount = recyclerView.adapter!!.itemCount - 1 // 어댑터에 등록된 아이템의 총 개수 -1
+                val itemTotalCount = recyclerView.adapter!!.itemCount - 1
 
                 // 스크롤이 끝에 도달했는지 확인
                 if (lastVisibleItemPosition == itemTotalCount) {
-                    recyclerAdapter.deleteLoading()
+//                    runBlocking {
+//                        recyclerAdapter.deleteLoading()
+//                    }
                     updateDatas()
                 }
             }
