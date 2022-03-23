@@ -169,8 +169,8 @@
 
     <fragment
         android:id="@+id/shareBoardFragment"
-        android:name="com.ssafy.ccd.src.main.home.Community.ShareBoardFragment"        android:label="LocalBoardFragment"
-        tools:layout="@layout/fragment_share_board"/>
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteBoardFragment"        android:label="LocalBoardFragment"
+        tools:layout="@layout/fragment_write_board"/>
 
 
 </navigation>

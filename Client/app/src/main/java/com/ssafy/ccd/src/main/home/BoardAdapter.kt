@@ -23,7 +23,7 @@ import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import java.lang.reflect.Type
 
-class BoardAdapter(var postList : MutableList<Board>, val context: Context) : RecyclerView.Adapter<BoardAdapter.BoardBaseHolder>(){
+class BoardAdapter(var postList : MutableList<Board>, val userList: MutableList<User>, val userLikePost: MutableList<Int>, val context: Context) : RecyclerView.Adapter<BoardAdapter.BoardBaseHolder>(){
     private val TAG = "BoardAdapter_ccd"
     // 현재 로그인한 유저의 아이디
     val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -46,27 +46,40 @@ class BoardAdapter(var postList : MutableList<Board>, val context: Context) : Re
             // 전체 유저 리스트 받아서
             // post.userId == userList.id -> 작성자
             // 로 코드 수정하기
-            var response: Response<Message>
-            runBlocking {
-                response = UserService().readUserInfo(post.userId)
-            }
-            if(response.code() == 200 || response.code() == 500) {
-                val res = response.body()
-                if (res != null) {
-                    if (res.success == true) {
-                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
-                            val type: Type = object : TypeToken<User>() {}.type
-                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
-                            binding.writer = user
-                        } else if (res.data["user"] == null) {
-                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
-                        }
-                    } else {
-                        Log.e(TAG, "getUserInfo: ${res.message}")
-                    }
+            for (user in userList) {
+                if(post.userId == user.id) {
+                    binding.writer = user
                 }
             }
 
+            for (i in userLikePost) {
+                if(post.id == i) {
+                    binding.lottieAnimationView.progress = 0.5F
+                } else {
+                    binding.lottieAnimationView.progress = 0.0F
+                }
+            }
+//            var response: Response<Message>
+//            runBlocking {
+//                response = UserService().readUserInfo(post.userId)
+//            }
+//            if(response.code() == 200 || response.code() == 500) {
+//                val res = response.body()
+//                if (res != null) {
+//                    if (res.success == true) {
+//                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
+//                            val type: Type = object : TypeToken<User>() {}.type
+//                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
+//                            binding.writer = user
+//                        } else if (res.data["user"] == null) {
+//                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
+//                        }
+//                    } else {
+//                        Log.e(TAG, "getUserInfo: ${res.message}")
+//                    }
+//                }
+//            }
+//
             val responseLike : Response<Message>
             runBlocking {
                 responseLike = BoardService().selectPostIsLike(post.id, userId)
@@ -93,41 +106,54 @@ class BoardAdapter(var postList : MutableList<Board>, val context: Context) : Re
             // 전체 유저 리스트 받아서
             // post.userId == userList.id -> 작성자
             // 로 코드 수정하기
-            var responseUser: Response<Message>
-            runBlocking {
-                responseUser = UserService().readUserInfo(post.userId)
-            }
-            if(responseUser.code() == 200 || responseUser.code() == 500) {
-                val res = responseUser.body()
-                if (res != null) {
-                    if (res.success == true) {
-                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
-                            val type: Type = object : TypeToken<User>() {}.type
-                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
-                            binding.writer = user
-                        } else if (res.data["user"] == null) {
-                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
-                        }
-                    } else {
-                        Log.e(TAG, "getUserInfo: ${res.message}")
-                    }
+            for (user in userList) {
+                if(post.userId == user.id) {
+                    binding.writer = user
                 }
             }
 
-            val responseLike : Response<Message>
-            runBlocking {
-                responseLike = BoardService().selectPostIsLike(post.id, userId)
-            }
-            val res = responseLike.body()
-            if(responseLike.code() == 200 || responseLike.code() == 500) {
-                if(res != null) {
-                    if(res.data["isSuccess"] == true && res.message == "좋아요 가능") {  // 사용자가 좋아요 안누른 상환
-                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.black))
-                    } else if(res.data["isSuccess"] == false) { // 이미 like 한 게시물 이거나 게시물이 존재하지 않습니다.
-                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.red))
-                    }
+            for (i in userLikePost) {
+                if(post.id == i) {
+                    binding.lottieAnimationView.progress = 0.5F
+                } else {
+                    binding.lottieAnimationView.progress = 0.0F
                 }
             }
+//            var responseUser: Response<Message>
+//            runBlocking {
+//                responseUser = UserService().readUserInfo(post.userId)
+//            }
+//            if(responseUser.code() == 200 || responseUser.code() == 500) {
+//                val res = responseUser.body()
+//                if (res != null) {
+//                    if (res.success == true) {
+//                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
+//                            val type: Type = object : TypeToken<User>() {}.type
+//                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
+//                            binding.writer = user
+//                        } else if (res.data["user"] == null) {
+//                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
+//                        }
+//                    } else {
+//                        Log.e(TAG, "getUserInfo: ${res.message}")
+//                    }
+//                }
+//            }
+//
+//            val responseLike : Response<Message>
+//            runBlocking {
+//                responseLike = BoardService().selectPostIsLike(post.id, userId)
+//            }
+//            val res = responseLike.body()
+//            if(responseLike.code() == 200 || responseLike.code() == 500) {
+//                if(res != null) {
+//                    if(res.data["isSuccess"] == true && res.message == "좋아요 가능") {  // 사용자가 좋아요 안누른 상환
+//                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.black))
+//                    } else if(res.data["isSuccess"] == false) { // 이미 like 한 게시물 이거나 게시물이 존재하지 않습니다.
+//                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.red))
+//                    }
+//                }
+//            }
 
             binding.post = post
             binding.executePendingBindings()
