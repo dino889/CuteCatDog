@@ -14,10 +14,8 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
-import com.ssafy.ccd.src.dto.Diary
-import com.ssafy.ccd.src.dto.Hashtag
-import com.ssafy.ccd.src.dto.Pet
-import com.ssafy.ccd.src.dto.Photo
+import com.ssafy.ccd.src.dto.*
+import com.ssafy.ccd.src.main.calender.CalendarDetailAdapter
 import com.ssafy.ccd.src.main.calender.CalendarWritePetAdapter
 import com.ssafy.ccd.src.main.diary.DiaryAdapter
 import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
@@ -187,11 +185,11 @@ fun bindPetConvertBirth(textView: TextView,data:String?){
 @BindingAdapter("calendarType")
 fun bindCalendarType(textView: TextView, type:Int){
     if(type == 1){
-        textView.text = "접종"
+        textView.text = "접종  |"
     }else if(type == 2){
-        textView.text = "산책"
+        textView.text = "산책  |"
     }else{
-        textView.text = "기타"
+        textView.text = "기타  |"
     }
 }
 
@@ -292,5 +290,18 @@ fun bindDiaryHashRecyclerView(recyclerView: RecyclerView, data:List<Hashtag>?){
         adapter = recyclerView.adapter as DiaryHashAdapter
     }
     adapter.list = data as MutableList<Hashtag>
+    adapter.notifyDataSetChanged()
+}
+
+@BindingAdapter("schedulerListData")
+fun bindScheduleRecyclerView(recyclerView: RecyclerView, data:List<Schedule>?){
+    var adapter = recyclerView.adapter as CalendarDetailAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as CalendarDetailAdapter
+    }
+    adapter.list = data as MutableList<Schedule>
     adapter.notifyDataSetChanged()
 }

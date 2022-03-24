@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.databinding.ItemCalendarDetailListBinding
 import com.ssafy.ccd.src.dto.Calendar
+import com.ssafy.ccd.src.dto.Schedule
 
 class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailViewHolder>(){
-    var list = mutableListOf<Calendar>()
+    var list = mutableListOf<Schedule>()
     inner class DetailViewHolder(private val binding:ItemCalendarDetailListBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(data : Calendar){
-            binding.calendar = data
+        fun bind(data : Schedule){
+            binding.schedules = data
             binding.executePendingBindings()
         }
     }

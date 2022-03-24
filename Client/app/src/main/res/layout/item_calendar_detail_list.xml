@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="calendar"
-            type="com.ssafy.ccd.src.dto.Calendar" />
+            name="schedules"
+            type="com.ssafy.ccd.src.dto.Schedule" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +19,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            app:imageUrlCalendarPets = "@{schedules.pet.photoPath}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="5dp"
-            android:text="@{calendar.title}"
+            android:text="@{schedules.schedule.title}"
             android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg"
             app:layout_constraintTop_toTopOf="@+id/fragment_calendar_dialog_petImg" />
@@ -40,17 +41,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="8dp"
-            app:calendarType="@{calendar.type}"
+            app:calendarType="@{schedules.schedule.type}"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_petImg"
             app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg" />
+
 
         <TextView
             android:id="@+id/fragment_calendar_dialog_memo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@{calendar.memo}"
+            android:text="@{schedules.schedule.memo}"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_type"
             app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_type" />

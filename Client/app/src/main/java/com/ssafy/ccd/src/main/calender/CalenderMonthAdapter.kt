@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,20 +12,25 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.collections.ArrayList
 
-class CalenderMonthAdapter(val context: Context, val date:String, val viewModel: MainViewModels, val owner: LifecycleOwner):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
+class CalenderMonthAdapter(val context: Context, val date:ArrayList<String>, val viewModel: MainViewModels, val owner: LifecycleOwner):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
     val center = Int.MAX_VALUE/2
     private var calender = Calendar.getInstance()
 
@@ -52,43 +58,15 @@ class CalenderMonthAdapter(val context: Context, val date:String, val viewModel:
         }
 
         val dayListManager = GridLayoutManager(holder.layout.context,7)
-        Log.d("Adapter", "onBindViewHolder: ${date}")
-        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList,date)
+        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList,date,viewModel,owner,context)
 
         holder.layout.findViewById<RecyclerView>(R.id.fragment_calender_dayRv).apply {
             layoutManager = dayListManager
             adapter = dayListAdapter
         }
 
-        dayListAdapter.setItemClickListener(object : CalenderDayAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int, day: String, week: String) {
-                runBlocking {
-                    viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date))
-                }
-                showDetailDialog(day,week)
-            }
-
-
-        })
     }
-    fun showDetailDialog(day:String, week:String){
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_calender_day_dialog,null)
-        val dialog = Dialog(context)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.setContentView(dialogView)
-        val param = WindowManager.LayoutParams()
-        param.width = WindowManager.LayoutParams.MATCH_PARENT
-        param.height = WindowManager.LayoutParams.MATCH_PARENT
-        val window = dialog.window
-        window?.attributes = param
-        dialogView.findViewById<ImageButton>(R.id.fragment_calender_dialog_cancle).setOnClickListener {
-            dialog.dismiss()
-        }
-        dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_week).setText(week)
-        dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_date).setText(day)
 
-        dialog.show()
-    }
     override fun getItemCount(): Int {
         return Int.MAX_VALUE
     }
