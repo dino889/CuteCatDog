@@ -1,17 +1,21 @@
 package com.ssafy.ccd.src.main.home.Community
 
+import android.animation.ValueAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalBoardBinding
+import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.network.service.BoardService
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
@@ -22,16 +26,23 @@ import retrofit2.Response
  * '울동네' 게시판
  */
 class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocalBoardBinding::bind,R.layout.fragment_local_board) {
+    private val TAG = "LocalBoardFragment_ccd"
     private lateinit var localBoardAdapter: LocalBoardAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        runBlocking {
+            mainViewModel.getPostListByType(1)
+            mainViewModel.getLikePostsByUserId(ApplicationClass.sharedPreferencesUtil.getUser().id)
+        }
+
+        binding.mainViewModel = mainViewModel
+
         initRecyclerView()
         backBtnClickEvent()
         writeBtnClickEvent()
@@ -57,48 +68,67 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
     }
 
     /**
-     * 게시글 recyclerView 초기화
+     * 게시글 recyclerView 초기화 + rv 아이템 클릭 이벤트
      */
     private fun initRecyclerView() {
-        runBlocking {
-            mainViewModel.getPostListByType(1)
-        }
+        val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+
+        binding.localBoardFragmentRvPostList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        localBoardAdapter = LocalBoardAdapter(requireContext())
+
+        mainViewModel.likePostsByUserId.observe(viewLifecycleOwner, {
+            localBoardAdapter.userLikePost = it
+//            localBoardAdapter.notifyDataSetChanged()
+        })
+
+//        localBoardAdapter.submitList(mainViewModel.locPostList.value)
+//        localBoardAdapter.userList = mainViewModel.allUserList.value!!
+
         mainViewModel.locPostList.observe(viewLifecycleOwner, {
-            binding.localBoardFragmentRvPostList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            localBoardAdapter = LocalBoardAdapter(it, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
-            binding.localBoardFragmentRvPostList.adapter = localBoardAdapter
+            localBoardAdapter.postList = it
+            localBoardAdapter.userList = mainViewModel.allUserList.value!!
+        })
 
-            localBoardAdapter.setHeartItemClickListener(object : LocalBoardAdapter.ItemClickListener {
-                override fun onClick(view: View, position: Int) {
-                    // boardlike 호출 -> 색 변경
-                }
-            })
-
-            localBoardAdapter.setCommentItemClickListener(object : LocalBoardAdapter.ItemClickListener {
-                override fun onClick(view: View, position: Int) {
-                    // postId 포함해서 commentList 페이지로 이동
-                }
-            })
+        binding.localBoardFragmentRvPostList.adapter = localBoardAdapter
+        localBoardAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
 
-            localBoardAdapter.setModifyItemClickListener(object : LocalBoardAdapter.MenuClickListener {
-                override fun onClick(postId: Int) {
-                    this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_writeLocalBoardFragment,
-                        bundleOf("postId" to postId)
-                    )
-                }
-            })
+        // item
+        localBoardAdapter.setHeartItemClickListener(object : LocalBoardAdapter.HeartItemClickListener {
+            override fun onClick(heartBtn: LottieAnimationView, position: Int, id: Int) {
+//            override fun onClick(heartBtn: LottieAnimationView, heartCnt: TextView, id: Int) {
+                // boardlike 호출 -> 색 변경
+                val likeRequestDto = LikeRequestDto(boardId = id, userId = userId)
+                likePost(heartBtn, likeRequestDto, position)
+            }
+        })
 
-            localBoardAdapter.setDeleteItemClickListener(object : LocalBoardAdapter.MenuClickListener {
-                override fun onClick(postId: Int) {
-                    deletePost(postId)
-                }
-            })
+        localBoardAdapter.setCommentItemClickListener(object : LocalBoardAdapter.ItemClickListener {
+            override fun onClick(view: View, position: Int) {
+                // postId 포함해서 commentList 페이지로 이동
+            }
+        })
 
+
+        localBoardAdapter.setModifyItemClickListener(object : LocalBoardAdapter.MenuClickListener {
+            override fun onClick(postId: Int, position: Int) {
+                this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_writeLocalBoardFragment,
+                    bundleOf("postId" to postId)
+                )
+            }
+        })
+
+        localBoardAdapter.setDeleteItemClickListener(object : LocalBoardAdapter.MenuClickListener {
+            override fun onClick(postId: Int, position: Int) {
+                deletePost(postId, position)
+            }
         })
     }
 
-    private fun deletePost(postId: Int) {
+    /**
+     * 게시글 삭제 response
+     */
+    private fun deletePost(postId: Int, position: Int) {
         var response : Response<Message>
         runBlocking {
             response = BoardService().deletePost(postId)
@@ -111,10 +141,60 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
                     runBlocking {
                         mainViewModel.getPostListByType(1)
                     }
+//                    localBoardAdapter.notifyItemRemoved(position)
+                    localBoardAdapter.notifyDataSetChanged()
                 } else {
                     showCustomToast("게시글 삭제 실패")
                 }
             }
+        }
+    }
+
+    /**
+     * 게시글 좋아요 response
+     */
+    private fun likePost(heart: LottieAnimationView, likeRequestDto: LikeRequestDto, position: Int) {
+
+
+        var response : Response<Message>
+        runBlocking {
+            response = BoardService().insertOrDeletePostLike(likeRequestDto)
+        }
+        if(response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            if (res != null) {
+                if(res.success) {
+                    if(res.data["isSuccess"] == true && res.message == "등록") {
+                        val animator = ValueAnimator.ofFloat(0f,0.4f).setDuration(500)
+                        animator.addUpdateListener { animation ->
+                            heart.progress = animation.animatedValue as Float
+                        }
+                        animator.start()
+                        runBlocking {
+                            mainViewModel.getLikePostsByUserId(likeRequestDto.userId)
+                            mainViewModel.getPostListByType(1)
+                        }
+                        localBoardAdapter.notifyItemChanged(position)
+
+
+                    } else if(res.data["isSuccess"] == true && res.message == "삭제") {
+                        val animator = ValueAnimator.ofFloat(1f,0f).setDuration(500)
+                        animator.addUpdateListener { animation ->
+                            heart.progress = animation.animatedValue as Float
+                        }
+                        animator.start()
+                        runBlocking {
+                            mainViewModel.getLikePostsByUserId(likeRequestDto.userId)
+                            mainViewModel.getPostListByType(1)
+                        }
+                        localBoardAdapter.notifyItemChanged(position)
+                    }
+                } else {
+                    showCustomToast("서버 통신 오류 발생")
+                    Log.e(TAG, "likePost: ${res.message}", )
+                }
+            }
+
         }
     }
 

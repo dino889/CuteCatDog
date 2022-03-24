@@ -2,8 +2,8 @@ package com.ssafy.ccd.src.network.service
 
 import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.Comment
+import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.network.api.BoardApi
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
 
@@ -31,7 +31,7 @@ class BoardService {
 
     suspend fun selectPostIsLike(postId: Int, userId: Int) = RetrofitUtil.boardService.selectPostIsLike(postId, userId)
 
-    suspend fun insertOrDeletePostLike(likeRequestDto: Board) = RetrofitUtil.boardService.insertOrDeletePostLike(likeRequestDto)
+    suspend fun insertOrDeletePostLike(likeRequestDto: LikeRequestDto) = RetrofitUtil.boardService.insertOrDeletePostLike(likeRequestDto)
     
     suspend fun selectPostListByType(typeId: Int) = RetrofitUtil.boardService.selectPostListByType(typeId)
 
