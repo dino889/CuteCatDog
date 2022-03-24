@@ -21,4 +21,7 @@ interface CalendarApi {
 
     @GET("/calendar/user/{user_id}")
     suspend fun calendarListbyUser(@Path("user_id")userId:Int):Response<Message>
+
+    @GET("/calendar/{user_id}/{datetime}")
+    suspend fun calendarListbyDate(@Path("user_id")user_id:Int,@Path("datetime")datetime:String) : Response<Message>
 }

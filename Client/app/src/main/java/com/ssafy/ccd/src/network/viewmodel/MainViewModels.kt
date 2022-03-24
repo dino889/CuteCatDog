@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.src.network.service.BoardService
+import com.ssafy.ccd.src.dto.Calendar
 import com.ssafy.ccd.src.network.service.CalendarService
 import com.ssafy.ccd.src.network.service.DiaryService
 import com.ssafy.ccd.src.network.service.PetService
@@ -19,6 +20,8 @@ import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 import java.net.URI
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "MainViewModels_ccd"
 class MainViewModels : ViewModel() {
@@ -614,18 +617,18 @@ class MainViewModels : ViewModel() {
      * @author Boyeon
      * @Date 2022-03-23*/
     private val _calendarList = MutableLiveData<MutableList<Calendar>>()
-    private val _calendar = MutableLiveData<Calendar>()
+    private val _calendar = MutableLiveData<MutableList<Schedule>>()
 
     val calendarList : LiveData<MutableList<Calendar>>
         get() = _calendarList
-    val calendar : LiveData<Calendar>
+    val schedule : LiveData<MutableList<Schedule>>
         get() = _calendar
 
     fun setCalendarList(list:MutableList<Calendar>) = viewModelScope.launch {
         _calendarList.value = list
     }
-    fun setCalendar(calendar:Calendar) = viewModelScope.launch {
-        _calendar.value = calendar
+    fun setSchedules(list : MutableList<Schedule>) = viewModelScope.launch {
+        _calendar.value = list
     }
 
     suspend fun getCalendarListbyUser(userId:Int){
@@ -638,11 +641,34 @@ class MainViewModels : ViewModel() {
                         Log.d(TAG, "getCalendarListbyUser: ${res}")
                         var type = object:TypeToken<MutableList<Calendar?>?>() {}.type
                         var calendar = CommonUtils.parseDto<MutableList<Calendar>>(res.data.get("schedules")!!,type)
+                        Log.d(TAG, "getCalendarListbyUser: ${calendar}")
                         setCalendarList(calendar)
                     }
                 }
             }else{
                 Log.d(TAG, "getCalendarListbyUser: ${response.code()}")
+            }
+        }
+    }
+    
+    suspend fun getCalendarListbyDate(userId:Int, datetime:String){
+        val response = CalendarService().getCalendarListByDate(userId, datetime)
+        Log.d(TAG, "getCalendarListbyDate: ${response.code()}")
+        viewModelScope.launch {
+            val res = response.body()
+            if (response.code() == 200) {
+                if (res != null) {
+                    if (res.success) {
+                        Log.d(TAG, "getCalendarListbyDate: ${res}")
+                        var type = object : TypeToken<MutableList<Schedule?>?>() {}.type
+                        var schedule = CommonUtils.parseDto<MutableList<Schedule>>(res.data.get("schedules")!!,type)
+                        Log.d(TAG, "getCalendarListbyDate: ${schedule}")
+                        setSchedules(schedule)
+//                        setCalendar(calendars)
+                    }
+                } else {
+                    Log.d(TAG, "getCalendarListbyDate: ${response.code()}")
+                }
             }
         }
     }

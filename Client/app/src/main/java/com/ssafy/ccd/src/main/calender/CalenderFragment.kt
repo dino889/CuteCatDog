@@ -36,6 +36,7 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
         runBlocking {
             mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
             mainViewModel.getCalendarListbyUser(ApplicationClass.sharedPreferencesUtil.getUser().id)
+            Log.d(TAG, "onViewCreated: ")
         }
         setListener()
 
@@ -68,12 +69,12 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
     fun initCalendar(){
         mainViewModel.calendarList.observe(viewLifecycleOwner, {
             val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
-            var date = ""
+            var date = arrayListOf<String>()
             for(i in 0..it.size-1){
-                date = CommonUtils.makeBirthString(it[i].datetime)
+                date.add(CommonUtils.makeBirthString(it[i].datetime))
             }
             Log.d(TAG, "initCalendar: ${date}")
-            monthListAdapter = CalenderMonthAdapter(requireContext(),date)
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
 
             binding.fragmentCalenderCustomCalender.apply {
                 layoutManager = monthListManager

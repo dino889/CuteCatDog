@@ -19,6 +19,7 @@ import com.ssafy.ccd.src.dto.Diary
 import com.ssafy.ccd.src.dto.Hashtag
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.dto.Photo
+import com.ssafy.ccd.src.main.calender.CalendarDetailAdapter
 import com.ssafy.ccd.src.main.calender.CalendarWritePetAdapter
 import com.ssafy.ccd.src.main.diary.DiaryAdapter
 import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
@@ -181,6 +182,17 @@ fun bindPetConvertBirth(textView: TextView,data:String?){
     }
 }
 
+@BindingAdapter("calendarType")
+fun bindCalendarType(textView: TextView, type:Int){
+    if(type == 1){
+        textView.text = "접종  |"
+    }else if(type == 2){
+        textView.text = "산책  |"
+    }else{
+        textView.text = "기타  |"
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("myPagePetInfo")
 fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){
@@ -291,13 +303,24 @@ fun bindDiaryHashRecyclerView(recyclerView: RecyclerView, data:List<Hashtag>?){
     adapter.list = data as MutableList<Hashtag>
     adapter.notifyDataSetChanged()
 }
+@BindingAdapter("schedulerListData")
+fun bindScheduleRecyclerView(recyclerView: RecyclerView, data:List<Schedule>?){
+    var adapter = recyclerView.adapter as CalendarDetailAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as CalendarDetailAdapter
+    }
+    adapter.list = data as MutableList<Schedule>
+    adapter.notifyDataSetChanged()
+}
 
 /**
  * board 관련 bindingAdapter
  */
 @BindingAdapter("homePostList") // BoardFragment + BoardAdapter
 fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
-
     var adapter = recyclerView.adapter as BoardAdapter
     if(recyclerView.adapter == null){
         adapter.setHasStableIds(true)
@@ -305,7 +328,6 @@ fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
     }else{
         adapter = recyclerView.adapter as BoardAdapter
     }
-
     val tmp = mutableListOf<Board>()
     if(data != null) {
         if (data.size >= 5) {
@@ -317,5 +339,4 @@ fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
             adapter.postList = data as MutableList<Board>
         }
     }
-    adapter.notifyDataSetChanged()
 }
