@@ -672,6 +672,22 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+
+    suspend fun getCalendarListbyPet(petId:Int){
+        val response = CalendarService().getCalendarListByPet(petId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object : TypeToken<MutableList<Calendar>??>() {}.type
+                        var calendar = CommonUtils.parseDto<MutableList<Calendar>>(res.data.get("schedule")!!,type)
+
+                    }
+                }
+            }
+        }
+    }
     /**
      * AI View Model
      * @Author Jueun

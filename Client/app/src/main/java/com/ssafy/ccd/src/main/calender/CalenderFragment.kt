@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -61,15 +62,52 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
             petAdapter.setItemClickListener(object: CalendarWritePetAdapter.ItemClickListener{
                 override fun onClick(view: View, position: Int, id: Int) {
                     //필터링하기...
+                    Log.d(TAG, "onClick: ${id}")
+                    initPetFilter(id)
                 }
 
             })
         })
     }
-    fun initCalendar(){
+    fun initPetFilter(petId:Int){
         mainViewModel.calendarList.observe(viewLifecycleOwner, {
             val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
             var date = arrayListOf<String>()
+            for(i in 0..it.size-1){
+                if(it[i].petId == petId){
+                    date.add(CommonUtils.makeBirthString(it[i].datetime))
+                }
+            }
+            Log.d(TAG, "initCalendar: ${date}")
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
+
+            binding.fragmentCalenderCustomCalender.apply {
+                layoutManager = monthListManager
+                adapter = monthListAdapter
+                scrollToPosition(Int.MAX_VALUE/2)
+            }
+            val snap = PagerSnapHelper()
+            if( binding.fragmentCalenderCustomCalender.onFlingListener == null){
+                snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
+            }
+
+        })
+    }
+    fun initCalendar(){
+        mainViewModel.calendarList.observe(viewLifecycleOwner, {
+            val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
+
+            var date = arrayListOf<String>()
+//            if(petId == -1){
+//
+//            }else{
+//                for(i in 0..it.size-1){
+//                    if(petId == it[i].petId) {
+//                        Log.d(TAG, "initCalendar: $petId")
+//                        date.add(CommonUtils.makeBirthString(it[i].datetime))
+//                    }
+//                }
+//            }
             for(i in 0..it.size-1){
                 date.add(CommonUtils.makeBirthString(it[i].datetime))
             }
@@ -84,9 +122,8 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
             val snap = PagerSnapHelper()
             snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
         })
-
-
     }
+
     companion object {
 
         @JvmStatic

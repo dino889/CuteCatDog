@@ -15,6 +15,9 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
         fun bind(data : Schedule){
             binding.schedules = data
             binding.executePendingBindings()
+            binding.itemSwipeDeleteTv.setOnClickListener {
+                removeData(this.layoutPosition)
+            }
         }
     }
 
@@ -27,8 +30,17 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
             bind(list[position])
         }
     }
-
+    fun removeData(position: Int){
+        removeListener.onRemove(list[position].schedule.id)
+    }
     override fun getItemCount(): Int {
         return list.size
+    }
+    interface RemoveListener{
+        fun onRemove(calendarId:Int)
+    }
+    private lateinit var removeListener : RemoveListener
+    fun setRemoveListener(removeListener: RemoveListener){
+        this.removeListener = removeListener
     }
 }
