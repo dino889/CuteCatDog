@@ -12,14 +12,19 @@ import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
-class CalenderMonthAdapter(val context: Context,val date:String):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
+class CalenderMonthAdapter(val context: Context, val date:String, val viewModel: MainViewModels, val owner: LifecycleOwner):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
     val center = Int.MAX_VALUE/2
     private var calender = Calendar.getInstance()
 
@@ -57,6 +62,9 @@ class CalenderMonthAdapter(val context: Context,val date:String):RecyclerView.Ad
 
         dayListAdapter.setItemClickListener(object : CalenderDayAdapter.ItemClickListener {
             override fun onClick(view: View, position: Int, day: String, week: String) {
+                runBlocking {
+                    viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date))
+                }
                 showDetailDialog(day,week)
             }
 

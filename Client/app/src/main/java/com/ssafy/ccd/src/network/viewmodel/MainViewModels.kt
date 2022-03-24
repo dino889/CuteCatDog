@@ -399,18 +399,18 @@ class MainViewModels : ViewModel() {
      * @author Boyeon
      * @Date 2022-03-23*/
     private val _calendarList = MutableLiveData<MutableList<Calendar>>()
-    private val _calendar = MutableLiveData<Calendar>()
+    private val _calendar = MutableLiveData<MutableList<Calendar>>()
 
     val calendarList : LiveData<MutableList<Calendar>>
         get() = _calendarList
-    val calendar : LiveData<Calendar>
+    val calendar : LiveData<MutableList<Calendar>>
         get() = _calendar
 
     fun setCalendarList(list:MutableList<Calendar>) = viewModelScope.launch {
         _calendarList.value = list
     }
-    fun setCalendar(calendar:Calendar) = viewModelScope.launch {
-        _calendar.value = calendar
+    fun setCalendar(list : MutableList<Calendar>) = viewModelScope.launch {
+        _calendar.value = list
     }
 
     suspend fun getCalendarListbyUser(userId:Int){
@@ -428,6 +428,25 @@ class MainViewModels : ViewModel() {
                 }
             }else{
                 Log.d(TAG, "getCalendarListbyUser: ${response.code()}")
+            }
+        }
+    }
+    
+    suspend fun getCalendarListbyDate(userId:Int, datetime:String){
+        val response = CalendarService().getCalendarListByDate(userId, datetime)
+        viewModelScope.launch { 
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getCalendarListbyDate: ${res}")
+                        var type = object : TypeToken<MutableList<Calendar?>?>() {}.type
+                        var calendars = CommonUtils.parseDto<MutableList<Calendar>>(res.data.get("schedules")!!,type)
+                        setCalendar(calendars)
+                    }
+                }
+            }else{
+                Log.d(TAG, "getCalendarListbyDate: ${response.code()}")
             }
         }
     }

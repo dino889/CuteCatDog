@@ -26,4 +26,8 @@ class CalendarService {
     suspend fun getCalendarListByUser(userId:Int) : Response<Message> {
         return RetrofitUtil.calendarService.calendarListbyUser(userId)
     }
+
+    suspend fun getCalendarListByDate(userId:Int, datetime:String) : Response<Message> {
+        return RetrofitUtil.calendarService.calendarListbyDate(userId,datetime)
+    }
 }

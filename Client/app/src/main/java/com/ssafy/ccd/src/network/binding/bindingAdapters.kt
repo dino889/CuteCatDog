@@ -183,6 +183,18 @@ fun bindPetConvertBirth(textView: TextView,data:String?){
         textView.text = CommonUtils.makeBirthString(data)
     }
 }
+
+@BindingAdapter("calendarType")
+fun bindCalendarType(textView: TextView, type:Int){
+    if(type == 1){
+        textView.text = "접종"
+    }else if(type == 2){
+        textView.text = "산책"
+    }else{
+        textView.text = "기타"
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @BindingAdapter("myPagePetInfo")
 fun bindPetConvertAgeandGender(textView: TextView, data:Pet?){

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,17 +59,22 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             var title = binding.fragmentCalendarWriteTitle.text.toString()
             var content = binding.fragmentCalendarWriteMemo.text.toString()
             var place = binding.fragmentCalendarWritePlace.text.toString()
-            var calendar = com.ssafy.ccd.src.dto.Calendar(
-                CommonUtils.makeBirthMilliSecond(date),
-                0,
-                content,
-                petId,
-                title,
-                type,
-                ApplicationClass.sharedPreferencesUtil.getUser().id,
-                place
-            )
-            insertCalendar(calendar)
+            if(type == -1 || type == 0){
+                showCustomToast("다시 선택해주세요!")
+            }else{
+                var calendar = com.ssafy.ccd.src.dto.Calendar(
+                    CommonUtils.makeBirthMilliSecond(date),
+                    0,
+                    content,
+                    petId,
+                    title,
+                    type,
+                    ApplicationClass.sharedPreferencesUtil.getUser().id,
+                    place
+                )
+                insertCalendar(calendar)
+            }
+
         }
         binding.fragmentCalendarWriteDatePicker.setOnClickListener {
             initDatePicker()

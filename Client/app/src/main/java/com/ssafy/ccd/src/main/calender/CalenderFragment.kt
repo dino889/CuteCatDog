@@ -73,7 +73,7 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
                 date = CommonUtils.makeBirthString(it[i].datetime)
             }
             Log.d(TAG, "initCalendar: ${date}")
-            monthListAdapter = CalenderMonthAdapter(requireContext(),date)
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
 
             binding.fragmentCalenderCustomCalender.apply {
                 layoutManager = monthListManager
