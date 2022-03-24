@@ -18,9 +18,9 @@ public class LikeServiceImpl implements LikeService{
 
   @Override
   public boolean addLike(LikeRequestDto likeRequestDto) throws Exception {
-    if(sqlSession.getMapper(LikeMapper.class).selectLike(likeRequestDto.getUserId()) != null){
-      return false;
-    }
+    // if(sqlSession.getMapper(LikeMapper.class).selectLike(likeRequestDto.getUserId()) != null){
+    //   return false;
+    // }
     return sqlSession.getMapper(LikeMapper.class).insertLike(likeRequestDto);
   }
 

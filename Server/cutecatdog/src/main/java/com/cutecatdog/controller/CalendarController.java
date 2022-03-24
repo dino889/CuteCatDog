@@ -1,11 +1,13 @@
 package com.cutecatdog.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.Calendar.ScheduleDto;
+import com.cutecatdog.model.pet.PetDto;
 import com.cutecatdog.service.PetService;
 import com.cutecatdog.service.ScheduleService;
 
@@ -67,15 +69,21 @@ public class CalendarController {
         HttpStatus status = null;
         try {
             response.setSuccess(true);
-            HashMap<String, List<?>> data = new HashMap<>();
             ScheduleDto sch = new ScheduleDto();
             sch.setDatetime(datetime);
             sch.setUserId(userId);
-            data.put("schedules", scheduleService.findScheduleDetail(sch));
-            data.put("pets", petService.findMyPetDetail(userId));
+            HashMap<String, List<HashMap<String, ?>>> data = new HashMap<>();
+            data.put("schedules", new ArrayList<>());
+            List<ScheduleDto> list = scheduleService.findScheduleDetail(sch);
+            for (ScheduleDto scheduleDto : list) {
+                HashMap<String, Object> hash = new HashMap<>();
+                hash.put("schedule", scheduleDto);
+                hash.put("pet", petService.findPetDetail(scheduleDto.getPetId()));
+                data.get("schedules").add(hash);
+            }
             response.setData(data);
             status = HttpStatus.OK;
-            if (data.get("schedules").size() > 0) {
+            if (data.size() > 0) {
                 response.setMessage(datetime+" 일정 조회 성공");
             } else {
                 response.setMessage("해당 날짜의 일정이 없습니다.");
