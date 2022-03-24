@@ -26,6 +26,7 @@ import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
 import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
+import com.ssafy.ccd.src.main.home.Community.LocalCommentAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
@@ -342,7 +343,7 @@ fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
     }
 }
 
-@BindingAdapter("postListData")
+@BindingAdapter("localPostListData")
 fun bindPostListRecyclerView(recyclerView: RecyclerView, data: MutableList<Board>) {
     var adapter = recyclerView.adapter as LocalBoardAdapter
     if(recyclerView.adapter == null){
@@ -358,3 +359,27 @@ fun bindPostListRecyclerView(recyclerView: RecyclerView, data: MutableList<Board
 //    adapter.submitList(data)
 //    adapter.notifyDataSetChanged()
 }
+
+@BindingAdapter("localCommentListData")
+fun bindLocalCommentList(recyclerView: RecyclerView, data: MutableList<Comment>) {
+    var adapter = recyclerView.adapter as LocalCommentAdapter
+    if (recyclerView.adapter == null) {
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    } else {
+        adapter = recyclerView.adapter as LocalCommentAdapter
+    }
+    adapter.commentList = data
+}
+
+//@BindingAdapter("localReplyListData")
+//fun bindLocalReplyList(recyclerView: RecyclerView, data: MutableList<Comment>) {
+//    var adapter = recyclerView.adapter as LocalCommentReplyAdapter
+//    if (recyclerView.adapter == null) {
+//        adapter.setHasStableIds(true)
+//        recyclerView.adapter = adapter
+//    } else {
+//        adapter = recyclerView.adapter as LocalCommentReplyAdapter
+//    }
+//    adapter.commentList = data
+//}

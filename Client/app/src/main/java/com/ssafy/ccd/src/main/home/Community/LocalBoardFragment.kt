@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.home.Community
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,9 +17,11 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalBoardBinding
 import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
+import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.BoardService
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
+import kotlin.properties.Delegates
 
 /**
  * @author Jiwoo
@@ -28,9 +31,16 @@ import retrofit2.Response
 class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocalBoardBinding::bind,R.layout.fragment_local_board) {
     private val TAG = "LocalBoardFragment_ccd"
     private lateinit var localBoardAdapter: LocalBoardAdapter
+    private lateinit var mainActivity : MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainActivity.hideBottomNavi(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,17 +105,20 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
 
         // item
         localBoardAdapter.setHeartItemClickListener(object : LocalBoardAdapter.HeartItemClickListener {
-            override fun onClick(heartBtn: LottieAnimationView, position: Int, id: Int) {
+            override fun onClick(heart: LottieAnimationView, position: Int, id: Int) {
 //            override fun onClick(heartBtn: LottieAnimationView, heartCnt: TextView, id: Int) {
                 // boardlike 호출 -> 색 변경
                 val likeRequestDto = LikeRequestDto(boardId = id, userId = userId)
-                likePost(heartBtn, likeRequestDto, position)
+                likePost(heart, likeRequestDto, position)
             }
         })
 
         localBoardAdapter.setCommentItemClickListener(object : LocalBoardAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int) {
+            override fun onClick(view: View, postId: Int) {
                 // postId 포함해서 commentList 페이지로 이동
+                this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_localCommentFragment,
+                    bundleOf("postId" to postId)
+                )
             }
         })
 
@@ -155,7 +168,6 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
      */
     private fun likePost(heart: LottieAnimationView, likeRequestDto: LikeRequestDto, position: Int) {
 
-
         var response : Response<Message>
         runBlocking {
             response = BoardService().insertOrDeletePostLike(likeRequestDto)
@@ -198,6 +210,9 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.hideBottomNavi(false)
+    }
 
 }
