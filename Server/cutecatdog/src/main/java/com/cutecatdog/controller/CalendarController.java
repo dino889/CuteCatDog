@@ -72,13 +72,14 @@ public class CalendarController {
             ScheduleDto sch = new ScheduleDto();
             sch.setDatetime(datetime);
             sch.setUserId(userId);
-            List<HashMap<String, ?>> data = new ArrayList<>();
+            HashMap<String, List<HashMap<String, ?>>> data = new HashMap<>();
+            data.put("schedules", new ArrayList<>());
             List<ScheduleDto> list = scheduleService.findScheduleDetail(sch);
             for (ScheduleDto scheduleDto : list) {
                 HashMap<String, Object> hash = new HashMap<>();
                 hash.put("schedule", scheduleDto);
                 hash.put("pet", petService.findPetDetail(scheduleDto.getPetId()));
-                data.add(hash);
+                data.get("schedules").add(hash);
             }
             response.setData(data);
             status = HttpStatus.OK;
