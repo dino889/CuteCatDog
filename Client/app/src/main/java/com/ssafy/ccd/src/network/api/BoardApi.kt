@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.network.api
 
 import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.Comment
+import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
 import retrofit2.Response
 import retrofit2.http.*
@@ -54,7 +55,7 @@ interface BoardApi {
 
     // 게시글 좋아요 등록 및 삭제
     @POST("/board/likes")
-    suspend fun insertOrDeletePostLike(@Body likeRequestDto: Board) : Response<Message>
+    suspend fun insertOrDeletePostLike(@Body likeRequestDto: LikeRequestDto) : Response<Message>
 
     // 게시글 타입별 게시글 조회
     @GET("/board/type/{typeId}")

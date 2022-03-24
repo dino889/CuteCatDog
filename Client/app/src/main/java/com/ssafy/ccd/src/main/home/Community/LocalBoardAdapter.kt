@@ -4,22 +4,33 @@ import android.content.Context
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
-import androidx.core.os.bundleOf
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.databinding.ItemLocalListBinding
 import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.User
-import com.ssafy.ccd.src.network.service.BoardService
 
-class LocalBoardAdapter (var postList : MutableList<Board>, val userList: MutableList<User>, val userLikePost: MutableList<Int>, val context: Context) : RecyclerView.Adapter<LocalBoardAdapter.LocalBoardViewHolder>(){
+class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoardAdapter.LocalBoardViewHolder>(){
+//class LocalBoardAdapter(val context: Context) : ListAdapter<Board, LocalBoardAdapter.LocalBoardViewHolder>(DiffCallback) {
+    lateinit var postList : MutableList<Board>
+    lateinit var userList: MutableList<User>
+    lateinit var userLikePost: MutableList<Int>
+
+//    init {
+//        setHasStableIds(true)
+//    }
 
     inner class LocalBoardViewHolder(private val binding: ItemLocalListBinding) : RecyclerView.ViewHolder(binding.root) {
         val heartBtn = binding.fragmentLocalboardHeart
+        val heartCnt = binding.fragmentLocalboardHeartCnt
         val commentBtn = binding.fragmentLocalboardChat
         val moreBtn = binding.localItemBtnMore
 
@@ -33,9 +44,9 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
             for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
                 if(post.id == i) {
                     binding.fragmentLocalboardHeart.progress = 0.5F
-                } else {
-                    binding.fragmentLocalboardHeart.progress = 0.0F
+                    break
                 }
+                binding.fragmentLocalboardHeart.progress = 0.0F
             }
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -52,12 +63,14 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
     }
 
     override fun onBindViewHolder(holder: LocalBoardViewHolder, position: Int) {
+//        val post = getItem(position)
+        val post = postList[position]
         holder.apply {
-            bindInfo(postList[position])
+            bindInfo(post)
             setIsRecyclable(false)
-
             heartBtn.setOnClickListener {
-                heartItemClickListener.onClick(it, position)
+                heartItemClickListener.onClick(it as LottieAnimationView, position, post.id)
+//                heartItemClickListener.onClick(it as LottieAnimationView, heartCnt, post.id)
             }
 
             commentBtn.setOnClickListener {
@@ -72,11 +85,11 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
                 popup.setOnMenuItemClickListener {
                     when(it.itemId) {
                         R.id.modify -> {
-                            modifyItemClickListener.onClick(postList[position].id)
+                            modifyItemClickListener.onClick(post.id, position)
                             return@setOnMenuItemClickListener true
                         }
                         R.id.delete -> {
-                            deleteItemClickListener.onClick(postList[position].id)
+                            deleteItemClickListener.onClick(post.id, position)
                             return@setOnMenuItemClickListener true
                         } else -> {
                             return@setOnMenuItemClickListener false
@@ -91,14 +104,22 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
         return postList.size
     }
 
-    interface ItemClickListener {
-        fun onClick(view: View, position: Int)
+    interface HeartItemClickListener {
+        fun onClick(heart: LottieAnimationView, position: Int, id: Int)
     }
 
-    private lateinit var heartItemClickListener : ItemClickListener
+//    interface HeartItemClickListener {
+//        fun onClick(heart: LottieAnimationView, view : TextView, id: Int)
+//    }
 
-    fun setHeartItemClickListener(itemClickListener: ItemClickListener) {
+    private lateinit var heartItemClickListener : HeartItemClickListener
+
+    fun setHeartItemClickListener(itemClickListener: HeartItemClickListener) {
         this.heartItemClickListener = itemClickListener
+    }
+
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int)
     }
 
     private lateinit var commentItemClickListener : ItemClickListener
@@ -108,7 +129,7 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
     }
 
     interface MenuClickListener {
-        fun onClick(postId: Int)
+        fun onClick(postId: Int, position: Int)
     }
 
     private lateinit var modifyItemClickListener : MenuClickListener
@@ -122,5 +143,18 @@ class LocalBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
     fun setDeleteItemClickListener(menuClickListener: MenuClickListener) {
         this.deleteItemClickListener = menuClickListener
     }
+
+    object DiffCallback : DiffUtil.ItemCallback<Board>() {
+        override fun areItemsTheSame(oldItem: Board, newItem: Board): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Board, newItem: Board): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+
+
+
 
 }

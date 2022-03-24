@@ -10,6 +10,7 @@
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_diary_write.xml" value="0.264" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_join.xml" value="0.1925925925925926" />
+        <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_local_board.xml" value="0.2988871224165342" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_login.xml" value="0.32421875" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_my_page.xml" value="0.264" />
         <entry key="..\:/SSAFY/GIT/AI/S06P22D103/Client/app/src/main/res/layout/fragment_reset_password.xml" value="0.264" />
@@ -57,6 +58,7 @@
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_my_schedule.xml" value="0.30416666666666664" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_qna_board.xml" value="0.5" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_share_board.xml" value="0.30416666666666664" />
+        <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calender_day.xml" value="0.75" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_write_board.xml" value="0.2546875" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/fragment_write_local_board.xml" value="0.2546875" />
         <entry key="..\:/Users/LeeBoyeon/Desktop/Ssafy/project2/CuteCatDog/Client/app/src/main/res/layout/item_calendar_detail_list.xml" value="0.5" />

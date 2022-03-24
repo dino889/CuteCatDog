@@ -25,6 +25,7 @@ import com.ssafy.ccd.src.main.diary.DiaryAdapter
 import com.ssafy.ccd.src.main.diary.DiaryHashAdapter
 import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.BoardAdapter
+import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
@@ -339,4 +340,21 @@ fun bindBoardRecyclerView(recyclerView: RecyclerView, data: List<Board>?) {
             adapter.postList = data as MutableList<Board>
         }
     }
+}
+
+@BindingAdapter("postListData")
+fun bindPostListRecyclerView(recyclerView: RecyclerView, data: MutableList<Board>) {
+    var adapter = recyclerView.adapter as LocalBoardAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as LocalBoardAdapter
+    }
+    adapter.postList = data
+//    adapter.notifyDataSetChanged()
+
+//    val adapter = recyclerView.adapter as LocalBoardAdapter
+//    adapter.submitList(data)
+//    adapter.notifyDataSetChanged()
 }
