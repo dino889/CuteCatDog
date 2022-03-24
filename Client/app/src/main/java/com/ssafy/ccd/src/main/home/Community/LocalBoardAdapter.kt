@@ -74,7 +74,7 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
             }
 
             commentBtn.setOnClickListener {
-                commentItemClickListener.onClick(it, position)
+                commentItemClickListener.onClick(it, post.id)
             }
 
             moreBtn.setOnClickListener {
@@ -119,7 +119,7 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
     }
 
     interface ItemClickListener {
-        fun onClick(view: View, position: Int)
+        fun onClick(view: View, postId: Int)
     }
 
     private lateinit var commentItemClickListener : ItemClickListener

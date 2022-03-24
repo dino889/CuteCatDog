@@ -163,6 +163,9 @@
         <action
             android:id="@+id/action_localBoardFragment_to_writeLocalBoardFragment"
             app:destination="@+id/writeLocalBoardFragment" />
+        <action
+            android:id="@+id/action_localBoardFragment_to_localCommentFragment"
+            app:destination="@+id/localCommentFragment"/>
         <argument
             android:name="postId"
             app:argType="integer"
@@ -208,5 +211,10 @@
         android:label="WriteLocalBoardFragment"
         tools:layout="@layout/fragment_write_local_board" />
 
+    <fragment
+        android:id="@+id/localCommentFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.LocalCommentFragment"
+        android:label="LocalCommentFragment"
+        tools:layout="@layout/fragment_local_comment" />
 
 </navigation>

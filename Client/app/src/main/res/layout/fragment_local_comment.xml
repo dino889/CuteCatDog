@@ -5,6 +5,9 @@
     tools:context=".src.main.home.Community.LocalCommentFragment">
     <data>
         <variable
+            name="loginUser"
+            type="com.ssafy.ccd.src.dto.User" />
+        <variable
             name="mainViewModel"
             type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
     </data>
@@ -13,7 +16,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fragment_local_appbar"
+            android:id="@+id/localCmtFragment_clAppbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/fragment_local_back"
+                android:id="@+id/localCmtFragment_ibBack"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="10dp"
@@ -35,32 +38,34 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/fragment_local_title"
+                android:id="@+id/localCmtFragment_tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="여기에 뭐넣지"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/fragment_local_back"
+                app:layout_constraintBottom_toBottomOf="@+id/localCmtFragment_ibBack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/fragment_local_back" />
+                app:layout_constraintTop_toTopOf="@+id/localCmtFragment_ibBack" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/boardDetail_rv_comment"
+            android:id="@+id/localCmtFragment_rvComment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_local_appbar"
-            app:listCommentData="@{mainViewModel.commentList}"
+            android:layout_height="wrap_content"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar"
+            app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_clInsertCmt"
+            app:localCommentListData="@{mainViewModel.commentList}"
             tools:listitem="@layout/item_local_comment_list" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/board_detail_detail_comment_layout"
+            android:id="@+id/localCmtFragment_clInsertCmt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -79,42 +84,43 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/comment_write_profile_iv"
+                android:id="@+id/localCmtFragment_ivLoginUserImg"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                app:imageUrlUser="@{loginUser.img}"
+                app:imageUrlUser="@{loginUser.profileImage}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view" />
 
             <EditText
-                android:id="@+id/comment_write_et"
+                android:id="@+id/localCmtFragment_etComment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="3dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/transparent"
                 android:hint="댓글 달기..."
                 android:paddingStart="10dp"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/comment_write_tv"
-                app:layout_constraintStart_toEndOf="@id/comment_write_profile_iv"
+                app:layout_constraintEnd_toStartOf="@id/localCmtFragment_tvConfirm"
+                app:layout_constraintStart_toEndOf="@id/localCmtFragment_ivLoginUserImg"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/comment_write_tv"
+                android:id="@+id/localCmtFragment_tvConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="10dp"
                 android:text="게시"
-                android:textColor="@color/blue_500"
+                android:textColor="@color/main_700"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -354,6 +354,23 @@ class MainViewModels : ViewModel() {
         }
     }
 
+    suspend fun getCommentList(postId : Int) {
+        val response = BoardService().selectCommentList(postId)
+
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if(res.data["comments"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Comment>>() {}.type
+                        val commentList: MutableList<Comment> = CommonUtils.parseDto(res.data["comments"]!!, type)
+                        setCommentList(commentList)
+                    }
+                }
+            }
+        }
+    }
+
 
 
     // ---------------------------------------------------------------------------------------------
