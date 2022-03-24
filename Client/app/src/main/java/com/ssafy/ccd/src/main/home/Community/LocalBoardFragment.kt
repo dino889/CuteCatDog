@@ -51,7 +51,8 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
      */
     private fun writeBtnClickEvent() {
         binding.fragmentLocalWrite.setOnClickListener {
-            this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_writeLocalBoardFragment)
+            this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_writeLocalBoardFragment,
+                    bundleOf("postId" to -1))
         }
     }
 

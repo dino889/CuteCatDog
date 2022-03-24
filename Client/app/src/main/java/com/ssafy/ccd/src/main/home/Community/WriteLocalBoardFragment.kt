@@ -40,6 +40,7 @@ import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 /**
  * @author Jiwoo
@@ -61,6 +62,10 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
 
     private var timeName = "" // firebase storage upload file name
 
+    // 수정인 경우 넘어오는 postId
+    private var postId by Delegates.notNull<Int>()
+    private lateinit var beforePost: Board
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -68,30 +73,48 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.apply {
+            postId = getInt("postId")
+        }
         mainActivity.hideBottomNavi(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         mainActivity.runOnUiThread(kotlinx.coroutines.Runnable {
             inputObservable()
         })
+
+        if(postId > 0) {
+            runBlocking { 
+                mainViewModel.getPostDetail(postId)
+            }
+            beforePost = mainViewModel.postDetail.value!!
+            binding.post = mainViewModel.postDetail.value
+            binding.fragmentBoardWriteAddCameraBtn.visibility = View.INVISIBLE
+            binding.fragmentBoardWriteIvSelectImg.visibility = View.VISIBLE
+            modifyBtnClickEvent()
+
+        } else {
+            confirmBtnClickEvent()
+        }
+
         backBtnClickEvent()
-        confirmBtnClickEvent()
-        imgDeleteBtnEvent()
+//        imgDeleteBtnEvent()
         selectImgBtnEvent()
-        Log.d(TAG, "onViewCreated: ${CommonUtils.unixTimeToDateFormat(1648050207567)}")
+
     }
 
 
     /**
-     * 완료 버튼 클릭 이벤트
+     * 완료 버튼 클릭 이벤트 - insert
      */
-    private fun confirmBtnClickEvent() {    // 게시글 insert Or Update
+    private fun confirmBtnClickEvent() {    // 게시글 insert
         binding.fragmentBoardWriteSuccessBtn.setOnClickListener {
 
-            // title (1 ~ 50), content(30 ~ 500 체크), 사진 선택
+            // title (1 ~ 50), content(30 ~ 100 체크), 사진 선택
             val title = binding.fragmentBoardWriteTitle.text.toString()
             val content = binding.fragmentDiaryWriteContent.text.toString()
 
@@ -147,6 +170,77 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
     }
 
     /**
+     * 완료 버튼 클릭 이벤트 - update
+     */
+    private fun modifyBtnClickEvent() {    // 게시글 insert Or Update
+        binding.fragmentBoardWriteSuccessBtn.setOnClickListener {
+
+            // title (1 ~ 50), content(30 ~ 100 체크), 사진 선택
+            val title = binding.fragmentBoardWriteTitle.text.toString()
+            val content = binding.fragmentDiaryWriteContent.text.toString()
+
+            val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            var fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
+                ""
+            } else{
+                timeName = System.currentTimeMillis().toString()
+                "${userId}/${timeName}."+ fileExtension
+            }
+
+            if(titleLenChk(title) && contentLenChk(content)) {
+                val beforeFileName = beforePost.photoPath.substring(beforePost.photoPath.lastIndexOf("/") + 1, beforePost.photoPath.length)
+                Log.d(TAG, "modifyBtnClickEvent: fn : $fileName / be : ${beforePost.photoPath} / $beforeFileName")
+                if(fileName == "" || fileName == beforeFileName) {
+                    fileName = beforePost.photoPath
+                }
+
+                val post = Board(
+                    id = postId,
+                    typeId = 1,
+                    title = title,
+                    content = content,
+                    photoPath = fileName)
+                updatePost(post)
+            }
+
+        }
+    }
+
+
+    /**
+     * 게시글 update
+     */
+    private fun updatePost(post: Board) {
+        var pageBack = false
+        var response : Response<Message>
+
+        runBlocking {
+            response = BoardService().updatePost(post)
+            if(post.photoPath != beforePost.photoPath) {
+                uploadUserImgToFirebase(post)
+                pageBack = false
+            } else {
+                pageBack = true
+            }
+        }
+
+        if(response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            if(res != null) {
+                if(res.success == true && res.data["isSuccess"] == true) {
+                    showCustomToast("게시글 수정이 완료되었습니다")
+                    if(pageBack) {
+                        (requireActivity() as MainActivity).onBackPressed()
+                    }
+                } else if(res.data["isSuccess"] == false) {
+                    showCustomToast("게시글 수정 실패")
+                    Log.e(TAG, "updatePost: ${res.message}", )
+                }
+            }
+        }
+    }
+
+    /**
      * 이미지 firebase storage 업로드
      */
     private fun uploadUserImgToFirebase(post: Board) {
@@ -180,7 +274,15 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
             Log.d(TAG, "fileUri 초기화  $imgUri")
         }
 
-        binding.routeReviewWriteBtnAddImg.setOnClickListener {
+        binding.fragmentBoardWriteAddCameraBtn.setOnClickListener {
+            if (mainActivity.checkPermission(STORAGE, STORAGE_CODE)) {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = MediaStore.Images.Media.CONTENT_TYPE
+                filterActivityLauncher.launch(intent)
+            }
+        }
+
+        binding.fragmentBoardWriteIvSelectImg.setOnClickListener {
             if (mainActivity.checkPermission(STORAGE, STORAGE_CODE)) {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.type = MediaStore.Images.Media.CONTENT_TYPE
@@ -195,7 +297,8 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if(it.resultCode == AppCompatActivity.RESULT_OK && it.data != null) {
-                binding.fragmentBoardWriteLLSetImg.visibility = View.VISIBLE
+                binding.fragmentBoardWriteAddCameraBtn.visibility = View.INVISIBLE
+                binding.fragmentBoardWriteIvSelectImg.visibility = View.VISIBLE
                 imgSelectedChk = false
                 val currentImageUri = it.data?.data
 
@@ -218,29 +321,23 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
                 }
             } else if(it.resultCode == AppCompatActivity.RESULT_CANCELED){
                 showCustomToast("사진 선택 취소")
-                if(binding.fragmentBoardWriteTvImgName.length() > 0) {  // 기존 사진이 있으면 visible
-                    binding.fragmentBoardWriteLLSetImg.visibility = View.VISIBLE
-                } else {
-                    binding.fragmentBoardWriteLLSetImg.visibility = View.GONE
-                    imgUri = Uri.EMPTY
-                }
             } else {
-                binding.fragmentBoardWriteLLSetImg.visibility = View.GONE
+                binding.fragmentBoardWriteIvSelectImg.visibility = View.INVISIBLE
                 Log.d(TAG,"filterActivityLauncher 실패")
             }
         }
 
 
-    /**
-     * 사진 삭제 버튼 클릭 이벤트
-     */
-    private fun imgDeleteBtnEvent() {
-        binding.fragmentBoardWriteIbDeletedImg.setOnClickListener {
-            imgUri = Uri.EMPTY
-            imgSelectedChk = true
-            binding.fragmentBoardWriteLLSetImg.visibility = View.GONE
-        }
-    }
+//    /**
+//     * 사진 삭제 버튼 클릭 이벤트
+//     */
+//    private fun imgDeleteBtnEvent() {
+//        binding.fragmentBoardWriteIbDeletedImg.setOnClickListener {
+//            imgUri = Uri.EMPTY
+//            imgSelectedChk = true
+//            binding.fragmentBoardWriteLLSetImg.visibility = View.GONE
+//        }
+//    }
 
     /**
      * title 길이 체크
@@ -253,23 +350,25 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
      * content 길이 체크
      */
     private fun contentLenChk(input: String) : Boolean {
-//        binding.fragmentDiaryWriteTilContent.error = "(${input.length} / 500)"
+        binding.writeLocalBoardFragmentTvTextLen.text = "(${input.length} / 100)"
         if(input.trim().isEmpty()){
             binding.fragmentDiaryWriteTilContent.error = "Required Field"
             binding.fragmentDiaryWriteContent.requestFocus()
             return false
-        } else if(input.length < 30 || input.length > 500) {
+        } else if(input.length < 30 || input.length > 100) {
             binding.fragmentDiaryWriteTilContent.error = "작성된 내용의 길이를 확인해 주세요."
             binding.fragmentDiaryWriteContent.requestFocus()
             return false
         }
         else {
-//            binding.fragmentDiaryWriteTilContent.error = "(${input.length} / 500)"
             binding.fragmentDiaryWriteTilContent.error = null
             return true
         }
     }
 
+    /**
+     * 뒤로가기 버튼 클릭 이벤트
+     */
     private fun backBtnClickEvent() {
         binding.fragmentBoardWriteBack.setOnClickListener {
             this@WriteLocalBoardFragment.findNavController().popBackStack()
