@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.calender
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -17,6 +18,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.view.menu.MenuView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
@@ -51,11 +54,10 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
         if(tmpMonth != dayList[position].month){
             day.alpha = 0.4f
         }
-        var month = ""
-        var monthOfday = ""
+
         for(i in 0..date.size-1){
-            month = date[i].substring(5,8).trim()
-            monthOfday = date[i].substring(9,date[i].length-1).trim()
+            var month = date[i].substring(5,8).trim()
+            var monthOfday = date[i].substring(9,date[i].length-1).trim()
 
             var strMonth = (dayList[position].month+1).toString()
             var strDay = dayList[position].day.toString()
@@ -66,7 +68,7 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             if(day.text.toString().length == 1){
                 strDay = "0${strDay}"
             }
-            var strDate = "${strMonth}월 ${day.text.toString()}일"
+            var strDate = "${strMonth}월 ${day.text}일"
             var comDate = "${month}월 ${monthOfday}일"
             var week = CommonUtils.convertWeek(position%7)
             if(strDate.equals(comDate)){
@@ -78,11 +80,11 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
                     showDetailDialog(comDate,week)
                 }
             }
-
         }
 
 
     }
+    @SuppressLint("ClickableViewAccessibility")
     fun showDetailDialog(day:String, week:String){
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_calender_day_dialog,null)
         val dialog = Dialog(context)
@@ -99,14 +101,29 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
         dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_week).setText(week)
         dialogView.findViewById<TextView>(R.id.fragment_calender_dialog_date).setText(day)
 
+
+        var detailAdapter = CalendarDetailAdapter()
+        val swipeHelper = CalendarHelperCallback(detailAdapter).apply {
+            setClamp(200f)
+//            setClamp(resources.displayMetrics.widthPixels.toFloat() / 4)
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHelper)
+        var dialogRecyclerView = dialogView.findViewById<RecyclerView>(R.id.fragment_calender_dialog_rv)
+        itemTouchHelper.attachToRecyclerView(dialogRecyclerView)
+        dialogRecyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         viewModel.schedule.observe(owner, {
-            var detailAdapter = CalendarDetailAdapter()
             detailAdapter.list = it
-            dialogView.findViewById<RecyclerView>(R.id.fragment_calender_dialog_rv).apply {
+            dialogRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
                 adapter = detailAdapter
+                setOnTouchListener{_, _ ->
+                    swipeHelper.removePreviousClamp(this)
+                    false
+                }
             }
         })
+
 
         dialog.show()
     }
