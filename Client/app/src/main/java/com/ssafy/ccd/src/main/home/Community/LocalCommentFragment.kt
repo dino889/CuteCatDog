@@ -103,7 +103,31 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 
     }
 
-
+    /**
+     * 댓글 삭제 response
+     */
+    private fun deleteComment(commentId: Int, position: Int) {
+        Log.d(TAG, "deleteComment: $commentId")
+        var response : Response<Message>
+        runBlocking {
+            response = BoardService().deleteComment(commentId)
+        }
+        if(response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            if(res != null) {
+                if(res.success == true && res.data["isSuccess"] == true) {
+                    showCustomToast("댓글이 삭제되었습니다.")
+                    runBlocking {
+                        mainViewModel.getCommentList(postId)
+                    }
+//                    localCommentAdapter.notifyItemRemoved(position)
+                    localCommentAdapter.notifyDataSetChanged()
+                } else {
+                    showCustomToast("댓글 삭제 실패")
+                }
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
