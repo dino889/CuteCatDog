@@ -164,7 +164,7 @@
             android:id="@+id/action_localBoardFragment_to_writeLocalBoardFragment"
             app:destination="@+id/writeLocalBoardFragment" />
         <argument
-            android:name="chk"
+            android:name="postId"
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
@@ -178,7 +178,7 @@
             android:id="@+id/action_qnaBoardFragment_to_writeBoardFragment"
             app:destination="@+id/writeBoardFragment" />
         <argument
-            android:name="chk"
+            android:name="postId"
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
@@ -192,7 +192,7 @@
             android:id="@+id/action_shareBoardFragment_to_writeBoardFragment"
             app:destination="@+id/writeBoardFragment" />
         <argument
-            android:name="chk"
+            android:name="postId"
             app:argType="integer"
             android:defaultValue="-1"/></fragment>
 
