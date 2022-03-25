@@ -635,11 +635,14 @@ class MainViewModels : ViewModel() {
      * @Date 2022-03-23*/
     private val _calendarList = MutableLiveData<MutableList<Calendar>>()
     private val _calendar = MutableLiveData<MutableList<Schedule>>()
+    private val _calendarWeekList = MutableLiveData<MutableList<Schedule>>()
 
     val calendarList : LiveData<MutableList<Calendar>>
         get() = _calendarList
     val schedule : LiveData<MutableList<Schedule>>
         get() = _calendar
+    val scheduleWeekList : LiveData<MutableList<Schedule>>
+        get() = _calendarWeekList
 
     fun setCalendarList(list:MutableList<Calendar>) = viewModelScope.launch {
         _calendarList.value = list
@@ -647,7 +650,9 @@ class MainViewModels : ViewModel() {
     fun setSchedules(list : MutableList<Schedule>) = viewModelScope.launch {
         _calendar.value = list
     }
-
+    fun setScheduleWeek(list: MutableList<Schedule>) = viewModelScope.launch {
+        _calendarWeekList.value = list
+    }
     suspend fun getCalendarListbyUser(userId:Int){
         val response = CalendarService().getCalendarListByUser(userId)
         viewModelScope.launch {
@@ -700,6 +705,21 @@ class MainViewModels : ViewModel() {
                         var type = object : TypeToken<MutableList<Calendar>??>() {}.type
                         var calendar = CommonUtils.parseDto<MutableList<Calendar>>(res.data.get("schedule")!!,type)
 
+                    }
+                }
+            }
+        }
+    }
+    suspend fun getCalendarListbyWeek(userId:Int){
+        val response = CalendarService().getCalendarListByWeek(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object: TypeToken<MutableList<Schedule?>?>() {}.type
+                        var schedules = CommonUtils.parseDto<MutableList<Schedule>>(res.data.get("schedules")!!,type)
+                        setScheduleWeek(schedules)
                     }
                 }
             }

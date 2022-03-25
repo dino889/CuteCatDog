@@ -6,10 +6,12 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentMyScheduleBinding
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
+import kotlinx.coroutines.runBlocking
 
 class MyScheduleFragment : BaseFragment<FragmentMyScheduleBinding>(FragmentMyScheduleBinding::bind, R.layout.fragment_my_schedule) {
     private lateinit var mainActivity : MainActivity
@@ -24,22 +26,28 @@ class MyScheduleFragment : BaseFragment<FragmentMyScheduleBinding>(FragmentMySch
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.viewModel = mainViewModel
+        runBlocking {
+            mainViewModel.getCalendarListbyWeek(ApplicationClass.sharedPreferencesUtil.getUser().id)
+        }
         initRecyclerviewAdapter()
     }
 
     private fun initRecyclerviewAdapter() {
-//
-//        myScheduleRecyclerviewAdapter = MyScheduleRecyclerviewAdapter()
-//        myScheduleRecyclerviewAdapter.setItemClickListener(object : MyScheduleRecyclerviewAdapter.ItemClickListener {
-//            override fun onClick(view: View, position: Int, id: Int) {
-//                showCustomToast(id.toString())
-//            }
-//        })
-//        binding.myScheduleFragmentRv.apply {
-//            layoutManager = LinearLayoutManager(requireContext())
-//            adapter = myScheduleRecyclerviewAdapter
-//            adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-//        }
+        mainViewModel.scheduleWeekList.observe(viewLifecycleOwner,{
+            myScheduleRecyclerviewAdapter = MyScheduleRecyclerviewAdapter()
+            myScheduleRecyclerviewAdapter.list = it
+            myScheduleRecyclerviewAdapter.setItemClickListener(object : MyScheduleRecyclerviewAdapter.ItemClickListener {
+                override fun onClick(view: View, position: Int, id: Int) {
+                    showCustomToast(id.toString())
+                }
+            })
+            binding.myScheduleFragmentRv.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = myScheduleRecyclerviewAdapter
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+        })
+
     }
 }

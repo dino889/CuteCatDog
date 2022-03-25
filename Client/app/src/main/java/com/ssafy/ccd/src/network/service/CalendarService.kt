@@ -30,4 +30,8 @@ class CalendarService {
     suspend fun getCalendarListByDate(userId:Int, datetime:String) : Response<Message> {
         return RetrofitUtil.calendarService.calendarListbyDate(userId,datetime)
     }
+
+    suspend fun getCalendarListByWeek(userId:Int):Response<Message>{
+        return RetrofitUtil.calendarService.calendarListbyWeek(userId)
+    }
 }
