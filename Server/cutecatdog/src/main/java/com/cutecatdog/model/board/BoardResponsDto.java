@@ -15,4 +15,5 @@ public class BoardResponsDto {
   Integer count;
   String time;
   String photoPath;
+  Integer commentCnt;
 }
