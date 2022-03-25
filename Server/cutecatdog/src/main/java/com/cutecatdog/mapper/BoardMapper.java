@@ -31,5 +31,7 @@ public interface BoardMapper {
   public List<commentDto> selectComment(int id) throws SQLException;
 
   public List<LikeUserResponsDto> selectLike(int id) throws SQLException;
+
+  public List<BoardDto> selectUserBoard(int userId) throws SQLException;
   
 }

@@ -80,6 +80,22 @@ public class BoardController {
 		return new ResponseEntity<Message>(message, status);
   }
 
+  @ApiOperation(value = "userId로 게시글 보기", notes = "", response = List.class)
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<Message> boardUserList(@PathVariable("userId") int userId) throws Exception{
+    HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+
+    List<BoardDto> boards;
+		boards = boardService.findUserBoard(userId);
+		HashMap<String,List<BoardDto>> map = new HashMap<>();
+		map.put("boards", boards);
+		message.setData(map);
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+  }
+
+
   @ApiOperation(value = "게시글 등록", notes = "게시글을 등록한다.", response = List.class)
   @PostMapping()
   public ResponseEntity<Message> boardAdd(@RequestBody BoardAddRequestDto boardAddRequestDto) throws Exception {
