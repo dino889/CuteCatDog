@@ -53,17 +53,31 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/localCmtFragment_rvComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar"
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_clInsertCmt"
-            app:localCommentListData="@{mainViewModel.commentList}"
-            tools:listitem="@layout/item_local_comment_list" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/localCmtFragment_rvComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar"
+                app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_clInsertCmt"
+                app:localCommentListData="@{mainViewModel.commentListWoParents}"
+                tools:listitem="@layout/item_local_comment_list" />
+    <!--            app:layout_constrainedHeight="true"-->
+            </LinearLayout>
+        </ScrollView>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/localCmtFragment_clInsertCmt"
             android:layout_width="match_parent"
@@ -99,17 +113,20 @@
                 android:id="@+id/localCmtFragment_etComment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="3dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
                 android:hint="댓글 달기..."
                 android:paddingStart="10dp"
                 android:textSize="14sp"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:minLines="1"
+                android:maxLines="3"
+                android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/localCmtFragment_tvConfirm"
-                app:layout_constraintStart_toEndOf="@id/localCmtFragment_ivLoginUserImg"
+                app:layout_constraintStart_toEndOf="@+id/localCmtFragment_ivLoginUserImg"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

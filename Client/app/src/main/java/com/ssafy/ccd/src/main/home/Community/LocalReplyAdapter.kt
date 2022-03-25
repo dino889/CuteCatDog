@@ -9,29 +9,28 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.databinding.FragmentLocalCommentBinding
 import com.ssafy.ccd.databinding.ItemLocalCommentListBinding
+import com.ssafy.ccd.databinding.ItemLocalReplyListBinding
 import com.ssafy.ccd.src.dto.Comment
 import com.ssafy.ccd.src.dto.User
 
-class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCommentAdapter.LocalCommentViewHolder>(){
+class LocalReplyAdapter (val context: Context) : RecyclerView.Adapter<LocalReplyAdapter.LocalReplyViewHolder>(){
     private val TAG = "LocalCommentAdapter_ccd"
 
     lateinit var commentList: MutableList<Comment>
-    lateinit var commentAllList : MutableList<Comment>
+//    lateinit var commentAllList : MutableList<Comment>
     lateinit var userList: MutableList<User>
 
     // 현재 로그인한 유저의 아이디
     val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
 
-    inner class LocalCommentViewHolder(private val binding: ItemLocalCommentListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class LocalReplyViewHolder(private val binding: ItemLocalReplyListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val moreBtn = binding.localCommentItemIvMoreBtn
-        val addReply = binding.localCommentItemTvAddReply
+        val moreBtn = binding.localReplyItemIvMore
 
         fun bindInfo(comment: Comment) {
 
@@ -46,45 +45,25 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
             binding.comment = comment
             binding.executePendingBindings()
 
-            // 대댓글 rv adapter 추가하기
-            val replyList = mutableListOf<Comment>()
-            for (reply in commentAllList) {
-                if(reply.parent == comment.id) {
-                    replyList.add(reply)
-                }
-            }
-            Log.d(TAG, "bindInfo: $replyList")
-
-            val commentReplyAdapter = LocalReplyAdapter(context)
-//                commentNestedAdapter.submitList(list)
-            commentReplyAdapter.commentList = replyList
-            commentReplyAdapter.userList = userList
-            binding.localCommentItemRvReply.apply{
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-                adapter = commentReplyAdapter
-                adapter!!.stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            }
-//            commentNestedAdapter.setItemClickListener(object: CommentNestedAdapter.ItemClickListener {
-//                override fun onEditClick(position: Int, comment: Comment) {
-//                }
-//            })
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalCommentViewHolder {
-        return LocalCommentViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_local_comment_list, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalReplyViewHolder {
+        return LocalReplyViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), R.layout.item_local_reply_list, parent, false
+            )
+        )
     }
 
-    override fun onBindViewHolder(holder: LocalCommentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LocalReplyViewHolder, position: Int) {
         val comment = commentList[position]
 
         holder.apply {
             bindInfo(comment)
 //            setIsRecyclable(false)
-
-            addReply.setOnClickListener {
-                addReplyClickListener.onClick(it, position, comment.id)
-            }
 
             moreBtn.setOnClickListener {
                 val popup = PopupMenu(context, moreBtn)
