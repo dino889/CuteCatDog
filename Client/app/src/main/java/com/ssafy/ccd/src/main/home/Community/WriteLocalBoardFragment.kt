@@ -390,8 +390,7 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
      */
     private fun EditText.setQueryDebounce(queryFunction: (String) -> Unit): Disposable {
         val editTextChangeObservable = this.textChanges()
-        editTextSubscription =
-            editTextChangeObservable
+        editTextSubscription = editTextChangeObservable
                 // 마지막 글자 입력 0.5초 후에 onNext 이벤트로 데이터 발행
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -414,7 +413,7 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
     override fun onDestroy() {
         super.onDestroy()
         mainActivity.hideBottomNavi(false)
-        if (!editTextSubscription.isDisposed()) {
+        if (!editTextSubscription.isDisposed) {
             editTextSubscription.dispose()
         }
     }

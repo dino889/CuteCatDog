@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentQnaBoardBinding
@@ -17,53 +18,66 @@ import kotlinx.coroutines.runBlocking
  * '궁금해' 게시판
  */
 class QnABoardFragment : BaseFragment<FragmentQnaBoardBinding>(FragmentQnaBoardBinding::bind,R.layout.fragment_qna_board) {
+
+    // Binding
+    private lateinit var rvQna : RecyclerView
     private lateinit var qnaBoardAdapter: QnABoardAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setInstance()
+        setListener()
         initRecyclerView()
-        backBtnClickEvent()
-        writeBtnClickEvent()
+    }
+
+    /**
+     * @author Jiwoo
+     * 리스너 설정
+     */
+    private fun setListener() {
+        binding.fragmentQnaBack.setOnClickListener {
+            this@QnABoardFragment.findNavController().popBackStack()
+        }
+
+        binding.fragmentQnaWrite.setOnClickListener {
+            mainViewModel.writeType = 0
+            this@QnABoardFragment.findNavController().navigate(R.id.writeQnaFragment)
+        }
+    }
+
+    /**
+     * @author Jiwoo
+     * 객체 생성
+     */
+    private fun setInstance() {
+        rvQna = binding.fragmentQnaRv
+        qnaBoardAdapter = QnABoardAdapter(mutableListOf(), mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
     }
 
 
+    /**
+     * @author Jiwoo
+     * RecyclerView 셋팅
+     */
     private fun initRecyclerView() {
         runBlocking {
             mainViewModel.getPostListByType(2)
         }
-        mainViewModel.qnaPostList.observe(viewLifecycleOwner, {
-            binding.fragmentQnaRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            qnaBoardAdapter = QnABoardAdapter(it, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+
+        rvQna.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             binding.fragmentQnaRv.adapter = qnaBoardAdapter
-        })
-    }
-
-    private fun backBtnClickEvent() {
-        binding.fragmentQnaBack.setOnClickListener {
-            this@QnABoardFragment.findNavController().popBackStack()
         }
-    }
 
-    private fun writeBtnClickEvent() {
-        binding.fragmentQnaWrite.setOnClickListener {
-            this@QnABoardFragment.findNavController().navigate(R.id.action_qnaBoardFragment_to_writeBoardFragment)
+        mainViewModel.qnaPostList.observe(viewLifecycleOwner) {
+            qnaBoardAdapter.updateData(it)
         }
-    }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            QnABoardFragment().apply {
-                arguments = Bundle().apply {
-
-                }
+        qnaBoardAdapter.setItemClickListener(object : QnABoardAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int) {
+                mainViewModel.boardQna = qnaBoardAdapter.postList[position]
+                this@QnABoardFragment.findNavController().navigate(R.id.qnABoardDetailFragment)
             }
+        })
     }
 }

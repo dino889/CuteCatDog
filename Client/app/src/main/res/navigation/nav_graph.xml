@@ -136,11 +136,6 @@
         android:label="fragment_information_main"
         tools:layout="@layout/fragment_information_main" />
     <fragment
-        android:id="@+id/aiFragment"
-        android:name="com.ssafy.ccd.src.main.ai.aiFragment"
-        android:label="fragment_ai"
-        tools:layout="@layout/fragment_ai" />
-    <fragment
         android:id="@+id/aiSelectFragment"
         android:name="com.ssafy.ccd.src.main.ai.aiSelectFragment"
         android:label="fragment_ai_select"
@@ -210,6 +205,16 @@
         android:name="com.ssafy.ccd.src.main.home.Community.WriteLocalBoardFragment"
         android:label="WriteLocalBoardFragment"
         tools:layout="@layout/fragment_write_local_board" />
+    <fragment
+        android:id="@+id/qnABoardDetailFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.QnABoardDetailFragment"
+        android:label="fragment_qn_a_board_detail"
+        tools:layout="@layout/fragment_qn_a_board_detail" />
+    <fragment
+        android:id="@+id/writeQnaFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteQnaFragment"
+        android:label="fragment_write_question"
+        tools:layout="@layout/fragment_write_qna" />
 
     <fragment
         android:id="@+id/localCommentFragment"

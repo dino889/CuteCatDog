@@ -120,7 +120,7 @@ class HomeFragment : Fragment() {
 
     private fun setListener() {
         ivHomeUserImg.setOnClickListener {
-            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
+            this@HomeFragment.findNavController().navigate(R.id.homeFragment)
         }
 
         ivKnowledge.setOnClickListener {

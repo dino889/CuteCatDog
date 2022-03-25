@@ -5,8 +5,8 @@ data class Board(
     val userId: Int,
     val typeId: Int,
     val author: String, // 작성자 nickname - insert 시 nickname 같이 보내기
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val commentList : List<Comment>,
     val count: Int,
     val time: String,
