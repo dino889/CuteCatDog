@@ -57,12 +57,22 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             mainViewModel.getCommentList(postId)
         }
         initDataBinding()
+        backBtnClickEvent()
         initCommentRv()
     }
 
     private fun initDataBinding() {
         binding.mainViewModel = mainViewModel
         binding.loginUser = mainViewModel.loginUserInfo.value
+    }
+
+    /**
+     * 뒤로가기 버튼 클릭 이벤트
+     */
+    private fun backBtnClickEvent() {
+        binding.localCmtFragmentIbBack.setOnClickListener {
+            this@LocalCommentFragment.findNavController().popBackStack()
+        }
     }
 
     /**
@@ -76,6 +86,7 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         mainViewModel.commentListWoParents.observe(viewLifecycleOwner, {
 
             localCommentAdapter.commentList = it
+            localCommentAdapter.commentAllList = mainViewModel.commentAllList.value!!
             localCommentAdapter.userList = mainViewModel.allUserList.value!!
         })
 

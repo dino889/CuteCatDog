@@ -1,6 +1,6 @@
 package com.ssafy.ccd.src.main.home.Community
 
-import android.animation.ValueAnimator
+    import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
