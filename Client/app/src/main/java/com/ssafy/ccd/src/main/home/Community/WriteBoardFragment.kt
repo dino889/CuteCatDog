@@ -7,6 +7,7 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentShareBoardBinding
 import com.ssafy.ccd.databinding.FragmentWriteBoardBinding
 
+
 class WriteBoardFragment : BaseFragment<FragmentWriteBoardBinding>(FragmentWriteBoardBinding::bind,R.layout.fragment_write_board) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
