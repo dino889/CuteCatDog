@@ -1,20 +1,14 @@
 package com.ssafy.ccd.src.main.home.Community
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
-import android.renderscript.ScriptGroup
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +16,6 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalCommentBinding
-import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.Comment
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.main.MainActivity
@@ -32,15 +25,13 @@ import retrofit2.Response
 import kotlin.properties.Delegates
 import android.widget.EditText
 
-import android.view.MotionEvent
-import android.view.View.OnTouchListener
-import androidx.core.content.ContextCompat.getSystemService
-import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import com.google.android.youtube.player.internal.r
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.ssafy.ccd.databinding.FragmentHomeBinding
+import com.ssafy.ccd.src.dto.CommentRequestDto
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 
 
 /**
@@ -49,8 +40,11 @@ import com.google.android.youtube.player.internal.r
  * '울동네' 게시글 댓글 화면
  */
 class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentLocalCommentBinding::bind, R.layout.fragment_local_comment) {
+//class LocalCommentFragment : Fragment() {
     private val TAG = "LocalCommentFragment_ccd"
     private lateinit var mainActivity : MainActivity
+//    private lateinit var binding: FragmentLocalCommentBinding
+//    val mainViewModel: MainViewModels by activityViewModels()
 
     private var postId by Delegates.notNull<Int>()
 
@@ -72,9 +66,18 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             postId = getInt("postId")
         }
         mainActivity.hideBottomNavi(true)
-        mInputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        mInputMethodManager = mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         mOnGlobalLayoutListener.onGlobalLayout()
     }
+
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        binding = FragmentLocalCommentBinding.inflate(inflater, container, false)
+//        return binding.root
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,15 +90,11 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         initDataBinding()
         backBtnClickEvent()
         initCommentRv()
-//        binding.test.setOnTouchListener { v, event ->
-//            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
-//            binding.localCmtFragmentTvWriterNick.text = ""
-//            hideKeyboard()
-//            true
-//        }
-        binding.test.viewTreeObserver.addOnGlobalLayoutListener(mOnGlobalLayoutListener)
 
+        // 키보드 감지 리스너 등록
+        binding.localCommentFragment.viewTreeObserver.addOnGlobalLayoutListener(mOnGlobalLayoutListener)
 
+        insertCommentAndReply(false)    // default : 댓글 등록
     }
 
     private fun initDataBinding() {
@@ -123,7 +122,10 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         mainViewModel.commentListWoParents.observe(viewLifecycleOwner, {
 
             localCommentAdapter.commentList = it
-            localCommentAdapter.commentAllList = mainViewModel.commentAllList.value!!
+
+            mainViewModel.commentAllList.observe(viewLifecycleOwner, { all ->
+                localCommentAdapter.commentAllList = all
+            })
             localCommentAdapter.userList = mainViewModel.allUserList.value!!
             localCommentAdapter.setAddReplyItemClickListener(object : LocalCommentAdapter.ItemClickListener {
                 override fun onClick(view: TextView, position: Int, commentId: Int) {
@@ -183,14 +185,15 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             val res = response.body()
             if(res != null) {
                 if(res.success == true && res.data["isSuccess"] == true) {
-                    showCustomToast("댓글이 삭제되었습니다.")
+                    Log.d(TAG, "deleteComment: 댓글 삭제 완료")
+//                    showCustomToast("댓글이 삭제되었습니다.")
                     runBlocking {
                         mainViewModel.getCommentList(postId)
                     }
 //                    localCommentAdapter.notifyItemRemoved(position)
                     localCommentAdapter.notifyDataSetChanged()
                 } else {
-                    showCustomToast("댓글 삭제 실패")
+//                    showCustomToast("댓글 삭제 실패")
                 }
             }
         }
@@ -198,14 +201,14 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 
     /**
      * 댓글 및 대댓글 등록
-     * parentId가 -1 -> 댓글 등록
+     * parentId == -1 -> 댓글 등록
      * parentId > 0 -> 대댓글 등록
      */
     private fun insertCommentAndReply(chk : Boolean) {
 
         binding.localCmtFragmentTvConfirm.setOnClickListener {
             val commentContent = binding.localCmtFragmentEtComment.text.toString()
-            if(chk == true && parentId != -1 && commentContent.isNotEmpty()) {   // 대댓글 작성
+            if(parentId != -1 && commentContent.isNotEmpty()) {   // 대댓글 작성
                 val reply = Comment(boardId = postId, comment = commentContent, parent = parentId, userId = userId)
 
                 var response : Response<Message>
@@ -218,22 +221,59 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
                     val res = response.body()
                     if(res != null) {
                         if(res.success == true && res.data["isSuccess"] == true) {
-                            showCustomToast("대댓글이 등록되었습니다.")
+//                            showCustomToast("대댓글이 등록되었습니다.")
                             runBlocking {
                                 mainViewModel.getCommentList(postId)
                             }
                             localCommentAdapter.notifyDataSetChanged()
-                            binding.localCmtFragmentEtComment.setText("")
+//                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+//                            binding.localCmtFragmentTvWriterNick.text = ""
+//                            binding.localCmtFragmentEtComment.setText("")
+//
+//                            clearFocus(mainActivity)
                         } else {
-                            showCustomToast("대댓글 등록 실패")
+                            Log.e(TAG, "insertCommentAndReply: ${res.message}", )
+//                            showCustomToast("대댓글 등록 실패")
+                        }
+                    }
+                }
+            } else if(parentId == -1 && commentContent.isNotEmpty()) {  // 댓글 등록
+
+                val comment = Comment(boardId = postId, comment = commentContent, userId = userId, nickname = mainViewModel.loginUserInfo.value!!.nickname)
+
+                var response : Response<Message>
+
+                runBlocking {
+                    response = BoardService().insertComment(comment)
+                }
+
+                if(response.code() == 200 || response.code() == 500) {
+                    val res = response.body()
+                    if(res != null) {
+                        if(res.success == true && res.data["isSuccess"] == true) {
+//                            showCustomToast("댓글이 등록되었습니다.")
+                            runBlocking {
+                                mainViewModel.getCommentList(postId)
+                            }
+                            localCommentAdapter.notifyDataSetChanged()
+//                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+//                            binding.localCmtFragmentTvWriterNick.text = ""
+//                            binding.localCmtFragmentEtComment.setText("")
+//
+//                            clearFocus(mainActivity)
+                        } else {
+                            Log.e(TAG, "insertCommentAndReply: ${res.message}", )
+//                            showCustomToast("댓글 등록 실패")
                         }
                     }
                 }
             }
-//            else if(parentId == -1 && commentContent.isNotEmpty()) {  // 댓글 등록
-//
-//            }
 
+            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+            binding.localCmtFragmentTvWriterNick.text = ""
+            binding.localCmtFragmentEtComment.setText("")
+
+            clearFocus(mainActivity)
 
         }
     }
@@ -257,7 +297,7 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         } else { //keyboard hide
             if (isOpenKeyboard) {
                 Log.d(TAG, ": ddddd")
-                clearFocus(requireActivity())
+                clearFocus(mainActivity)
                 binding.localCmtFragmentTvWriterNick.visibility = View.GONE
                 binding.localCmtFragmentTvWriterNick.text = ""
                 parentId = -1
@@ -285,11 +325,14 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         )
     }
 
+    override fun onStop() {
+        super.onStop()
+        binding.localCommentFragment.viewTreeObserver.removeOnGlobalLayoutListener(mOnGlobalLayoutListener)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         mainActivity.hideBottomNavi(false)
-        mOnGlobalLayoutListener.onGlobalLayout()
     }
 
 }

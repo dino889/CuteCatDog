@@ -3,6 +3,7 @@ package com.ssafy.ccd.src.main.home.Community
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -51,6 +52,8 @@ class WriteQnaFragment : BaseFragment<FragmentWriteQnaBinding>(FragmentWriteQnaB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         setInstance()
         inputObservable()
         setListener()

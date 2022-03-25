@@ -1,9 +1,6 @@
 package com.ssafy.ccd.src.network.service
 
-import com.ssafy.ccd.src.dto.Board
-import com.ssafy.ccd.src.dto.Comment
-import com.ssafy.ccd.src.dto.LikeRequestDto
-import com.ssafy.ccd.src.dto.Message
+import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
 
@@ -21,7 +18,7 @@ class BoardService {
 
     suspend fun selectCommentList(postId: Int) = RetrofitUtil.boardService.selectCommentList(postId)
 
-    suspend fun insertComment(commentRequestDto : Comment) = RetrofitUtil.boardService.insertComment(commentRequestDto)
+    suspend fun insertComment(commentRequestDto: Comment) = RetrofitUtil.boardService.insertComment(commentRequestDto)
 
     suspend fun updateComment(commentModifyRequestDto : Comment) = RetrofitUtil.boardService.updateComment(commentModifyRequestDto)
 
