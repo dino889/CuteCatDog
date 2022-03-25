@@ -18,23 +18,33 @@
         android:layout_height="wrap_content" >
 
         <ImageView
+            android:id="@+id/localReplyItem_ivArrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/ic_curve_arrow_512px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/localReplyItem_ivUserImg"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:scaleType="centerInside"
             app:imageUrlUser="@{writer.profileImage}"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/localReplyItem_ivArrow"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/localReplyItem_tvUserNick"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
+            android:layout_marginStart="10dp"
             android:text="@{writer.nickname}"
             android:textColor="@color/black"
             app:layout_constraintEnd_toStartOf="@+id/localReplyItem_ivMore"
@@ -45,16 +55,16 @@
             android:id="@+id/localReplyItem_tvComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
             android:text="@{comment.comment}"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/localReplyItem_ivArrow"
             app:layout_constraintTop_toBottomOf="@+id/localReplyItem_tvUserNick" />
 
         <ImageView
