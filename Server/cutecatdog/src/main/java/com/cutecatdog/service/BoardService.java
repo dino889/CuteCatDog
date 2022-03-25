@@ -22,5 +22,7 @@ public interface BoardService {
 
   public BoardDetailDto findDetailBoard(int id) throws Exception;
 
+  public List<BoardDto> findUserBoard(int userId) throws Exception;
+
   
 }

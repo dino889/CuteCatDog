@@ -9,6 +9,14 @@
     ORDER BY b.time desc
 	</select>
 
+  <select id="selectUserBoard" resultType="BoardDto" parameterType="int">
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time
+    FROM tbl_board b 
+    WHERE user_id = #{userId}
+    ORDER BY b.time desc
+ 
+  </select>
+
   <select id="selectTypeBoard" resultType="BoardDto" parameterType="int">
     SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time
     FROM tbl_board b 
