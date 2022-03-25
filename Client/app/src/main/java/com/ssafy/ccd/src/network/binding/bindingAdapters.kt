@@ -28,6 +28,7 @@ import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalCommentAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
+import com.ssafy.ccd.src.main.mypage.MyScheduleRecyclerviewAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
@@ -123,6 +124,7 @@ fun bindImageUser(imgView: ImageView, imgUrl: String?) {
     if(imgUrl == null || imgUrl == ""){
         Glide.with(imgView.context)
             .load(R.drawable.defaultimg)
+            .circleCrop()
             .into(imgView)
 
     } else if(imgUrl.contains("https://")) {
@@ -137,7 +139,7 @@ fun bindImageUser(imgView: ImageView, imgUrl: String?) {
         storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener { p0 ->
             Glide.with(imgView.context)
                 .load(p0)
-                                    .circleCrop()
+                .circleCrop()
                 .into(imgView)
         }.addOnFailureListener(object : OnFailureListener {
             override fun onFailure(p0: Exception) {
@@ -317,7 +319,18 @@ fun bindScheduleRecyclerView(recyclerView: RecyclerView, data:List<Schedule>?){
     adapter.list = data as MutableList<Schedule>
     adapter.notifyDataSetChanged()
 }
-
+@BindingAdapter("schedulerTodayListData")
+fun bindScheduleTodayRecyclerView(recyclerView: RecyclerView, data:List<Schedule>?){
+    var adapter = recyclerView.adapter as MyScheduleRecyclerviewAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as MyScheduleRecyclerviewAdapter
+    }
+    adapter.list = data as MutableList<Schedule>
+    adapter.notifyDataSetChanged()
+}
 /**
  * board 관련 bindingAdapter
  */

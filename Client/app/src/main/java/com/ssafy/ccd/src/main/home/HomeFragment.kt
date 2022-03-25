@@ -2,14 +2,17 @@ package com.ssafy.ccd.src.main.home
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,10 +28,17 @@ import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.main.home.Information.InformationRecyclerViewAdapter
 import com.ssafy.ccd.src.main.information.InformationActivity
+import com.ssafy.ccd.src.main.mypage.MyScheduleRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
-
+private const val TAG = "HomeFragment"
 //class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 class HomeFragment : Fragment() {
     val mainViewModel: MainViewModels by activityViewModels()
@@ -36,6 +46,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var petAdapter:HomeProfilePetsAdapter
     private lateinit var mainActivity : MainActivity
+    private lateinit var calendarAdapter : MyScheduleRecyclerviewAdapter
 
     // Binding items
     private lateinit var ivKnowledge : ImageView
@@ -75,6 +86,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,11 +95,15 @@ class HomeFragment : Fragment() {
 
         runBlocking {
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            var now = LocalDate.now()
+            var strNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
+            var todayMillisecond = CommonUtils.makeBirthMilliSecond(strNow)
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
             mainViewModel.getAllPostList()
             mainViewModel.getAllUserList()
             mainViewModel.getLikePostsByUserId(userId)
+            mainViewModel.getCalendarListbyDate(userId, todayMillisecond)
         }
 
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
@@ -161,6 +177,18 @@ class HomeFragment : Fragment() {
         rvInformation.apply {
             layoutManager = manager
             adapter = rvAdapterinfo
+        }
+
+        //Calendar Adapter
+        mainViewModel.schedule.observe(viewLifecycleOwner){
+            Log.d(TAG, "initAdapter: $it")
+            calendarAdapter = MyScheduleRecyclerviewAdapter()
+            calendarAdapter.list = it
+            binding.fragmentHomeRvTodayCalenderNoti.apply {
+                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                adapter = calendarAdapter
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
         }
     }
 

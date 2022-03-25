@@ -8,14 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.databinding.ItemMyscheduleListBinding
 import com.ssafy.ccd.src.dto.Pet
+import com.ssafy.ccd.src.dto.Schedule
 
-class MyScheduleRecyclerviewAdapter(private val scheduleList: MutableList<Pet>) : RecyclerView.Adapter<MyScheduleRecyclerviewAdapter.MyScheduleViewHolder>() {
-
+class MyScheduleRecyclerviewAdapter() : RecyclerView.Adapter<MyScheduleRecyclerviewAdapter.MyScheduleViewHolder>() {
+    var list = mutableListOf<Schedule>()
     inner class MyScheduleViewHolder(private val binding: ItemMyscheduleListBinding) : RecyclerView.ViewHolder(binding.root) {
         val scheduleLayout = binding.myScheduleItemCvSchedule
 
-        fun bind(schedule: Pet, position: Int) {
-//            binding.schedule = schedule
+        fun bind(schedule: Schedule, position: Int) {
+            binding.schedules = schedule
             binding.executePendingBindings()
         }
     }
@@ -25,17 +26,17 @@ class MyScheduleRecyclerviewAdapter(private val scheduleList: MutableList<Pet>) 
     }
 
     override fun onBindViewHolder(holder: MyScheduleViewHolder, position: Int) {
-        val schedule = scheduleList[position]
+        val schedule = list[position]
         holder.apply {
             bind(schedule, position)
             scheduleLayout.setOnClickListener {
-                itemClickListener.onClick(it, position, schedule.id)
+                itemClickListener.onClick(it, position, schedule.schedule.id)
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return scheduleList.size
+        return list.size
     }
 
     interface ItemClickListener{

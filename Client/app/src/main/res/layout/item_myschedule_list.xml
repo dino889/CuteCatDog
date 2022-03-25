@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-<!--        <variable-->
-<!--            name=""-->
-<!--            type="" />-->
+        <variable
+            name="schedules"
+            type="com.ssafy.ccd.src.dto.Schedule" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,13 +19,11 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="2dp"
+            android:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="@android:color/transparent"
             app:rippleColor="@color/main">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,8 +35,10 @@
                     android:id="@+id/myScheduleItem_tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3월 6일 일요일"
-                    android:textSize="12sp"
+                    android:text="오늘의 일정"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,15 +59,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="뚜이"
+                        android:text="@{schedules.pet.name}"
+                        android:textColor="@color/black"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/myScheduleItem_tvContent"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textSize="12sp"
-                        android:text="태어난지 4년째 되는 날" />
+                        android:text="@{schedules.schedule.title}"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -77,6 +79,7 @@
                     android:layout_marginTop="15dp"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
+                    app:imageUrlPet="@{schedules.pet.photoPath}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/myScheduleItem_tvDate" />
 
