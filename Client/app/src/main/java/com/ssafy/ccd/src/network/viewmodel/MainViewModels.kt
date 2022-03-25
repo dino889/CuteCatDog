@@ -33,7 +33,7 @@ class MainViewModels : ViewModel() {
      * USER ViewModel
      */
     private val _allUserList = MutableLiveData<MutableList<User>>()
-    private val _loginUserInfo = MutableLiveData<User>()
+    val _loginUserInfo = MutableLiveData<User>()
     private val _userInfo = MutableLiveData<User>()
 
     val allUserList :  LiveData<MutableList<User>>
@@ -312,7 +312,7 @@ class MainViewModels : ViewModel() {
             val res = response.body()
             if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
-                    if(res.data["boards"] != null && res.success == true) {
+                    if(res.data["boards"] != null && res.success) {
                         val type = object : TypeToken<MutableList<Board>>() {}.type
                         val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
                         if (typeId == 1) {
@@ -338,7 +338,7 @@ class MainViewModels : ViewModel() {
             if(response.code() == 200 || response.code() == 500) {
                 val res = response.body()
                 if(res != null) {
-                    if (res.data["board"] != null && res.success == true) {
+                    if (res.data["board"] != null && res.success) {
                         setLikePosts(res.data["board"] as MutableList<Int>)
                     } else {
                         Log.e(TAG, "getLikePostsByUserId: ${res.message}", )
@@ -350,12 +350,11 @@ class MainViewModels : ViewModel() {
 
     suspend fun getPostDetail(id: Int) {
         val response = BoardService().selectPostDetail(id)
-
         viewModelScope.launch {
             val res = response.body()
             if(response.code() == 200 || response.code() == 500) {
                 if(res != null) {
-                    if (res.data["board"] != null && res.success == true) {
+                    if (res.data["board"] != null && res.success) {
                         val type = object : TypeToken<Board>() {}.type
                         val post: Board = CommonUtils.parseDto(res.data["board"]!!, type)
                         setPostDetail(post)
@@ -773,4 +772,41 @@ class MainViewModels : ViewModel() {
     var aiType = 0
     var emotions:String = ""
 
+
+    /**
+     * QnABoardFragment
+     * @Author Jueun
+     * @Date 2022-03-24 11:37
+     */
+    lateinit var boardQna : Board
+    lateinit var commentQna : Comment
+
+    var writeType = 0
+
+    private var _commentsByPostId = MutableLiveData<MutableList<Comment>>()
+
+    val comments : LiveData<MutableList<Comment>>
+        get() = _commentsByPostId
+
+    private fun setComments(comments : MutableList<Comment>) = viewModelScope.launch {
+        _commentsByPostId.value = comments
+    }
+
+    suspend fun getCommentsByPostId(postId: Int) {
+        val response = BoardService().selectCommentList(postId)
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if (res.data["comments"] != null && res.success) {
+                        var type = object:TypeToken<MutableList<Comment>>() {}.type
+                        var comment = CommonUtils.parseDto<MutableList<Comment>>(res.data["comments"]!!,type)
+                        setComments(comment)
+                    } else {
+                        Log.e(TAG, "getCommentsByPostId: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
 }

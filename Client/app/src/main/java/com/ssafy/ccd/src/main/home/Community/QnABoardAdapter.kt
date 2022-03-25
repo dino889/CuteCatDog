@@ -39,9 +39,9 @@ class QnABoardAdapter (var postList : MutableList<Board>, val userList: MutableL
             bindInfo(postList[position])
             setIsRecyclable(false)
 
-//             QnAPostItem.setOnClickListener {
-//                itemClickListener.onClick(it, position)
-//            }
+            holder.itemView.setOnClickListener {
+                itemClickListener.onClick(it, position)
+            }
         }
     }
 
@@ -57,6 +57,11 @@ class QnABoardAdapter (var postList : MutableList<Board>, val userList: MutableL
 
     fun setItemClickListener(itemClickListener: ItemClickListener) {
         this.itemClickListener = itemClickListener
+    }
+
+    fun updateData(data : MutableList<Board>){
+        this.postList = data
+        notifyDataSetChanged()
     }
 
 }
