@@ -9,6 +9,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Service
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -53,6 +55,11 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public List<ScheduleDto> findScheduleDetail(ScheduleDto scheduleDto) throws Exception {
         return sqlSession.getMapper(ScheduleMapper.class).selectScheduleDetail(scheduleDto);
+    }
+
+    @Override
+    public List<ScheduleDto> findScheduleWeek(int userId) throws Exception {
+        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleWeek(userId);
     }
     
 }

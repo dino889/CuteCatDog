@@ -37,6 +37,13 @@
         from tbl_schedule
 		WHERE pet_id = #{petId} AND type = 2
 	</select>
+
+	<select id="selectScheduleWeek" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, title, memo, datetime, place
+        from tbl_schedule
+		WHERE user_id = #{userId}
+		AND DATETIME BETWEEN UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) AND UNIX_TIMESTAMP(NOW())
+	</select>
 	
 	<update id= "updateSchedule" parameterType="ScheduleDto">
 		update tbl_schedule

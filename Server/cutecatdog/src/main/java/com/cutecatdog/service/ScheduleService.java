@@ -22,4 +22,6 @@ public interface ScheduleService {
 
     boolean removeSchedule(int id) throws Exception;
 
+    List<ScheduleDto> findScheduleWeek(int userId) throws Exception;
+
 }
