@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,7 +84,7 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
 //            setIsRecyclable(false)
 
             addReply.setOnClickListener {
-                addReplyClickListener.onClick(it, position, comment.id)
+                addReplyClickListener.onClick(it as TextView, position, comment.id)
             }
 
             moreBtn.setOnClickListener {
@@ -115,7 +116,7 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
     }
 
     interface ItemClickListener {
-        fun onClick(view: View, position: Int, commentId: Int)
+        fun onClick(view: TextView, position: Int, commentId: Int)
     }
 
     private lateinit var addReplyClickListener : ItemClickListener
