@@ -25,5 +25,7 @@ public interface ScheduleMapper {
     boolean deleteSchedule(int id) throws SQLException;
 
     List<ScheduleDto> selectScheduleDetail(ScheduleDto scheduleDto) throws SQLException;
+
+    List<ScheduleDto> selectScheduleWeek(int userId) throws SQLException;
     
 }
