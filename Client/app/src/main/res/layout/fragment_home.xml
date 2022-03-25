@@ -11,9 +11,11 @@
             type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/constraintLayout18"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layoutDescription="@xml/fragment_home_xml_constraintlayout18_scene"
         tools:context=".src.main.home.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,8 +32,8 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
-                app:imageUrlUser="@{loginUser.profileImage}"
                 android:src="@drawable/logo"
+                app:imageUrlUser="@{loginUser.profileImage}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +54,6 @@
                 android:id="@+id/fragment_home_userNick"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:userNick="@{loginUser.nickname}"
                 android:layout_marginEnd="30dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -60,19 +61,20 @@
                 app:layout_constraintBottom_toBottomOf="@+id/fragment_home_tvHi"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/fragment_home_tvHi"
-                app:layout_constraintTop_toTopOf="@+id/fragment_home_tvHi" />
+                app:layout_constraintTop_toTopOf="@+id/fragment_home_tvHi"
+                app:userNick="@{loginUser.nickname}" />
 
 
             <TextView
                 android:id="@+id/fragment_home_userNick2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:userNick="@{loginUser.nickname}"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_home_tvHi"/>
+                app:layout_constraintTop_toBottomOf="@+id/fragment_home_tvHi"
+                app:userNick="@{loginUser.nickname}" />
 
             <TextView
                 android:id="@+id/fragment_home_userNickPets"
@@ -87,30 +89,26 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_home_rvPets"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
+                app:homePetListData="@{viewModel.myPetsList}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_home_userNickPets" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_home_rvTodayCalenderNoti"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_home_userNickPets"
-                app:homePetListData = "@{viewModel.myPetsList}"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/fragment_home_rvPets"
+                app:schedulerTodayListData="@{viewModel.schedule}" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragment_home_rvTodayCalenderNoti"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="10dp"
-            app:schedulerTodayListData = "@{viewModel.schedule}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_home_profileLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
             android:id="@+id/scrollView2"
@@ -119,7 +117,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_home_rvTodayCalenderNoti">
+            app:layout_constraintTop_toBottomOf="@+id/fragment_home_profileLayout">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -241,6 +239,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_margin="10dp"
                         android:layout_marginBottom="8dp"
                         app:dotsColor="@color/main"
                         app:dotsCornerRadius="8dp"
@@ -248,7 +247,6 @@
                         app:dotsSpacing="4dp"
                         app:dotsStrokeColor="#AAAAAA"
                         app:dotsStrokeWidth="2dp"
-                        android:layout_margin="10dp"
                         app:layout_constraintBottom_toTopOf="@+id/guideline4"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -358,5 +356,5 @@
             </LinearLayout>
         </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

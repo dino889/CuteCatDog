@@ -122,6 +122,10 @@
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_know_list.xml" value="0.115625" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_qna_list.xml" value="0.4" />
         <entry key="..\:/Users/SSAFY/Desktop/S06P22D103/Client/app/src/main/res/layout/item_youtube_list.xml" value="0.15833333333333333" />
+        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_home.xml" value="0.264" />
+        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_home_calendar_detail_dialog.xml" value="0.4" />
+        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/fragment_my_post.xml" value="0.1" />
+        <entry key="..\:/ssafy/workspace/cuteCatDog/Client/app/src/main/res/layout/item_mypost_list.xml" value="0.522075055187638" />
       </map>
     </option>
   </component>

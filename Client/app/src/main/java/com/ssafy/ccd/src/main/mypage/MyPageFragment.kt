@@ -54,6 +54,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     // firebase authentication
     var mGoogleSignInClient: GoogleSignInClient? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.apply {
+            petId = getInt("petId")
+            Log.d(TAG, "onCreate: ${petId}")
+        }
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -72,7 +79,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
             binding.user = it
         })
-
+        if(petId > 0){
+            runBlocking {
+                mainViewModel.getPetDetailList(petId)
+            }
+            binding.myPageFragmentCvPetImage.visibility = View.VISIBLE
+            binding.myPageFragmentCvUserInfo.visibility = View.INVISIBLE
+        }
 //        val myPetsList = mainViewModel.myPetsList.value
 //        if(myPetsList?.size!! > 0){
 //            petId = myPetsList[0].id
