@@ -187,9 +187,8 @@ class MainViewModels : ViewModel() {
     private val _locPostList = MutableLiveData<MutableList<Board>>()
     private val _qnaPostList = MutableLiveData<MutableList<Board>>()
     private val _sharePostList = MutableLiveData<MutableList<Board>>()
-
+    private val _boardAllByUser = MutableLiveData<MutableList<Board>>()
     private val _likePostsByUserId = MutableLiveData<MutableList<Int>>()
-
     private val _postDetail = MutableLiveData<Board>()
     private val _commentList = MutableLiveData<MutableList<Comment>>()
 
@@ -216,6 +215,9 @@ class MainViewModels : ViewModel() {
 
     val commentList : LiveData<MutableList<Comment>>
         get() = _commentList
+
+    val boardListByUser : LiveData<MutableList<Board>>
+        get() = _boardAllByUser
 
     private fun setAllPostList(postList : MutableList<Board>) = viewModelScope.launch {
         _postAllList.value = postList
@@ -249,6 +251,9 @@ class MainViewModels : ViewModel() {
         _commentList.value = commentList
     }
 
+    private fun setBoardListByUser(board:MutableList<Board>) = viewModelScope.launch {
+        _boardAllByUser.value = board
+    }
 
     suspend fun getAllPostList() {
         val response = BoardService().selectAllPostList()
@@ -371,6 +376,21 @@ class MainViewModels : ViewModel() {
         }
     }
 
+    suspend fun getBoardListByUser(userId:Int){
+        val response = BoardService().selectBoardByUserId(userId)
+        viewModelScope.launch {
+            if(response.code() == 200){
+                var res = response.body()
+                if(res!=null){
+                    if(res.success){
+                        val type = object : TypeToken<MutableList<Board?>?>() {}.type
+                        val boards = CommonUtils.parseDto<MutableList<Board>>(res.data.get("boards")!!,type)
+                        setBoardListByUser(boards)
+                    }
+                }
+            }
+        }
+    }
 
 
     // ---------------------------------------------------------------------------------------------

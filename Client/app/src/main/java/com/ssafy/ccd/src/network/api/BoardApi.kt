@@ -65,4 +65,7 @@ interface BoardApi {
     @GET("/board/userid/{userId}")
     suspend fun selectLikePostsByUserId(@Path("userId") userId: Int) : Response<Message>
 
+    //유저가 쓴 글 전체보기
+    @GET("/board/user/{userId}")
+    suspend fun selectBoardByUserId(@Path("userId")userId:Int) : Response<Message>
 }

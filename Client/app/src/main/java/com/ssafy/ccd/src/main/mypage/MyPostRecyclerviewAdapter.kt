@@ -7,15 +7,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.databinding.ItemMypostListBinding
+import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.Pet
 
-class MyPostRecyclerviewAdapter(private val postList: List<Pet>): RecyclerView.Adapter<MyPostRecyclerviewAdapter.MyPostViewHolder>() {
-
+class MyPostRecyclerviewAdapter(): RecyclerView.Adapter<MyPostRecyclerviewAdapter.MyPostViewHolder>() {
+    var list = mutableListOf<Board>()
     inner class MyPostViewHolder(private val binding: ItemMypostListBinding) : RecyclerView.ViewHolder(binding.root) {
         val postLayout = binding.myPostItemLl
 
-        fun bind(post: Pet, position: Int) {
-//            binding.post = post
+        fun bind(post: Board, position: Int) {
+            binding.board = post
             binding.executePendingBindings()
         }
     }
@@ -25,7 +26,7 @@ class MyPostRecyclerviewAdapter(private val postList: List<Pet>): RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: MyPostRecyclerviewAdapter.MyPostViewHolder, position: Int) {
-        val post = postList[position]
+        val post = list[position]
         holder.apply {
             bind(post, position)
             postLayout.setOnClickListener {
@@ -35,7 +36,7 @@ class MyPostRecyclerviewAdapter(private val postList: List<Pet>): RecyclerView.A
     }
 
     override fun getItemCount(): Int {
-        return postList.size
+        return list.size
     }
 
     interface ItemClickListener{

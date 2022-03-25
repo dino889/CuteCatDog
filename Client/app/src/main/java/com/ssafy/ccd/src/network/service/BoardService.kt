@@ -36,4 +36,6 @@ class BoardService {
     suspend fun selectPostListByType(typeId: Int) = RetrofitUtil.boardService.selectPostListByType(typeId)
 
     suspend fun selectLikePostsByUserId(userId: Int) = RetrofitUtil.boardService.selectLikePostsByUserId(userId)
+
+    suspend fun selectBoardByUserId(userId:Int) = RetrofitUtil.boardService.selectBoardByUserId(userId)
 }

@@ -28,6 +28,7 @@ import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalCommentAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
+import com.ssafy.ccd.src.main.mypage.MyPostRecyclerviewAdapter
 import com.ssafy.ccd.src.main.mypage.MyScheduleRecyclerviewAdapter
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
@@ -384,7 +385,28 @@ fun bindLocalCommentList(recyclerView: RecyclerView, data: MutableList<Comment>)
     }
     adapter.commentList = data
 }
-
+@BindingAdapter("boardAllListbyUser")
+fun bindBoardAllListbyUser(recyclerView: RecyclerView, data:MutableList<Board>){
+    var adapter = recyclerView.adapter as MyPostRecyclerviewAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as MyPostRecyclerviewAdapter
+    }
+    adapter.list = data
+    adapter.notifyDataSetChanged()
+}
+@BindingAdapter("boardType")
+fun bindConvertBoardType(textView: TextView,type:Int){
+    if(type == 1){
+        textView.text = "울동네"
+    }else if(type == 2){
+        textView.text = "궁금해"
+    }else if(type == 3){
+        textView.text = "공유해"
+    }
+}
 //@BindingAdapter("localReplyListData")
 //fun bindLocalReplyList(recyclerView: RecyclerView, data: MutableList<Comment>) {
 //    var adapter = recyclerView.adapter as LocalCommentReplyAdapter
