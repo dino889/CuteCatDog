@@ -98,16 +98,6 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
             val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
 
             var date = arrayListOf<String>()
-//            if(petId == -1){
-//
-//            }else{
-//                for(i in 0..it.size-1){
-//                    if(petId == it[i].petId) {
-//                        Log.d(TAG, "initCalendar: $petId")
-//                        date.add(CommonUtils.makeBirthString(it[i].datetime))
-//                    }
-//                }
-//            }
             for(i in 0..it.size-1){
                 date.add(CommonUtils.makeBirthString(it[i].datetime))
             }
@@ -120,7 +110,9 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
                 scrollToPosition(Int.MAX_VALUE/2)
             }
             val snap = PagerSnapHelper()
-            snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
+            if( binding.fragmentCalenderCustomCalender.onFlingListener == null){
+                snap.attachToRecyclerView(binding.fragmentCalenderCustomCalender)
+            }
         })
     }
 

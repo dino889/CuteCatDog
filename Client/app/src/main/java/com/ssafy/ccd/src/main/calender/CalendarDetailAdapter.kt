@@ -1,7 +1,9 @@
 package com.ssafy.ccd.src.main.calender
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
@@ -9,15 +11,14 @@ import com.ssafy.ccd.databinding.ItemCalendarDetailListBinding
 import com.ssafy.ccd.src.dto.Calendar
 import com.ssafy.ccd.src.dto.Schedule
 
+private const val TAG = "CalendarDetailAdapter"
 class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailViewHolder>(){
     var list = mutableListOf<Schedule>()
     inner class DetailViewHolder(private val binding:ItemCalendarDetailListBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(data : Schedule){
             binding.schedules = data
             binding.executePendingBindings()
-            binding.itemSwipeDeleteTv.setOnClickListener {
-                removeData(this.layoutPosition)
-            }
+
         }
     }
 
@@ -28,6 +29,10 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
         holder.apply {
             bind(list[position])
+            holder.itemView.findViewById<TextView>(R.id.item_swipe_delete_tv).setOnClickListener {
+                Log.d(TAG, "bind: 삭제")
+                removeData(this.layoutPosition)
+            }
         }
     }
     fun removeData(position: Int){

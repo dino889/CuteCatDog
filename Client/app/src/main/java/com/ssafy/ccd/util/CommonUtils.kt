@@ -114,7 +114,7 @@ object CommonUtils {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun unixTimeToDateFormat(unixTime: Long): String {
-        val simpleDateFormat = SimpleDateFormat("YYYY년 MM월 dd일") //"YYYY-MM-dd HH:mm:ss.SSS"
+        val simpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일") //"YYYY-MM-dd HH:mm:ss.SSS"
         val date = Date()
         date.time = unixTime
 

@@ -24,8 +24,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.network.service.CalendarService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.ArrayList
@@ -77,7 +80,7 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
                     runBlocking {
                         viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date[i]))
                     }
-                    showDetailDialog(comDate,week)
+                    showDetailDialog(comDate,week,CommonUtils.makeBirthMilliSecond(date[i]))
                 }
             }
         }
@@ -85,7 +88,7 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
 
     }
     @SuppressLint("ClickableViewAccessibility")
-    fun showDetailDialog(day:String, week:String){
+    fun showDetailDialog(day:String, week:String, date:String){
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_calender_day_dialog,null)
         val dialog = Dialog(context)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -104,14 +107,13 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
 
         var detailAdapter = CalendarDetailAdapter()
         val swipeHelper = CalendarHelperCallback(detailAdapter).apply {
-            setClamp(200f)
-//            setClamp(resources.displayMetrics.widthPixels.toFloat() / 4)
+            setClamp(context.resources.displayMetrics.widthPixels.toFloat() / 4)
         }
-
         val itemTouchHelper = ItemTouchHelper(swipeHelper)
         var dialogRecyclerView = dialogView.findViewById<RecyclerView>(R.id.fragment_calender_dialog_rv)
         itemTouchHelper.attachToRecyclerView(dialogRecyclerView)
         dialogRecyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
+
         viewModel.schedule.observe(owner, {
             detailAdapter.list = it
             dialogRecyclerView.apply {
@@ -122,6 +124,26 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
                     false
                 }
             }
+
+            detailAdapter.setRemoveListener(object: CalendarDetailAdapter.RemoveListener {
+                override fun onRemove(calendarId: Int) {
+                    GlobalScope.launch {
+                        var response = CalendarService().deleteCalendar(calendarId)
+                        var res = response.body()
+                        if(response.code() == 200){
+                            if(res!=null){
+                                if(res.success){
+                                    runBlocking {
+                                        viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,date)
+                                        viewModel.getCalendarListbyUser(ApplicationClass.sharedPreferencesUtil.getUser().id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
         })
 
 

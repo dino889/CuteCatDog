@@ -99,7 +99,7 @@ class CalendarHelperCallback(private val recyclerViewAdapter: CalendarDetailAdap
 
     // swipe_view 반환 -> swipe_view만 이동할 수 있게 해줌
     private fun getView(viewHolder: RecyclerView.ViewHolder) : View = viewHolder.itemView.findViewById(
-        R.id.cardview_item)
+        R.id.item_board_layout)
 
     // swipe_view 를 swipe 했을 때 <삭제> 화면이 보이도록 고정
     private fun clampViewPositionHorizontal(

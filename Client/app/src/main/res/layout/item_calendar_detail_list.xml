@@ -20,11 +20,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_delete"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <LinearLayout
                 android:id="@+id/item_swipe_layout"
                 android:layout_width="match_parent"
@@ -52,19 +47,12 @@
                     android:includeFontPadding="false"
                     android:layout_weight="3" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_item"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/item_board_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/fragment_calendar_dialog_petImg"
@@ -112,9 +100,6 @@
                     app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_type" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
             
 
