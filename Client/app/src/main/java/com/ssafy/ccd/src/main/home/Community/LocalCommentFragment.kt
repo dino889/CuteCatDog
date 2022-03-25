@@ -16,6 +16,7 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalCommentBinding
 import com.ssafy.ccd.src.dto.Board
+import com.ssafy.ccd.src.dto.Comment
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.BoardService
@@ -72,7 +73,8 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         binding.localCmtFragmentRvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         localCommentAdapter = LocalCommentAdapter(requireContext())
 
-        mainViewModel.commentList.observe(viewLifecycleOwner, {
+        mainViewModel.commentListWoParents.observe(viewLifecycleOwner, {
+
             localCommentAdapter.commentList = it
             localCommentAdapter.userList = mainViewModel.allUserList.value!!
         })

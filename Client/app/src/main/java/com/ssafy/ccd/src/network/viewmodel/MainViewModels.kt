@@ -191,7 +191,9 @@ class MainViewModels : ViewModel() {
     private val _likePostsByUserId = MutableLiveData<MutableList<Int>>()
 
     private val _postDetail = MutableLiveData<Board>()
-    private val _commentList = MutableLiveData<MutableList<Comment>>()
+    private val _commentAllList = MutableLiveData<MutableList<Comment>>()
+    private val _commentListWoParents = MutableLiveData<MutableList<Comment>>()
+
 
     val postAllList : LiveData<MutableList<Board>>
         get() = _postAllList
@@ -214,8 +216,11 @@ class MainViewModels : ViewModel() {
     val postDetail : LiveData<Board>
         get() = _postDetail
 
-    val commentList : LiveData<MutableList<Comment>>
-        get() = _commentList
+    val commentAllList : LiveData<MutableList<Comment>>
+        get() = _commentAllList
+
+    val commentListWoParents : LiveData<MutableList<Comment>>
+        get() = _commentListWoParents
 
     private fun setAllPostList(postList : MutableList<Board>) = viewModelScope.launch {
         _postAllList.value = postList
@@ -245,8 +250,12 @@ class MainViewModels : ViewModel() {
         _postDetail.value = post
     }
 
-    private fun setCommentList(commentList : MutableList<Comment>) = viewModelScope.launch {
-        _commentList.value = commentList
+    private fun setAllCommentList(commentList : MutableList<Comment>) = viewModelScope.launch {
+        _commentAllList.value = commentList
+    }
+
+    private fun setCommentListWoParents(commentList: MutableList<Comment>) = viewModelScope.launch {
+        _commentListWoParents.value = commentList
     }
 
 
@@ -345,7 +354,7 @@ class MainViewModels : ViewModel() {
                         val type = object : TypeToken<Board>() {}.type
                         val post: Board = CommonUtils.parseDto(res.data["board"]!!, type)
                         setPostDetail(post)
-                        setCommentList(post.commentList as MutableList<Comment>)
+                        setAllCommentList(post.commentList as MutableList<Comment>)
                     } else {
                         Log.e(TAG, "getPostDetail: ${res.message}", )
                     }
@@ -364,7 +373,16 @@ class MainViewModels : ViewModel() {
                     if(res.data["comments"] != null && res.success == true) {
                         val type = object : TypeToken<MutableList<Comment>>() {}.type
                         val commentList: MutableList<Comment> = CommonUtils.parseDto(res.data["comments"]!!, type)
-                        setCommentList(commentList)
+                        setAllCommentList(commentList)
+
+                        val tmp = mutableListOf<Comment>()
+                        for(cmt in commentList) {
+                            Log.d(TAG, "LocalCommentAdapter_ccd: ${cmt.parent}")
+                            if(cmt.parent == null || cmt.parent.toString() == "null") {
+                                tmp.add(cmt)
+                            }
+                        }
+                        setCommentListWoParents(tmp)
                     }
                 }
             }
