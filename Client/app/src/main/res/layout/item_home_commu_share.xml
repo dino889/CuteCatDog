@@ -156,7 +156,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="@{post.commentList == null ? String.valueOf(0) : String.valueOf(post.commentList.size())}"
+                            android:text="@{String.valueOf(post.commentCnt)}"
                             android:textColor="@color/black"
                             android:textSize="10sp"
                             app:layout_constraintBottom_toBottomOf="@+id/imageView5"
