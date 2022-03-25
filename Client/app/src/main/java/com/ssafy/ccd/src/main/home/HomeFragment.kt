@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -166,6 +167,8 @@ class HomeFragment : Fragment() {
 
             petAdapter.setItemClickListener(object : HomeProfilePetsAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
+                    var petId = bundleOf("petId" to pet.id)
+                    this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_myPageFragment,petId)
                 }
             })
         }

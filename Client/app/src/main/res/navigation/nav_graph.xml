@@ -16,7 +16,12 @@
             app:destination="@id/addPetFragment" />
         <action
             android:id="@+id/action_homeFragment_to_myPageFragment"
-            app:destination="@id/myPageFragment" />
+            app:destination="@id/myPageFragment" >
+            <argument
+                android:name="petId"
+                app:argType="integer"
+                android:defaultValue="0"/>
+        </action>
         <action
             android:id="@+id/action_homeFragment_to_LocalBoardFragment"
             app:destination="@+id/localBoardFragment" />
@@ -26,6 +31,14 @@
         <action
             android:id="@+id/action_homeFragment_to_ShareBoardFragment"
             app:destination="@+id/shareBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment">
+            <argument
+                android:name="calendarId"
+                app:argType="integer"
+                android:defaultValue="0"/>
+        </action>
     </fragment>
 
     <fragment
