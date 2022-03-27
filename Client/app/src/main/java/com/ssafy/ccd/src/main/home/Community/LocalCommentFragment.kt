@@ -235,9 +235,9 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
                                 mainViewModel.getCommentList(postId)
                             }
                             localCommentAdapter.notifyDataSetChanged()
-//                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
-//                            binding.localCmtFragmentTvWriterNick.text = ""
-//                            binding.localCmtFragmentEtComment.setText("")
+                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+                            binding.localCmtFragmentTvWriterNick.text = ""
+                            binding.localCmtFragmentEtComment.setText("")
 //
                             clearFocus(mainActivity)
                         } else {
@@ -270,9 +270,9 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
                                 mainViewModel.getCommentList(postId)
                             }
                             localCommentAdapter.notifyDataSetChanged()
-//                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
-//                            binding.localCmtFragmentTvWriterNick.text = ""
-//                            binding.localCmtFragmentEtComment.setText("")
+                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+                            binding.localCmtFragmentTvWriterNick.text = ""
+                            binding.localCmtFragmentEtComment.setText("")
 //
                             clearFocus(mainActivity)
                         } else {
@@ -314,11 +314,14 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
                     if (res != null) {
                         if (res.success == true && res.data["isSuccess"] == true) {
                             showCustomToast("댓글이 수정되었습니다.")
-                            clearFocus(mainActivity)
                             runBlocking {
                                 mainViewModel.getCommentList(postId)
                             }
                             localCommentAdapter.notifyDataSetChanged()
+                            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+                            binding.localCmtFragmentTvWriterNick.text = ""
+                            binding.localCmtFragmentEtComment.setText("")
+                            clearFocus(mainActivity)
                         } else {
                             showCustomToast("댓글 수정 실패")
                             Log.e(TAG, "updateComment: ${res.message}",)
