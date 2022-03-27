@@ -12,7 +12,7 @@ data class Comment(
 ) {
     constructor(boardId: Int, comment: String, userId: Int, nickname: String) : this(0, boardId, userId, 0, comment, 0, 0, nickname)    // comment insert
     constructor(boardId: Int, comment: String, userId: Int) : this(0, boardId, userId, 0, comment, 0, 0, "")    // comment insert
-    constructor(id: Int, comment: String) : this(id, 0, 0, 0, comment, 0, 0, "")    // update Comment
+    constructor(id: Int, comment: String) : this(id, 0, 0, 0, comment = comment, 0, 0, "")    // update Comment
     constructor(boardId: Int, comment: String, parent: Int?, userId: Int) : this(0, boardId, userId, parent, comment, 0, 0, "")    // comment insert
 
 }

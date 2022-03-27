@@ -40,16 +40,13 @@ import com.ssafy.ccd.src.network.viewmodel.MainViewModels
  * '울동네' 게시글 댓글 화면
  */
 class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentLocalCommentBinding::bind, R.layout.fragment_local_comment) {
-//class LocalCommentFragment : Fragment() {
     private val TAG = "LocalCommentFragment_ccd"
-    private lateinit var mainActivity : MainActivity
-//    private lateinit var binding: FragmentLocalCommentBinding
-//    val mainViewModel: MainViewModels by activityViewModels()
+    private lateinit var mainActivity: MainActivity
 
     private var postId by Delegates.notNull<Int>()
 
     private lateinit var localCommentAdapter: LocalCommentAdapter
-    private lateinit var mInputMethodManager : InputMethodManager
+    private lateinit var mInputMethodManager: InputMethodManager
 
     // 대댓글 작성 시 필요한 parentId == commentId
     private var parentId = -1
@@ -66,18 +63,11 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             postId = getInt("postId")
         }
         mainActivity.hideBottomNavi(true)
-        mInputMethodManager = mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        mInputMethodManager =
+            mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         mOnGlobalLayoutListener.onGlobalLayout()
     }
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        binding = FragmentLocalCommentBinding.inflate(inflater, container, false)
-//        return binding.root
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -92,9 +82,11 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         initCommentRv()
 
         // 키보드 감지 리스너 등록
-        binding.localCommentFragment.viewTreeObserver.addOnGlobalLayoutListener(mOnGlobalLayoutListener)
+        binding.localCommentFragment.viewTreeObserver.addOnGlobalLayoutListener(
+            mOnGlobalLayoutListener
+        )
 
-        insertCommentAndReply(false)    // default : 댓글 등록
+        insertCommentAndReply()    // default : 댓글 등록
     }
 
     private fun initDataBinding() {
@@ -116,8 +108,9 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
      */
     private fun initCommentRv() {
 
-        binding.localCmtFragmentRvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        localCommentAdapter = LocalCommentAdapter(requireContext())
+        binding.localCmtFragmentRvComment.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        localCommentAdapter = LocalCommentAdapter(requireContext(), mainViewModel)
 
         mainViewModel.commentListWoParents.observe(viewLifecycleOwner, {
 
@@ -126,14 +119,17 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             mainViewModel.commentAllList.observe(viewLifecycleOwner, { all ->
                 localCommentAdapter.commentAllList = all
             })
+
             localCommentAdapter.userList = mainViewModel.allUserList.value!!
-            localCommentAdapter.setAddReplyItemClickListener(object : LocalCommentAdapter.ItemClickListener {
+
+            // 답글달기 버튼 클릭 이벤트
+            localCommentAdapter.setAddReplyItemClickListener(object :
+                LocalCommentAdapter.ItemClickListener {
                 override fun onClick(view: TextView, position: Int, commentId: Int) {
                     // 대댓글 작성
                     // 클릭한 댓글 뷰 색상 바꿔주고
                     // 하단 댓글 작성 부분 focus
                     // 게시 버튼 눌렀을 때 글자가 하나라도 쓰여져있으면 insert
-
 //                    val mInputMethodManager = context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 //                    mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 //                    binding.localCmtFragmentEtComment.requestFocus()
@@ -145,27 +141,35 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 
                     parentId = it[position].id
 
-                    insertCommentAndReply(true)
+                    insertCommentAndReply()
+
+                }
+            })
+
+            // 수정 클릭 이벤트
+            localCommentAdapter.setModifyItemClickListener(object :
+                LocalCommentAdapter.MenuClickListener {
+                override fun onClick(commentId: Int, position: Int) {
+                    // 댓글 수정
+                    // 수정 클릭한 댓글 뷰 색상 변경하고,는 안되겠넹
+                    // 기존 댓글 내용 editText에 세팅
+                    showKeyboard(binding.localCmtFragmentEtComment)
+
+                    binding.localCmtFragmentEtComment.setText(it[position].comment)
+
+                    updateComment(commentId)
 
                 }
             })
         })
 
-        localCommentAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        localCommentAdapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.localCmtFragmentRvComment.adapter = localCommentAdapter
 
 
-
-        localCommentAdapter.setModifyItemClickListener(object : LocalCommentAdapter.MenuClickListener {
-            override fun onClick(commentId: Int, position: Int) {
-                // 댓글 수정
-                // 수정 클릭한 댓글 뷰 색상 변경하고,는 안되겠넹
-                // 기존 댓글 내용 editText에 세팅
-
-            }
-        })
-
-        localCommentAdapter.setDeleteItemClickListener(object : LocalCommentAdapter.MenuClickListener {
+        localCommentAdapter.setDeleteItemClickListener(object :
+            LocalCommentAdapter.MenuClickListener {
             override fun onClick(commentId: Int, position: Int) {
                 deleteComment(commentId, position)
             }
@@ -177,23 +181,23 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
      */
     private fun deleteComment(commentId: Int, position: Int) {
         Log.d(TAG, "deleteComment: $commentId")
-        var response : Response<Message>
+        var response: Response<Message>
         runBlocking {
             response = BoardService().deleteComment(commentId)
         }
-        if(response.code() == 200 || response.code() == 500) {
+        if (response.code() == 200 || response.code() == 500) {
             val res = response.body()
-            if(res != null) {
-                if(res.success == true && res.data["isSuccess"] == true) {
+            if (res != null) {
+                if (res.success == true && res.data["isSuccess"] == true) {
                     Log.d(TAG, "deleteComment: 댓글 삭제 완료")
-//                    showCustomToast("댓글이 삭제되었습니다.")
+                    showCustomToast("댓글이 삭제되었습니다.")
                     runBlocking {
                         mainViewModel.getCommentList(postId)
                     }
 //                    localCommentAdapter.notifyItemRemoved(position)
                     localCommentAdapter.notifyDataSetChanged()
                 } else {
-//                    showCustomToast("댓글 삭제 실패")
+                    showCustomToast("댓글 삭제 실패")
                 }
             }
         }
@@ -204,24 +208,29 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
      * parentId == -1 -> 댓글 등록
      * parentId > 0 -> 대댓글 등록
      */
-    private fun insertCommentAndReply(chk : Boolean) {
+    private fun insertCommentAndReply() {
 
         binding.localCmtFragmentTvConfirm.setOnClickListener {
             val commentContent = binding.localCmtFragmentEtComment.text.toString()
-            if(parentId != -1 && commentContent.isNotEmpty()) {   // 대댓글 작성
-                val reply = Comment(boardId = postId, comment = commentContent, parent = parentId, userId = userId)
+            if (parentId != -1 && commentContent.isNotEmpty()) {   // 대댓글 작성
+                val reply = Comment(
+                    boardId = postId,
+                    comment = commentContent,
+                    parent = parentId,
+                    userId = userId
+                )
 
-                var response : Response<Message>
+                var response: Response<Message>
 
                 runBlocking {
                     response = BoardService().insertReply(reply)
                 }
 
-                if(response.code() == 200 || response.code() == 500) {
+                if (response.code() == 200 || response.code() == 500) {
                     val res = response.body()
-                    if(res != null) {
-                        if(res.success == true && res.data["isSuccess"] == true) {
-//                            showCustomToast("대댓글이 등록되었습니다.")
+                    if (res != null) {
+                        if (res.success == true && res.data["isSuccess"] == true) {
+                            showCustomToast("대댓글이 등록되었습니다.")
                             runBlocking {
                                 mainViewModel.getCommentList(postId)
                             }
@@ -230,28 +239,33 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 //                            binding.localCmtFragmentTvWriterNick.text = ""
 //                            binding.localCmtFragmentEtComment.setText("")
 //
-//                            clearFocus(mainActivity)
+                            clearFocus(mainActivity)
                         } else {
-                            Log.e(TAG, "insertCommentAndReply: ${res.message}", )
-//                            showCustomToast("대댓글 등록 실패")
+                            Log.e(TAG, "insertCommentAndReply: ${res.message}",)
+                            showCustomToast("대댓글 등록 실패")
                         }
                     }
                 }
-            } else if(parentId == -1 && commentContent.isNotEmpty()) {  // 댓글 등록
+            } else if (parentId == -1 && commentContent.isNotEmpty()) {  // 댓글 등록
 
-                val comment = Comment(boardId = postId, comment = commentContent, userId = userId, nickname = mainViewModel.loginUserInfo.value!!.nickname)
+                val comment = Comment(
+                    boardId = postId,
+                    comment = commentContent,
+                    userId = userId,
+                    nickname = mainViewModel.loginUserInfo.value!!.nickname
+                )
 
-                var response : Response<Message>
+                var response: Response<Message>
 
                 runBlocking {
                     response = BoardService().insertComment(comment)
                 }
 
-                if(response.code() == 200 || response.code() == 500) {
+                if (response.code() == 200 || response.code() == 500) {
                     val res = response.body()
-                    if(res != null) {
-                        if(res.success == true && res.data["isSuccess"] == true) {
-//                            showCustomToast("댓글이 등록되었습니다.")
+                    if (res != null) {
+                        if (res.success == true && res.data["isSuccess"] == true) {
+                            showCustomToast("댓글이 등록되었습니다.")
                             runBlocking {
                                 mainViewModel.getCommentList(postId)
                             }
@@ -260,22 +274,60 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 //                            binding.localCmtFragmentTvWriterNick.text = ""
 //                            binding.localCmtFragmentEtComment.setText("")
 //
-//                            clearFocus(mainActivity)
+                            clearFocus(mainActivity)
                         } else {
-                            Log.e(TAG, "insertCommentAndReply: ${res.message}", )
-//                            showCustomToast("댓글 등록 실패")
+                            Log.e(TAG, "insertCommentAndReply: ${res.message}",)
+                            showCustomToast("댓글 등록 실패")
                         }
                     }
                 }
             }
 
-            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
-            binding.localCmtFragmentTvWriterNick.text = ""
-            binding.localCmtFragmentEtComment.setText("")
-
-            clearFocus(mainActivity)
+//            binding.localCmtFragmentTvWriterNick.visibility = View.GONE
+//            binding.localCmtFragmentTvWriterNick.text = ""
+//            binding.localCmtFragmentEtComment.setText("")
+//
+//            clearFocus(mainActivity)
 
         }
+    }
+
+    /**
+     * 댓글 수정 response
+     */
+    private fun updateComment(commentId: Int) {
+
+        binding.localCmtFragmentTvConfirm.setOnClickListener {
+            val commentContent = binding.localCmtFragmentEtComment.text.toString()
+            if(commentContent.isNotEmpty() && commentId > 0) {
+
+                val updateComment = Comment(commentId, commentContent)
+
+                var response: Response<Message>
+
+                runBlocking {
+                    response = BoardService().updateComment(updateComment)
+                }
+
+                if (response.code() == 200 || response.code() == 500) {
+                    val res = response.body()
+                    if (res != null) {
+                        if (res.success == true && res.data["isSuccess"] == true) {
+                            showCustomToast("댓글이 수정되었습니다.")
+                            clearFocus(mainActivity)
+                            runBlocking {
+                                mainViewModel.getCommentList(postId)
+                            }
+                            localCommentAdapter.notifyDataSetChanged()
+                        } else {
+                            showCustomToast("댓글 수정 실패")
+                            Log.e(TAG, "updateComment: ${res.message}",)
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
 
@@ -292,11 +344,9 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             lastHeightDiff = heightDiff
         }
         if (heightDiff > lastHeightDiff) { //keyboard show
-            Log.d(TAG, ": kkkkkk")
             isOpenKeyboard = true
         } else { //keyboard hide
             if (isOpenKeyboard) {
-                Log.d(TAG, ": ddddd")
                 clearFocus(mainActivity)
                 binding.localCmtFragmentTvWriterNick.visibility = View.GONE
                 binding.localCmtFragmentTvWriterNick.text = ""

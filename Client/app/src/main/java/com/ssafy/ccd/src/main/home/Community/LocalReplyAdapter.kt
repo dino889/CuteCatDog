@@ -73,11 +73,11 @@ class LocalReplyAdapter (val context: Context) : RecyclerView.Adapter<LocalReply
                 popup.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.modify -> {
-                            modifyItemClickListener.onClick(comment.id, position)
+                            modifyItemClickListener.onClick(comment.id, comment.boardId, position)
                             return@setOnMenuItemClickListener true
                         }
                         R.id.delete -> {
-                            deleteItemClickListener.onClick(comment.id, position)
+                            deleteItemClickListener.onClick(comment.id, comment.boardId, position)
                             return@setOnMenuItemClickListener true
                         }
                         else -> {
@@ -105,7 +105,7 @@ class LocalReplyAdapter (val context: Context) : RecyclerView.Adapter<LocalReply
 
 
     interface MenuClickListener {
-        fun onClick(commentId: Int, position: Int)
+        fun onClick(commentId: Int, postId: Int, position: Int)
     }
 
     private lateinit var modifyItemClickListener : MenuClickListener

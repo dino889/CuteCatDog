@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,14 +19,20 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.databinding.FragmentLocalCommentBinding
 import com.ssafy.ccd.databinding.ItemLocalCommentListBinding
 import com.ssafy.ccd.src.dto.Comment
+import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.User
+import com.ssafy.ccd.src.network.service.BoardService
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import kotlinx.coroutines.runBlocking
+import retrofit2.Response
 
-class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCommentAdapter.LocalCommentViewHolder>(){
+class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewModels) : RecyclerView.Adapter<LocalCommentAdapter.LocalCommentViewHolder>(){
     private val TAG = "LocalCommentAdapter_ccd"
 
     lateinit var commentList: MutableList<Comment>
     lateinit var commentAllList : MutableList<Comment>
     lateinit var userList: MutableList<User>
+    lateinit var commentReplyAdapter : LocalReplyAdapter
 
     // 현재 로그인한 유저의 아이디
     val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -56,7 +64,7 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
             }
             Log.d(TAG, "bindInfo: $replyList")
 
-            val commentReplyAdapter = LocalReplyAdapter(context)
+            commentReplyAdapter = LocalReplyAdapter(context)
 //                commentNestedAdapter.submitList(list)
             commentReplyAdapter.commentList = replyList
             commentReplyAdapter.userList = userList
@@ -65,10 +73,21 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
                 adapter = commentReplyAdapter
                 adapter!!.stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
-//            commentNestedAdapter.setItemClickListener(object: CommentNestedAdapter.ItemClickListener {
-//                override fun onEditClick(position: Int, comment: Comment) {
-//                }
-//            })
+
+            commentReplyAdapter.setModifyItemClickListener(object : LocalReplyAdapter.MenuClickListener {
+
+                override fun onClick(commentId: Int, postId: Int, position: Int) {
+                    // 대댓글 수정3
+                }
+            })
+
+            commentReplyAdapter.setDeleteItemClickListener(object : LocalReplyAdapter.MenuClickListener {
+
+                override fun onClick(commentId: Int, postId: Int, position: Int) {
+                    deleteReply(commentId, postId, position)
+                }
+            })
+
         }
     }
 
@@ -142,5 +161,34 @@ class LocalCommentAdapter (val context: Context) : RecyclerView.Adapter<LocalCom
         this.deleteItemClickListener = menuClickListener
     }
 
+
+    /**
+     * 댓글 삭제 response
+     */
+    private fun deleteReply(commentId: Int, postId: Int, position: Int) {
+        var response: Response<Message>
+        runBlocking {
+            response = BoardService().deleteComment(commentId)
+        }
+        if (response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            if (res != null) {
+                if (res.success == true && res.data["isSuccess"] == true) {
+                    Toast.makeText(context, "대댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+
+                    runBlocking {
+                        mainViewModel.getCommentList(postId)
+                    }
+//                    localCommentAdapter.notifyItemRemoved(position)
+//                    commentReplyAdapter.notifyDataSetChanged()
+                    commentReplyAdapter.notifyItemRemoved(position)
+                    notifyDataSetChanged()
+                } else {
+                    Toast.makeText(context, "대댓글이 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "deleteReply: ${res.message}", )
+                }
+            }
+        }
+    }
 
 }
