@@ -120,7 +120,6 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="65dp"
                 android:paddingStart="10dp"
-                android:text="ddd"
                 android:textSize="12sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_etComment"

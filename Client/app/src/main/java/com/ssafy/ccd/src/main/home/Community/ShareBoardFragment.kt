@@ -105,7 +105,7 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         shareBoardAdapter.setCommentItemClickListener(object : ShareBoardAdapter.ItemClickListener {
             override fun onClick(view: View, postId: Int) {
                 // postId 포함해서 commentList 페이지로 이동
-                this@ShareBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_localCommentFragment,
+                this@ShareBoardFragment.findNavController().navigate(R.id.action_shareBoardFragment_to_localCommentFragment,
                     bundleOf("postId" to postId)
                 )
             }
