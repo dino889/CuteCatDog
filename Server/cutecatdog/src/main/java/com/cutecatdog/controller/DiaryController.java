@@ -153,7 +153,7 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "날짜로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. - end_date를 쓰면 기간으로, 비우면 날짜로 조회", response = Map.class)
+    @ApiOperation(value = "날짜로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. end_date를 쓰면 기간으로, 비우면(null또는 '') 날짜로 조회", response = Map.class)
     @GetMapping("/date")
     public ResponseEntity<Message> diaryListByDate(@RequestBody(required = true) DiaryParamDto diaryParamDto)
             throws Exception {
