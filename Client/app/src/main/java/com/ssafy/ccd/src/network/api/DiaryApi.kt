@@ -13,8 +13,8 @@ interface DiaryApi {
     @GET("/diary/asc")
     suspend fun diaryListbyAsc(@Query("user_id")userId:Int) : Response<Message>
 
-    @GET("/diary/date")
-    suspend fun diaryListbyDate(@Query("end_date")endDate:String,@Query("start_date")startDate:String,@Query("userId")userId:Int):Response<Message>
+    @GET("/diary/{user_id}/{start_date}/{end_date}")
+    suspend fun diaryListbyDate(@Path("end_date")endDate:String,@Path("start_date")startDate:String,@Path("user_id")userId:Int):Response<Message>
 
     @GET("/diary/{id}")
     suspend fun diaryListDetail(@Path("id")id:Int):Response<Message>

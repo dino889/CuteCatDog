@@ -631,6 +631,43 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+    suspend fun getDiaryListAsc(userId:Int){
+        val response = DiaryService().diaryListbyAscService(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res != null){
+                    if(res.success){
+                        var type = object:TypeToken<MutableList<Diary?>?>() {}.type
+                        var diary = CommonUtils.parseDto<MutableList<Diary>>(res.data.get("diarys")!!,type)
+                        setDiaryList(diary)
+                    }else{
+                        Log.d(TAG, "getDiaryListAsc: ")
+                    }
+                }
+            }else{
+                Log.d(TAG, "getDiaryListAsc: ${response.code()}")
+            }
+        }
+    }
+    suspend fun getDiaryListDate(endDate:String, startDate:String, userId:Int){
+        val response = DiaryService().diaryListbyDateService(endDate, startDate, userId)
+        viewModelScope.launch {
+            val res = response.body()
+            Log.d(TAG, "getDiaryListDate: ${res}")
+            if(response.code() == 200){
+                Log.d(TAG, "getDiaryListDate: ${res}")
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getDiaryListDate: ${res}")
+                        var type = object :TypeToken<MutableList<Diary?>?>() {}.type
+                        var diary = CommonUtils.parseDto<MutableList<Diary>>(res.data.get("diarys")!!,type)
+                        setDiaryList(diary)
+                    }
+                }
+            }
+        }
+    }
     suspend fun getDiaryDetail(id:Int){
         val response = DiaryService().diaryDetailService(id)
         viewModelScope.launch {
