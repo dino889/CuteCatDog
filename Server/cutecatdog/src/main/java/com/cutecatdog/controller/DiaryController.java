@@ -15,6 +15,7 @@ import com.cutecatdog.model.diary.PhotoParamDto;
 import com.cutecatdog.service.DiaryService;
 import com.cutecatdog.service.HashtagService;
 import com.cutecatdog.service.PhotoService;
+import com.google.common.base.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -154,14 +155,19 @@ public class DiaryController {
     }
 
     @ApiOperation(value = "날짜로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. end_date를 쓰면 기간으로, 비우면(null또는 '') 날짜로 조회", response = Map.class)
-    @GetMapping("/date")
-    public ResponseEntity<Message> diaryListByDate(@RequestBody(required = true) DiaryParamDto diaryParamDto)
+    @GetMapping(value = {"/{user_id}/{start_date}/{end_date}", "/{user_id}/{start_date}"})
+    public ResponseEntity<Message> diaryListByDate(@PathVariable(required = true)int user_id, @PathVariable(required = true)String start_date, @PathVariable(required = false)Optional<String> end_date)
             throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
             response.setSuccess(true);
             HashMap<String, List<DiaryDto>> data = new HashMap<>();
+            DiaryParamDto diaryParamDto = new DiaryParamDto();
+            diaryParamDto.setUserId(user_id);
+            diaryParamDto.setStart_date(start_date);
+            if(end_date != null)
+                diaryParamDto.setEnd_date(end_date.get());
             data.put("diarys", diaryService.findDiaryByDate(diaryParamDto));
             response.setData(data);
             if (data.get("diarys").size() > 0) {
