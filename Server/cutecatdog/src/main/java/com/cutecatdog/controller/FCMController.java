@@ -2,6 +2,7 @@ package com.cutecatdog.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.UserDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +38,7 @@ public class FCMController {
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = "사용자 기기 토큰 등록", notes = "사용자의 기기 토큰값을 등록한다.", response = Map.class)
     @PostMapping("/token")
     public ResponseEntity<Message> registToken(String token, int userId) {
         log.info("registToken : token:{} {}", token, userId);
@@ -68,6 +71,7 @@ public class FCMController {
 
     }
 
+    @ApiOperation(value = "전체 알림 전송", notes = "공지사항 또는 이벤트와 같은 전체 알림을 전송한다.", response = Map.class)
     @PostMapping("/broadcast")
     public ResponseEntity<Message> broadCast(@RequestBody(required = true)FCMParamDto fcmParamDto) throws IOException {
         log.info("broadCast : title:{}, body:{}", fcmParamDto.getTitle(), fcmParamDto.getContent());
@@ -98,6 +102,7 @@ public class FCMController {
         return new ResponseEntity<>(response, status);
     }
 
+    @ApiOperation(value = "개인 일정 알림 전송", notes = "개인 일정 알림을 전송한다.", response = Map.class)
     @PostMapping("/sendMessageTo")
     public ResponseEntity<Message> sendMessageTo(@RequestBody(required = true)FCMParamDto fcmParamDto) throws IOException {
         log.info("sendMessageTo : token:{}, title:{}, body:{}", fcmParamDto.getToken(), fcmParamDto.getTitle(), fcmParamDto.getContent());

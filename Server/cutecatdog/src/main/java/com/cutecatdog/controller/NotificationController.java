@@ -30,7 +30,7 @@ public class NotificationController {
     @Autowired
     NotificationService notificationService;
 
-    @ApiOperation(value = "알림 조회", notes = "사용자에게 온 알림을 모두 조회한다.", response = Map.class)
+    @ApiOperation(value = "사용자 알림 조회", notes = "사용자에게 온 알림을 모두 조회한다.", response = Map.class)
     @GetMapping("/{user_id}")
     public ResponseEntity<Message> notificationList(@PathVariable(name = "user_id") int userId) throws Exception {
         Message response = new Message();
@@ -55,7 +55,7 @@ public class NotificationController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "알림 조회", notes = "공지사항 알림을 모두 조회한다.", response = Map.class)
+    @ApiOperation(value = "공지사항 알림 조회", notes = "공지사항 알림을 모두 조회한다.", response = Map.class)
     @GetMapping("/notice/{user_id}")
     public ResponseEntity<Message> notificationN(@PathVariable(name = "user_id") int userId) throws Exception {
         Message response = new Message();
@@ -80,7 +80,7 @@ public class NotificationController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "알림 조회", notes = "이벤트 알림을 모두 조회한다.", response = Map.class)
+    @ApiOperation(value = "이벤트 알림 조회", notes = "이벤트 알림을 모두 조회한다.", response = Map.class)
     @GetMapping("/event/{user_id}")
     public ResponseEntity<Message> notificationE(@PathVariable(name = "user_id") int userId) throws Exception {
         Message response = new Message();
@@ -105,7 +105,7 @@ public class NotificationController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "알림 조회", notes = "사용자 일정 알림을 모두 조회한다.", response = Map.class)
+    @ApiOperation(value = "개인 일정 알림 조회", notes = "사용자 일정 알림을 모두 조회한다.", response = Map.class)
     @GetMapping("/schedule/{user_id}")
     public ResponseEntity<Message> notificationP(@PathVariable(name = "user_id") int userId) throws Exception {
         Message response = new Message();
