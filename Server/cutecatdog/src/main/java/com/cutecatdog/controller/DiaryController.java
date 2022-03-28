@@ -15,7 +15,6 @@ import com.cutecatdog.model.diary.PhotoParamDto;
 import com.cutecatdog.service.DiaryService;
 import com.cutecatdog.service.HashtagService;
 import com.cutecatdog.service.PhotoService;
-import com.google.common.base.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
