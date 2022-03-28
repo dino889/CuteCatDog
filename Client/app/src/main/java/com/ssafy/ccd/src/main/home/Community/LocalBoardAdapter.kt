@@ -35,6 +35,8 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
         val moreBtn = binding.localItemBtnMore
 
         fun bindInfo(post: Board) {
+            binding.post = post
+
             for (user in userList) {    // 작성자 nickname, profileImg 세팅
                 if(post.userId == user.id) {
                     binding.writer = user
@@ -51,7 +53,6 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
 
-            binding.post = post
             binding.executePendingBindings()
         }
     }
@@ -70,7 +71,6 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
             setIsRecyclable(false)
             heartBtn.setOnClickListener {
                 heartItemClickListener.onClick(it as LottieAnimationView, position, post.id)
-//                heartItemClickListener.onClick(it as LottieAnimationView, heartCnt, post.id)
             }
 
             commentBtn.setOnClickListener {
@@ -108,9 +108,6 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
         fun onClick(heart: LottieAnimationView, position: Int, id: Int)
     }
 
-//    interface HeartItemClickListener {
-//        fun onClick(heart: LottieAnimationView, view : TextView, id: Int)
-//    }
 
     private lateinit var heartItemClickListener : HeartItemClickListener
 
@@ -153,8 +150,5 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
             return oldItem.id == newItem.id
         }
     }
-
-
-
 
 }

@@ -1,15 +1,16 @@
 package com.ssafy.ccd.src.main.home.Community
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +34,7 @@ class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewMode
     lateinit var commentAllList : MutableList<Comment>
     lateinit var userList: MutableList<User>
     lateinit var commentReplyAdapter : LocalReplyAdapter
+    lateinit var dialog: Dialog
 
     // 현재 로그인한 유저의 아이디
     val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -77,7 +79,27 @@ class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewMode
             commentReplyAdapter.setModifyItemClickListener(object : LocalReplyAdapter.MenuClickListener {
 
                 override fun onClick(commentId: Int, postId: Int, position: Int) {
-                    // 대댓글 수정3
+                    // 대댓글 수정
+                    val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_update_reply,null)
+                    if(dialogView.parent!=null){
+                        (dialogView.parent as ViewGroup).removeAllViews()
+                    }
+                    dialog = Dialog(context)
+                    dialog.setContentView(dialogView)
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                    dialogView.findViewById<TextView>(R.id.updateReplyDialog_tvContent).text = replyList[position].comment
+
+                    dialog.show()
+
+                    dialogView.findViewById<Button>(R.id.updateReplyDialog_btnCancel).setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    dialogView.findViewById<AppCompatButton>(R.id.updateReplyDialog_btnOk).setOnClickListener {
+                        updateReply(commentId, dialogView.findViewById<TextView>(R.id.updateReplyDialog_tvContent).text.toString(), postId)
+                    }
+
                 }
             })
 
@@ -91,8 +113,14 @@ class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewMode
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalCommentViewHolder {
-        return LocalCommentViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_local_comment_list, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalCommentAdapter.LocalCommentViewHolder {
+        return LocalCommentViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), R.layout.item_local_comment_list, parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: LocalCommentViewHolder, position: Int) {
@@ -163,7 +191,7 @@ class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewMode
 
 
     /**
-     * 댓글 삭제 response
+     * 대댓글 삭제 response
      */
     private fun deleteReply(commentId: Int, postId: Int, position: Int) {
         var response: Response<Message>
@@ -191,4 +219,40 @@ class LocalCommentAdapter (val context: Context, val mainViewModel: MainViewMode
         }
     }
 
+    /**
+     * 대댓글 수정 response
+     */
+    private fun updateReply(commentId: Int, content: String, postId: Int) {
+
+        if(content.isNotEmpty() && commentId > 0) {
+
+            val updateComment = Comment(commentId, content)
+
+            var response: Response<Message>
+
+            runBlocking {
+                response = BoardService().updateComment(updateComment)
+            }
+
+            if (response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if (res != null) {
+                    if (res.success == true && res.data["isSuccess"] == true) {
+                        Toast.makeText(context, "대댓글이 수정되었습니다.", Toast.LENGTH_SHORT).show()
+
+                        runBlocking {
+                            mainViewModel.getCommentList(postId)
+                        }
+                        dialog.dismiss()
+                        commentReplyAdapter.notifyDataSetChanged()
+                        notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(context, "대댓글이 수정 실패", Toast.LENGTH_SHORT).show()
+
+                        Log.e(TAG, "updateComment: ${res.message}",)
+                    }
+                }
+            }
+        }
+    }
 }
