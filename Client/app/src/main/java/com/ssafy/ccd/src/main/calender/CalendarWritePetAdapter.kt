@@ -19,9 +19,16 @@ import java.lang.Exception
 private const val TAG = "CalendarWritePetAdapter"
 class CalendarWritePetAdapter():RecyclerView.Adapter<CalendarWritePetAdapter.PetViewHolder>() {
     var list = mutableListOf<Pet>()
+    var selectItem = -1
+
     inner class PetViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+
+
         fun bind(data: Pet){
-            itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.INVISIBLE
+            if(selectItem == position){
+                itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.VISIBLE
+            }else itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.INVISIBLE
+
             if(data.photoPath == null || data.photoPath == ""){
                 Log.d(TAG, "onBind: this is photoPath null")
                 Glide.with(itemView)
@@ -61,7 +68,6 @@ class CalendarWritePetAdapter():RecyclerView.Adapter<CalendarWritePetAdapter.Pet
             bind(list[position])
             var check = false
             itemView.setOnClickListener {
-
                 if(check){
                     //선택됨
                     itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.INVISIBLE
