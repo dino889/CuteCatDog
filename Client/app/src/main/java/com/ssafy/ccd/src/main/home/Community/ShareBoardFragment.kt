@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.ccd.R
@@ -54,7 +55,8 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
 
     private fun writeBtnClickEvent() {
         binding.shareFragmentIbWrite.setOnClickListener {
-            this@ShareBoardFragment.findNavController().navigate(R.id.action_shareBoardFragment_to_writeBoardFragment)
+            this@ShareBoardFragment.findNavController().navigate(R.id.action_shareBoardFragment_to_writeShareBoardFragment,
+                bundleOf("postId" to -1))
         }
     }
 }

@@ -200,8 +200,11 @@
         android:label="ShareBoardFragment"
         tools:layout="@layout/fragment_share_board">
         <action
-            android:id="@+id/action_shareBoardFragment_to_writeBoardFragment"
-            app:destination="@+id/writeBoardFragment" />
+            android:id="@+id/action_shareBoardFragment_to_writeShareBoardFragment"
+            app:destination="@+id/writeShareBoardFragment" />
+        <action
+            android:id="@+id/action_localBoardFragment_to_localCommentFragment"
+            app:destination="@+id/localCommentFragment"/>
         <argument
             android:name="postId"
             app:argType="integer"
@@ -218,6 +221,7 @@
         android:name="com.ssafy.ccd.src.main.home.Community.WriteLocalBoardFragment"
         android:label="WriteLocalBoardFragment"
         tools:layout="@layout/fragment_write_local_board" />
+
     <fragment
         android:id="@+id/qnABoardDetailFragment"
         android:name="com.ssafy.ccd.src.main.home.Community.QnABoardDetailFragment"
@@ -234,5 +238,11 @@
         android:name="com.ssafy.ccd.src.main.home.Community.LocalCommentFragment"
         android:label="LocalCommentFragment"
         tools:layout="@layout/fragment_local_comment" />
+
+    <fragment
+        android:id="@+id/writeShareBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteShareBoardFragment"
+        android:label="WriteShareBoardFragment"
+        tools:layout="@layout/fragment_write_share_board" />
 
 </navigation>
