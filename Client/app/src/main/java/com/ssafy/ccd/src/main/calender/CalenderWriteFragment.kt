@@ -171,6 +171,8 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             petAdapter.setItemClickListener(object: CalendarWritePetAdapter.ItemClickListener{
                 override fun onClick(view: View, position: Int, id: Int) {
                     petId = id
+                    petAdapter.selectItem = position
+                    petAdapter.notifyDataSetChanged()
                 }
 
             })

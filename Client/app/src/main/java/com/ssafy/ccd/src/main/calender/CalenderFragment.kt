@@ -49,6 +49,12 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
     fun setListener(){
         initCalendar()
         initAdapter()
+        binding.fragmentCalendarAllList.setOnClickListener {
+            petAdapter.selectItem = -1
+            petAdapter.notifyDataSetChanged()
+            binding.fragmentCalendarAllCheck.visibility = View.VISIBLE
+            initCalendar()
+        }
     }
     fun initAdapter(){
         mainViewModel.myPetsList.observe(viewLifecycleOwner, {
@@ -62,12 +68,15 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
             petAdapter.setItemClickListener(object: CalendarWritePetAdapter.ItemClickListener{
                 override fun onClick(view: View, position: Int, id: Int) {
                     //필터링하기...
-                    Log.d(TAG, "onClick: ${id}")
+//                    Log.d(TAG, "onClick: ${id}")
+                    petAdapter.selectItem = position
+                    binding.fragmentCalendarAllCheck.visibility = View.INVISIBLE
+                    petAdapter.notifyDataSetChanged()
                     initPetFilter(id)
                 }
-
             })
         })
+
     }
     fun initPetFilter(petId:Int){
         mainViewModel.calendarList.observe(viewLifecycleOwner, {
