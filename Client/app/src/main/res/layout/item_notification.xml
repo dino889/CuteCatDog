@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            app:myPageConvertBirth = "@{noti.datetime}"
+            app:unixToDateTime="@{noti.datetime}"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

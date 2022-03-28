@@ -4,12 +4,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
@@ -25,36 +26,28 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.google.android.youtube.player.YouTubeBaseActivity
-import com.kakao.sdk.common.KakaoSdk
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
-import com.ssafy.ccd.src.main.ai.aiSelectFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.lang.Exception
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import android.widget.EditText
-
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import com.ssafy.ccd.src.main.home.Community.LocalCommentFragment
+import com.ssafy.ccd.src.dto.Message
+import com.ssafy.ccd.src.network.api.FCMApi
+import kotlinx.coroutines.runBlocking
+import retrofit2.Response
 
 
+private const val TAG = "MainActivity_ccd"
 class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-    val TAG = "SSAFY"
 
     // 카메라 모드
     private var cameraMode = 0
@@ -81,6 +74,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         setInstance()
         setListener()
 
+        initFcm()
     }
 
     /**
@@ -465,5 +459,62 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 //        return super.dispatchTouchEvent(ev)
 //    }
 
+    /**
+     * FCM 토큰 수신 및 채널 생성
+     */
+    private fun initFcm() {
+        // FCM 토큰 수신
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "FCM 토큰 얻기에 실패하였습니다.", task.exception)
+                return@OnCompleteListener
+            }
+            // token log 남기기
+            Log.d(TAG, "token: ${task.result?:"task.result is null"}")
+            uploadToken(task.result!!, ApplicationClass.sharedPreferencesUtil.getUser().id)
+        })
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(channel_id, "ssafy")
+        }
+    }
+
+    /**
+     * Fcm Notification 수신을 위한 채널 추가
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    // Notification 수신을 위한 체널 추가
+    private fun createNotificationChannel(id: String, name: String) {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT // or IMPORTANCE_HIGH
+        val channel = NotificationChannel(id, name, importance)
+
+        val notificationManager: NotificationManager
+                = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    companion object {
+        const val channel_id = "ssafy_channel"
+        fun uploadToken(token:String, userId: Int) {
+            val storeService = ApplicationClass.retrofit.create(FCMApi::class.java)
+
+            var response : Response<Message>
+            runBlocking {
+                response = storeService.uploadToken(token, ApplicationClass.sharedPreferencesUtil.getUser().id)
+            }
+            val res = response.body()
+            if(response.code() == 200) {
+                if(res != null) {
+                    if(res.data["isSuccess"] == true && res.message == "토큰 등록 성공") {
+                        Log.d(TAG, "uploadToken: $token")
+                    } else {
+                        Log.d(TAG, "uploadToken: ${res.message}")
+                    }
+                }
+            } else {
+                Log.e(TAG, "uploadToken: 토큰 정보 등록 중 통신 오류", )
+            }
+        }
+    }
 
 }
