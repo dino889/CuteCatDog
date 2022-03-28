@@ -43,24 +43,39 @@
                     android:layout_marginBottom="7dp"
                     app:imageUrlUser="@{writer.profileImage}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/textView3"
+                    app:layout_constraintEnd_toStartOf="@+id/shareItem_tbWriterNick"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/logo" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/shareItem_tbWriterNick"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="7dp"
-                    android:layout_marginEnd="7dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@{writer.nickname}"
                     android:textColor="@color/black"
                     android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/shareItem_btnMore"
                     app:layout_constraintStart_toEndOf="@+id/imageView3"
                     app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+                <ImageButton
+                    android:id="@+id/shareItem_btnMore"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/shareItem_tbWriterNick"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_more_black" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -119,6 +134,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/shareItem_clComment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -128,7 +144,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/shareItem_ivComment"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:scaleType="centerInside"
@@ -146,10 +162,10 @@
                         android:text="@{String.valueOf(post.commentCnt)}"
                         android:textColor="@color/black"
                         android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                        app:layout_constraintBottom_toBottomOf="@+id/shareItem_ivComment"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imageView5"
-                        app:layout_constraintTop_toTopOf="@+id/imageView5" />
+                        app:layout_constraintStart_toEndOf="@+id/shareItem_ivComment"
+                        app:layout_constraintTop_toTopOf="@+id/shareItem_ivComment" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -161,9 +177,25 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="15dp"
-                android:text="@{post.content.length() > 20 ? post.content.substring(0, 20) : post.content}"
+                android:text="@{post.content.length() > 30 ? post.content.substring(0, 30) : post.content}"
                 android:textColor="@color/black"
                 android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout6"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+
+            <TextView
+                android:id="@+id/shareItem_tvContentAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:text="@{post.content}"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/constraintLayout6"
