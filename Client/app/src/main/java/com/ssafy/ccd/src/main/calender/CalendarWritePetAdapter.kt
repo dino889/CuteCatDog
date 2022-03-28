@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.Lottie
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ssafy.ccd.R
-import com.ssafy.ccd.databinding.ItemCalenderPetsBinding
 import com.ssafy.ccd.src.dto.Pet
 import java.lang.Exception
 
@@ -20,6 +21,7 @@ class CalendarWritePetAdapter():RecyclerView.Adapter<CalendarWritePetAdapter.Pet
     var list = mutableListOf<Pet>()
     inner class PetViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         fun bind(data: Pet){
+            itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.INVISIBLE
             if(data.photoPath == null || data.photoPath == ""){
                 Log.d(TAG, "onBind: this is photoPath null")
                 Glide.with(itemView)
@@ -57,8 +59,18 @@ class CalendarWritePetAdapter():RecyclerView.Adapter<CalendarWritePetAdapter.Pet
     override fun onBindViewHolder(holder: PetViewHolder, position: Int) {
         holder.apply {
             bind(list[position])
+            var check = false
             itemView.setOnClickListener {
-                itemClickListener.onClick(itemView,position,list[position].id)
+
+                if(check){
+                    //선택됨
+                    itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.INVISIBLE
+                    check = false
+                }else{
+                    itemView.findViewById<LottieAnimationView>(R.id.fragment_calendar_pets_check).visibility = View.VISIBLE
+                    check = true
+                    itemClickListener.onClick(itemView,position,list[position].id)
+                }
             }
         }
     }
