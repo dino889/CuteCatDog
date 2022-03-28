@@ -10,12 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.src.dto.*
-import com.ssafy.ccd.src.network.service.BoardService
 import com.ssafy.ccd.src.dto.Calendar
-import com.ssafy.ccd.src.network.service.CalendarService
-import com.ssafy.ccd.src.network.service.DiaryService
-import com.ssafy.ccd.src.network.service.PetService
-import com.ssafy.ccd.src.network.service.UserService
+import com.ssafy.ccd.src.network.service.*
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.launch
 import java.lang.reflect.Type
@@ -841,6 +837,88 @@ class MainViewModels : ViewModel() {
                         setComments(comment)
                     } else {
                         Log.e(TAG, "getCommentsByPostId: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Notification ViewModel
+     * @author LeeBoyeon
+     * @Date 2022-03-28*/
+
+    private val _notificationList = MutableLiveData<MutableList<Notification>>()
+
+    val notificationList : LiveData<MutableList<Notification>>
+        get() = _notificationList
+
+    fun setNotification(list: MutableList<Notification>) = viewModelScope.launch {
+        _notificationList.value = list
+    }
+
+    suspend fun getNotificationAll(userId:Int) {
+        val response = NotificationService().getNotificationList(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getNotificationAll: ${res}")
+                        var type = object:TypeToken<MutableList<Notification?>?>() {}.type
+                        var noti = CommonUtils.parseDto<MutableList<Notification>>(res.data.get("notifications")!!,type)
+                        setNotification(noti)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getNotificationEvent(userId:Int){
+        val response = NotificationService().getNotificationEventList(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getNotificationAll: ${res}")
+                        var type = object:TypeToken<MutableList<Notification?>?>() {}.type
+                        var noti = CommonUtils.parseDto<MutableList<Notification>>(res.data.get("notifications")!!,type)
+                        setNotification(noti)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getNotificationNotice(userId:Int){
+        val response = NotificationService().getNotificationNoticeList(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getNotificationAll: ${res}")
+                        var type = object:TypeToken<MutableList<Notification?>?>() {}.type
+                        var noti = CommonUtils.parseDto<MutableList<Notification>>(res.data.get("notifications")!!,type)
+                        setNotification(noti)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getNotificationSchedule(userId:Int){
+        val response = NotificationService().getNotificationScheduleList(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        Log.d(TAG, "getNotificationAll: ${res}")
+                        var type = object:TypeToken<MutableList<Notification?>?>() {}.type
+                        var noti = CommonUtils.parseDto<MutableList<Notification>>(res.data.get("notifications")!!,type)
+                        setNotification(noti)
                     }
                 }
             }

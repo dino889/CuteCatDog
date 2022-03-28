@@ -39,6 +39,9 @@
                 app:argType="integer"
                 android:defaultValue="0"/>
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
 
     <fragment
@@ -234,5 +237,10 @@
         android:name="com.ssafy.ccd.src.main.home.Community.LocalCommentFragment"
         android:label="LocalCommentFragment"
         tools:layout="@layout/fragment_local_comment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.ssafy.ccd.src.main.home.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
 
 </navigation>
