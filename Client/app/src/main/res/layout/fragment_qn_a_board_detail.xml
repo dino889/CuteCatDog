@@ -234,7 +234,7 @@
 
                                 <TextView
                                     android:id="@+id/fragmentQnaBoardDetail_tvLikeCnt"
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="13dp"
                                     android:layout_marginStart="5dp"
                                     android:text="@{String.valueOf(post.count)}"

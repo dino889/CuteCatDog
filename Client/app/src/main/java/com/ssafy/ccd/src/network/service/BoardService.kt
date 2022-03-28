@@ -3,6 +3,7 @@ package com.ssafy.ccd.src.network.service
 import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
+import retrofit2.Retrofit
 
 class BoardService {
 
@@ -35,4 +36,6 @@ class BoardService {
     suspend fun selectLikePostsByUserId(userId: Int) = RetrofitUtil.boardService.selectLikePostsByUserId(userId)
 
     suspend fun selectBoardByUserId(userId:Int) = RetrofitUtil.boardService.selectBoardByUserId(userId)
+
+    suspend fun checkLikeByBoardIdAndUserId(boardId:Int, userId:Int) = RetrofitUtil.boardService.checkLikeByBoardIdAndUserId(boardId, userId)
 }

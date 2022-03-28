@@ -1,6 +1,5 @@
 package com.ssafy.ccd.src.main.home.Community
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -10,13 +9,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentQnABoardDetailBinding
+import com.ssafy.ccd.src.dto.Board
+import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
-import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.BoardService
+import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,6 +43,7 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
     private lateinit var clLikeBtn : ConstraintLayout
     private lateinit var clAnswerBtn : ConstraintLayout
     private lateinit var rvAnswer : RecyclerView
+    private lateinit var tvLikeCnt : TextView
 
     private lateinit var commentAdapter: CommentAdapter
 
@@ -105,8 +108,8 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
             this@QnABoardDetailFragment.findNavController().navigate(R.id.writeQnaFragment)
         }
         
-        clLikeBtn.setOnClickListener { 
-            // TODO 공감해요 갯수 변경해서 update
+        clLikeBtn.setOnClickListener {
+            insertLike()
         }
 
         binding.fragmentQnaBoardDetailTvDelete.setOnClickListener {
@@ -116,6 +119,55 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
         binding.fragmentQnaBoardDetailTvRewrite.setOnClickListener {
             mainViewModel.writeType = 2
             this@QnABoardDetailFragment.findNavController().navigate(R.id.writeQnaFragment)
+        }
+    }
+
+    /**
+     * 공감해요(좋아요)를 누르는 것
+     */
+    private fun insertLike() {
+        var response : Response<Message>
+
+        runBlocking {
+            response = BoardService().insertOrDeletePostLike(LikeRequestDto(mainViewModel.boardQna.id, ApplicationClass.sharedPreferencesUtil.getUser().id))
+        }
+
+        if(response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            if(res != null) {
+                if(res.success && res.data["isSuccess"] == true) {
+                    reLoadData()
+                } else if(res.data["isSuccess"] == false) {
+                    Log.d(TAG, "deleteQuestion: ${res.message}")
+                }
+            }
+        }
+    }
+
+    /**
+     * 해당 아이디에 맞는 게시판 데이터를 다시 로드한다
+     */
+    private fun reLoadData() {
+        var response : Response<Message>
+
+        runBlocking {
+            response = BoardService().selectPostDetail(mainViewModel.boardQna.id)
+        }
+
+        if(response.code() == 200 || response.code() == 500) {
+            val res = response.body()
+            Log.d(TAG, "reLoadData: $res")
+            if(res != null) {
+                if(res.success) {
+                    val type = object : TypeToken<Board>() {}.type
+                    val post: Board = CommonUtils.parseDto(res.data["board"]!!, type)
+                    Log.d(TAG, "reLoadData: $post")
+                    mainViewModel.boardQna = post
+                    tvLikeCnt.text = post.count.toString()
+                } else if(res.data["isSuccess"] == false) {
+                    Log.d(TAG, "deleteQuestion: ${res.message}")
+                }
+            }
         }
     }
 
@@ -130,6 +182,7 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = commentAdapter
         }
+        tvLikeCnt.text = mainViewModel.boardQna.count.toString()
     }
 
     /**
@@ -154,6 +207,7 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
         clAnswerBtn = binding.fragmentQnaBoardDetailClAnswerBtn
         clLikeBtn = binding.fragmentQnaBoardDetailClLikeBtn
         rvAnswer = binding.fragmentQnaBoardDetailRvAnswer
+        tvLikeCnt = binding.fragmentQnaBoardDetailTvLikeCnt
 
         val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
         commentAdapter = CommentAdapter(mutableListOf(), requireContext(), this, userId)
