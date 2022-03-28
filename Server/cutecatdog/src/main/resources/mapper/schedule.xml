@@ -42,7 +42,7 @@
 		SELECT id, user_id, pet_id, type, title, memo, datetime, place
         from tbl_schedule
 		WHERE user_id = #{userId}
-		AND DATETIME BETWEEN UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) AND UNIX_TIMESTAMP(NOW())
+		AND DATETIME BETWEEN UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL 7 DAY)) AND UNIX_TIMESTAMP(NOW())
 	</select>
 	
 	<update id= "updateSchedule" parameterType="ScheduleDto">
