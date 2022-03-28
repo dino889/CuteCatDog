@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -104,18 +105,26 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         shareBoardAdapter.setCommentItemClickListener(object : ShareBoardAdapter.ItemClickListener {
             override fun onClick(view: View, postId: Int) {
                 // postId 포함해서 commentList 페이지로 이동
-                this@ShareBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_localCommentFragment,
+                this@ShareBoardFragment.findNavController().navigate(R.id.action_shareBoardFragment_to_localCommentFragment,
                     bundleOf("postId" to postId)
                 )
             }
         })
 
         // '더보기' 클릭 이벤트
-        shareBoardAdapter.setDetailItemClickListener(object : ShareBoardAdapter.ItemClickListener {
-            override fun onClick(view: View, postId: Int) {
-
+        shareBoardAdapter.setDetailItemClickListener(object : ShareBoardAdapter.DetailItemClickListener {
+            override fun onClick(view: View, all: TextView, split: TextView, postId: Int) {
+                val detail = view as TextView
+                if(detail.text == "더 보기") {
+                    all.visibility = View.VISIBLE
+                    split.visibility = View.GONE
+                    detail.text = "숨기기"
+                } else if(detail.text == "숨기기") {
+                    all.visibility = View.GONE
+                    split.visibility = View.VISIBLE
+                    detail.text = "더 보기"
+                }
             }
-
         })
 
         // more - 수정 버튼 클릭 이벤트

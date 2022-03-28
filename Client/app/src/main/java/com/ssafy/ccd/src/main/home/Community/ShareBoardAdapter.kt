@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -22,21 +23,23 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
     lateinit var userLikePost: MutableList<Int>
 
     inner class ShareBoardViewHolder(private val binding: ItemShareListBinding) : RecyclerView.ViewHolder(binding.root) {
-        val postDetailBtn = binding.shareItemTvPostDetail
         val heartBtn = binding.shareItemLottieHeart
         val commentBtn = binding.shareItemClComment
         val moreBtn = binding.shareItemBtnMore
         val contentDetail = binding.shareItemTvPostDetail
 
+        val allContent = binding.shareItemTvContentAll
+        val splitContent = binding.shareItemTvContent
+
         fun bindInfo(post: Board) {
             for (user in userList) {
-                if(post.userId == user.id) {
+                if (post.userId == user.id) {
                     binding.writer = user
                 }
             }
 
             for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
-                if(post.id == i) {
+                if (post.id == i) {
                     heartBtn.progress = 0.5F
                     break
                 }
@@ -45,21 +48,28 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
 
-            postDetailBtn.isVisible = post.content.length >= 30
+            contentDetail.isVisible = post.content.length > 30
 
             binding.post = post
             binding.executePendingBindings()
+
         }
     }
 
 
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareBoardViewHolder {
-        return ShareBoardViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_share_list, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareBoardAdapter.ShareBoardViewHolder {
+        return ShareBoardViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), R.layout.item_share_list, parent, false
+            )
+        )
     }
 
-    override fun onBindViewHolder(holder: ShareBoardViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ShareBoardAdapter.ShareBoardViewHolder, position: Int) {
         val post = postList[position]
         holder.apply {
             bindInfo(post)
@@ -74,8 +84,8 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
                 commentItemClickListener.onClick(it, post.id)
             }
 
-            postDetailBtn.setOnClickListener {
-                detailItemClickListener.onClick(it, post.id)
+            contentDetail.setOnClickListener {
+                detailItemClickListener.onClick(it, allContent, splitContent, post.id)
             }
 
             moreBtn.setOnClickListener {
@@ -126,9 +136,13 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
         this.commentItemClickListener = itemClickListener
     }
 
-    private lateinit var detailItemClickListener : ItemClickListener
+    interface DetailItemClickListener {
+        fun onClick(view: View, all: TextView, split: TextView, postId: Int)
+    }
 
-    fun setDetailItemClickListener(itemClickListener: ItemClickListener) {
+    private lateinit var detailItemClickListener : DetailItemClickListener
+
+    fun setDetailItemClickListener(itemClickListener: DetailItemClickListener ) {
         this.detailItemClickListener = itemClickListener
     }
 

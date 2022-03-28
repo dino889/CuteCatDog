@@ -206,7 +206,7 @@
             android:id="@+id/action_shareBoardFragment_to_writeShareBoardFragment"
             app:destination="@+id/writeShareBoardFragment" />
         <action
-            android:id="@+id/action_localBoardFragment_to_localCommentFragment"
+            android:id="@+id/action_shareBoardFragment_to_localCommentFragment"
             app:destination="@+id/localCommentFragment"/>
         <argument
             android:name="postId"
