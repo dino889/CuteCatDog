@@ -66,14 +66,13 @@
                     android:id="@+id/shareItem_btnMore"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_marginEnd="10dp"
                     android:background="@android:color/transparent"
                     android:scaleType="centerCrop"
                     android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/shareItem_tbWriterNick"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/shareItem_tbWriterNick"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/shareItem_tbWriterNick"
                     app:srcCompat="@drawable/ic_more_black" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

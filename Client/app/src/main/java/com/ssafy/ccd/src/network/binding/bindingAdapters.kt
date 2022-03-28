@@ -27,6 +27,7 @@ import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalCommentAdapter
+import com.ssafy.ccd.src.main.home.Community.ShareBoardAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.home.NotificationAdapter
 import com.ssafy.ccd.src.main.mypage.MyPostRecyclerviewAdapter
@@ -386,6 +387,19 @@ fun bindLocalCommentList(recyclerView: RecyclerView, data: MutableList<Comment>)
     }
     adapter.commentList = data
 }
+
+@BindingAdapter("sharePostListData")
+fun bindSharePostListRecyclerView(recyclerView: RecyclerView, data: MutableList<Board>) {
+    var adapter = recyclerView.adapter as ShareBoardAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as ShareBoardAdapter
+    }
+    adapter.postList = data
+}
+
 @BindingAdapter("notificationList")
 fun bindNotificationList(recyclerView: RecyclerView, data:List<Notification>?){
     var adapter = recyclerView.adapter as NotificationAdapter

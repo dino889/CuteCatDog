@@ -26,7 +26,7 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
         val heartBtn = binding.shareItemLottieHeart
         val commentBtn = binding.shareItemClComment
         val moreBtn = binding.shareItemBtnMore
-
+        val contentDetail = binding.shareItemTvPostDetail
 
         fun bindInfo(post: Board) {
             for (user in userList) {
@@ -44,6 +44,8 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
             }
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
+
+            postDetailBtn.isVisible = post.content.length >= 30
 
             binding.post = post
             binding.executePendingBindings()
@@ -72,6 +74,10 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
                 commentItemClickListener.onClick(it, post.id)
             }
 
+            postDetailBtn.setOnClickListener {
+                detailItemClickListener.onClick(it, post.id)
+            }
+
             moreBtn.setOnClickListener {
                 val popup = PopupMenu(context, moreBtn)
                 MenuInflater(context).inflate(R.menu.popup_menu, popup.menu)
@@ -87,8 +93,8 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
                             deleteItemClickListener.onClick(post.id, position)
                             return@setOnMenuItemClickListener true
                         } else -> {
-                        return@setOnMenuItemClickListener false
-                    }
+                            return@setOnMenuItemClickListener false
+                        }
                     }
                 }
             }
@@ -118,6 +124,12 @@ class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoard
 
     fun setCommentItemClickListener(itemClickListener: ItemClickListener) {
         this.commentItemClickListener = itemClickListener
+    }
+
+    private lateinit var detailItemClickListener : ItemClickListener
+
+    fun setDetailItemClickListener(itemClickListener: ItemClickListener) {
+        this.detailItemClickListener = itemClickListener
     }
 
     interface MenuClickListener {

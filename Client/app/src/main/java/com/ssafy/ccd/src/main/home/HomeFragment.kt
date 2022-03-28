@@ -96,9 +96,9 @@ class HomeFragment : Fragment() {
 
         runBlocking {
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-            var now = LocalDate.now()
-            var strNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
-            var todayMillisecond = CommonUtils.makeBirthMilliSecond(strNow)
+            val now = LocalDate.now()
+            val strNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
+            val todayMillisecond = CommonUtils.makeBirthMilliSecond(strNow)
             mainViewModel.getMyPetsAllList(userId)
             mainViewModel.getUserInfo(userId, true)
             mainViewModel.getAllPostList()
@@ -170,7 +170,7 @@ class HomeFragment : Fragment() {
 
             petAdapter.setItemClickListener(object : HomeProfilePetsAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
-                    var petId = bundleOf("petId" to pet.id)
+                    val petId = bundleOf("petId" to pet.id)
                     this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_myPageFragment,petId)
                 }
             })

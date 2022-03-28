@@ -52,34 +52,14 @@ class BoardAdapter(var postList : MutableList<Board>, val userList: MutableList<
                 }
             }
 
-            for (i in userLikePost) {
+            for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
                 if(post.id == i) {
                     binding.lottieAnimationView.progress = 0.5F
-                } else {
-                    binding.lottieAnimationView.progress = 0.0F
+                    break
                 }
+                binding.lottieAnimationView.progress = 0.0F
             }
-//            var response: Response<Message>
-//            runBlocking {
-//                response = UserService().readUserInfo(post.userId)
-//            }
-//            if(response.code() == 200 || response.code() == 500) {
-//                val res = response.body()
-//                if (res != null) {
-//                    if (res.success == true) {
-//                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
-//                            val type: Type = object : TypeToken<User>() {}.type
-//                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
-//                            binding.writer = user
-//                        } else if (res.data["user"] == null) {
-//                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
-//                        }
-//                    } else {
-//                        Log.e(TAG, "getUserInfo: ${res.message}")
-//                    }
-//                }
-//            }
-//
+
             val responseLike : Response<Message>
             runBlocking {
                 responseLike = BoardService().selectPostIsLike(post.id, userId)
@@ -112,48 +92,13 @@ class BoardAdapter(var postList : MutableList<Board>, val userList: MutableList<
                 }
             }
 
-            for (i in userLikePost) {
+            for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
                 if(post.id == i) {
                     binding.lottieAnimationView.progress = 0.5F
-                } else {
-                    binding.lottieAnimationView.progress = 0.0F
+                    break
                 }
+                binding.lottieAnimationView.progress = 0.0F
             }
-//            var responseUser: Response<Message>
-//            runBlocking {
-//                responseUser = UserService().readUserInfo(post.userId)
-//            }
-//            if(responseUser.code() == 200 || responseUser.code() == 500) {
-//                val res = responseUser.body()
-//                if (res != null) {
-//                    if (res.success == true) {
-//                        if (res.data["user"] != null && res.message == "회원 정보 조회 성공") {
-//                            val type: Type = object : TypeToken<User>() {}.type
-//                            val user = CommonUtils.parseDto<User>(res.data["user"]!!, type)
-//                            binding.writer = user
-//                        } else if (res.data["user"] == null) {
-//                            Log.e(TAG, "bindInfo: 탈퇴한 회원 정보 조회 또는 에러",)
-//                        }
-//                    } else {
-//                        Log.e(TAG, "getUserInfo: ${res.message}")
-//                    }
-//                }
-//            }
-//
-//            val responseLike : Response<Message>
-//            runBlocking {
-//                responseLike = BoardService().selectPostIsLike(post.id, userId)
-//            }
-//            val res = responseLike.body()
-//            if(responseLike.code() == 200 || responseLike.code() == 500) {
-//                if(res != null) {
-//                    if(res.data["isSuccess"] == true && res.message == "좋아요 가능") {  // 사용자가 좋아요 안누른 상환
-//                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.black))
-//                    } else if(res.data["isSuccess"] == false) { // 이미 like 한 게시물 이거나 게시물이 존재하지 않습니다.
-//                        binding.lottieAnimationView.setColorFilter(context.resources.getColor(R.color.red))
-//                    }
-//                }
-//            }
 
             binding.post = post
             binding.executePendingBindings()
