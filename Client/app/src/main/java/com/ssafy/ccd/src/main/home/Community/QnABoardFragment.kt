@@ -51,7 +51,7 @@ class QnABoardFragment : BaseFragment<FragmentQnaBoardBinding>(FragmentQnaBoardB
      */
     private fun setInstance() {
         rvQna = binding.fragmentQnaRv
-        qnaBoardAdapter = QnABoardAdapter(mutableListOf(), mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        qnaBoardAdapter = QnABoardAdapter(mutableListOf(), mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext(), this)
     }
 
 
