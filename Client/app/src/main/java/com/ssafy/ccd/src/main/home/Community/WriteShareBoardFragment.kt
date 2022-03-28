@@ -117,7 +117,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
     private fun confirmBtnClickEvent() {    // 게시글 insert
         binding.fragmentBoardWriteSuccessBtn.setOnClickListener {
 
-            // content(30 ~ 100 체크), 사진 선택
+            // content(30 ~ 500 체크), 사진 선택
             val content = binding.fragmentDiaryWriteContent.text.toString()
 
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -177,7 +177,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
     private fun modifyBtnClickEvent() {    // 게시글 insert Or Update
         binding.fragmentBoardWriteSuccessBtn.setOnClickListener {
 
-            // content(30 ~ 100 체크), 사진 선택
+            // content(30 ~ 500 체크), 사진 선택
             val content = binding.fragmentDiaryWriteContent.text.toString()
 
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -350,12 +350,12 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
      * content 길이 체크
      */
     private fun contentLenChk(input: String) : Boolean {
-        binding.writeLocalBoardFragmentTvTextLen.text = "(${input.length} / 100)"
+        binding.writeLocalBoardFragmentTvTextLen.text = "(${input.length} / 500)"
         if(input.trim().isEmpty()){
             binding.fragmentDiaryWriteTilContent.error = "Required Field"
             binding.fragmentDiaryWriteContent.requestFocus()
             return false
-        } else if(input.length < 30 || input.length > 100) {
+        } else if(input.length < 30 || input.length > 500) {
             binding.fragmentDiaryWriteTilContent.error = "작성된 내용의 길이를 확인해 주세요."
             binding.fragmentDiaryWriteContent.requestFocus()
             return false
