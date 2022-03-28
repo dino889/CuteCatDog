@@ -45,7 +45,8 @@ class DiaryAdapter(val context: Context,val viewModel:MainViewModels, val owner:
 //                })
                 photoListAdapter.list = list[position].photo as MutableList<Photo>
             }
-            itemView.setOnClickListener {
+
+            this.itemView.setOnClickListener {
                 itemClickListener.onClick(it,position,list[position].id)
             }
 
