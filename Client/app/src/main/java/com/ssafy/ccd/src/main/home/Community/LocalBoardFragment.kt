@@ -68,7 +68,7 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
     }
 
     /**
-     * 글작성 완료 버튼 클릭 이벤트
+     * 글작성 버튼 클릭 이벤트
      */
     private fun writeBtnClickEvent() {
         binding.fragmentLocalWrite.setOnClickListener {

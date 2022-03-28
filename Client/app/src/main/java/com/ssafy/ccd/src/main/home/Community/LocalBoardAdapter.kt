@@ -30,8 +30,7 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
 
     inner class LocalBoardViewHolder(private val binding: ItemLocalListBinding) : RecyclerView.ViewHolder(binding.root) {
         val heartBtn = binding.fragmentLocalboardHeart
-        val heartCnt = binding.fragmentLocalboardHeartCnt
-        val commentBtn = binding.fragmentLocalboardChat
+        val commentBtn = binding.localItemClComment
         val moreBtn = binding.localItemBtnMore
 
         fun bindInfo(post: Board) {
@@ -45,13 +44,14 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
 
             for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
                 if(post.id == i) {
-                    binding.fragmentLocalboardHeart.progress = 0.5F
+                    heartBtn.progress = 0.5F
                     break
                 }
-                binding.fragmentLocalboardHeart.progress = 0.0F
+                heartBtn.progress = 0.0F
             }
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
+
 
             binding.executePendingBindings()
         }

@@ -2,19 +2,31 @@ package com.ssafy.ccd.src.main.home.Community
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.ssafy.ccd.R
+import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.databinding.ItemShareListBinding
 import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.User
 
-class ShareBoardAdapter (var postList : MutableList<Board>, val userList: MutableList<User>, val userLikePost: MutableList<Int>, val context: Context) : RecyclerView.Adapter<ShareBoardAdapter.ShareBoardViewHolder>(){
+class ShareBoardAdapter (val context: Context) : RecyclerView.Adapter<ShareBoardAdapter.ShareBoardViewHolder>(){
+    lateinit var postList : MutableList<Board>
+    lateinit var userList: MutableList<User>
+    lateinit var userLikePost: MutableList<Int>
 
     inner class ShareBoardViewHolder(private val binding: ItemShareListBinding) : RecyclerView.ViewHolder(binding.root) {
         val postDetailBtn = binding.shareItemTvPostDetail
+        val heartBtn = binding.shareItemLottieHeart
+        val commentBtn = binding.shareItemClComment
+        val moreBtn = binding.shareItemBtnMore
+
 
         fun bindInfo(post: Board) {
             for (user in userList) {
@@ -23,13 +35,15 @@ class ShareBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
                 }
             }
 
-            for (i in userLikePost) {
+            for (i in userLikePost) {   // 로그인 유저가 좋아요 누른 게시글 표시
                 if(post.id == i) {
-                    binding.shareItemLottieHeart.progress = 0.5F
-                } else {
-                    binding.shareItemLottieHeart.progress = 0.0F
+                    heartBtn.progress = 0.5F
+                    break
                 }
+                heartBtn.progress = 0.0F
             }
+
+            moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
 
             binding.post = post
             binding.executePendingBindings()
@@ -44,12 +58,39 @@ class ShareBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
     }
 
     override fun onBindViewHolder(holder: ShareBoardViewHolder, position: Int) {
+        val post = postList[position]
         holder.apply {
-            bindInfo(postList[position])
+            bindInfo(post)
             setIsRecyclable(false)
 
-             postDetailBtn.setOnClickListener {
-                itemClickListener.onClick(it, position)
+
+            heartBtn.setOnClickListener {
+                heartItemClickListener.onClick(it as LottieAnimationView, position, post.id)
+            }
+
+            commentBtn.setOnClickListener {
+                commentItemClickListener.onClick(it, post.id)
+            }
+
+            moreBtn.setOnClickListener {
+                val popup = PopupMenu(context, moreBtn)
+                MenuInflater(context).inflate(R.menu.popup_menu, popup.menu)
+
+                popup.show()
+                popup.setOnMenuItemClickListener {
+                    when(it.itemId) {
+                        R.id.modify -> {
+                            modifyItemClickListener.onClick(post.id, position)
+                            return@setOnMenuItemClickListener true
+                        }
+                        R.id.delete -> {
+                            deleteItemClickListener.onClick(post.id, position)
+                            return@setOnMenuItemClickListener true
+                        } else -> {
+                        return@setOnMenuItemClickListener false
+                    }
+                    }
+                }
             }
         }
     }
@@ -58,14 +99,41 @@ class ShareBoardAdapter (var postList : MutableList<Board>, val userList: Mutabl
         return postList.size
     }
 
-    interface ItemClickListener {
-        fun onClick(view: View, position: Int)
+    interface HeartItemClickListener {
+        fun onClick(heart: LottieAnimationView, position: Int, id: Int)
     }
 
-    private lateinit var itemClickListener : ItemClickListener
 
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.itemClickListener = itemClickListener
+    private lateinit var heartItemClickListener : HeartItemClickListener
+
+    fun setHeartItemClickListener(itemClickListener: HeartItemClickListener) {
+        this.heartItemClickListener = itemClickListener
+    }
+
+    interface ItemClickListener {
+        fun onClick(view: View, postId: Int)
+    }
+
+    private lateinit var commentItemClickListener : ItemClickListener
+
+    fun setCommentItemClickListener(itemClickListener: ItemClickListener) {
+        this.commentItemClickListener = itemClickListener
+    }
+
+    interface MenuClickListener {
+        fun onClick(postId: Int, position: Int)
+    }
+
+    private lateinit var modifyItemClickListener : MenuClickListener
+
+    fun setModifyItemClickListener(menuClickListener: MenuClickListener) {
+        this.modifyItemClickListener = menuClickListener
+    }
+
+    private lateinit var deleteItemClickListener : MenuClickListener
+
+    fun setDeleteItemClickListener(menuClickListener: MenuClickListener) {
+        this.deleteItemClickListener = menuClickListener
     }
 
 }

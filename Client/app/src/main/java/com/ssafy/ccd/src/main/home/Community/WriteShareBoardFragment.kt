@@ -196,7 +196,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
 
                 val post = Board(
                     id = postId,
-                    typeId = 1,
+                    typeId = 3,
                     title = "",
                     content = content,
                     photoPath = fileName)
