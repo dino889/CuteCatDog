@@ -112,7 +112,6 @@ class HomeFragment : Fragment() {
         }
 
         initPostList()
-
         initAdapter()
         initBanner()
 
@@ -126,6 +125,10 @@ class HomeFragment : Fragment() {
 
         ivKnowledge.setOnClickListener {
             this@HomeFragment.findNavController().navigate(R.id.informationMainFragment)
+        }
+
+        binding.fragmentHomeNoti.setOnClickListener {
+            this@HomeFragment.findNavController().navigate(R.id.notificationFragment)
         }
     }
 

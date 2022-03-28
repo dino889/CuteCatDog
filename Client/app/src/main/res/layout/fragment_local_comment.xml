@@ -44,7 +44,7 @@
                 android:id="@+id/localCmtFragment_tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="여기에 뭐넣지"
+                android:text="댓글"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
