@@ -61,30 +61,28 @@ class DiaryFragment : BaseFragment<FragmentDiaryBinding>(FragmentDiaryBinding::b
         }
     }
     fun initAdapter(){
-
-        mainViewModel.diaryList.observe(viewLifecycleOwner, {
-            Log.d(TAG, "initAdapter: ${it}")
-            diaryAdapter = DiaryAdapter(requireContext(),mainViewModel,viewLifecycleOwner)
+        mainViewModel.diaryList.observe(viewLifecycleOwner) {
+            Log.d(TAG, "initAdapter: $it")
+            diaryAdapter = DiaryAdapter(requireContext(), mainViewModel, viewLifecycleOwner)
             diaryAdapter.list = it
 
             binding.fragmentDiaryRv.apply {
-                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                 adapter = diaryAdapter
                 adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
-            diaryAdapter.setItemClickListener(object : DiaryAdapter.ItemClickListener{
+            diaryAdapter.setItemClickListener(object : DiaryAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, id: Int) {
-                    mainActivity.runOnUiThread(Runnable {
+                    mainActivity.runOnUiThread {
                         Log.d(TAG, "onClick: ${id}")
 //                        setFragmentResult("diaryId", bundleOf("diaryId" to id))
                         val diaryId = bundleOf("diaryId" to id)
                         this@DiaryFragment.findNavController().navigate(R.id.action_diaryFragment_to_diaryDetailFragment, diaryId)
-                    })
+                    }
                 }
 
             })
-        })
-
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
