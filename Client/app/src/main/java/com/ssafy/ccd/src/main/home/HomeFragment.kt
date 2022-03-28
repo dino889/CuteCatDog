@@ -145,10 +145,10 @@ class HomeFragment : Fragment() {
         // Information
         rvAdapterinfo = InformationRecyclerViewAdapter(requireContext(), mutableListOf(
             // TODO 추후에 이미지 변경해야함.
-            ItemInfo("강아지 훈련 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 0)),
-            ItemInfo("강아지 교감 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 1)),
-            ItemInfo("고양이 훈련 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 2)),
-            ItemInfo("고양이 교감 교실", "defaultimg.png", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 3)),
+            ItemInfo( "dogtraining", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 0)),
+            ItemInfo("dogemotionboard", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 1)),
+            ItemInfo( "cattraining", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 2)),
+            ItemInfo( "catemotion", Intent(requireActivity(), InformationActivity::class.java).putExtra("type", 3)),
         ))
     }
 

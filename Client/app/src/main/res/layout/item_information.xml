@@ -23,19 +23,11 @@
 
             <ImageView
                 android:id="@+id/itemInformation_iv"
-                android:layout_width="100dp"
-                android:layout_height="80dp"
-                android:layout_margin="8dp"
-                app:srcCompat="@drawable/defaultimg"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:scaleType="fitXY"
                 tools:srcCompat="@drawable/defaultimg" />
 
-            <TextView
-                android:id="@+id/itemInformation_tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:textAlignment="center"
-                tools:text="동물훈련" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

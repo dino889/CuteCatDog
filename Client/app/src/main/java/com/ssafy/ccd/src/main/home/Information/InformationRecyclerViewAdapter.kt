@@ -20,7 +20,7 @@ class InformationRecyclerViewAdapter(private var context: Context, private var d
         fun bindInfo(data: ItemInfo) {
             val imageResource = context.resources.getIdentifier(data.img, "drawable", context.packageName)
 
-            view.findViewById<TextView>(R.id.itemInformation_tvTitle).text = data.title
+//            view.findViewById<TextView>(R.id.itemInformation_tvTitle).text = data.title
             view.findViewById<ImageView>(R.id.itemInformation_iv).setImageResource(imageResource)
             view.findViewById<CardView>(R.id.itemInformation_cv).setOnClickListener {
                 (context as MainActivity).startActivity(data.intent)
