@@ -68,4 +68,8 @@ interface BoardApi {
     //유저가 쓴 글 전체보기
     @GET("/board/user/{userId}")
     suspend fun selectBoardByUserId(@Path("userId")userId:Int) : Response<Message>
+
+    // 좋아요 가능한지 확인
+    @GET("/board/isLike")
+    suspend fun checkLikeByBoardIdAndUserId(@Path("boardId")boardId:Int, @Path("userId")userId:Int) : Response<Message>
 }

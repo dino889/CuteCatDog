@@ -40,5 +40,4 @@ abstract class BaseFragment<B : ViewBinding>(
     fun showCustomToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
-
 }
