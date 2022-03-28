@@ -52,8 +52,6 @@ class WriteQnaFragment : BaseFragment<FragmentWriteQnaBinding>(FragmentWriteQnaB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-
         setInstance()
         inputObservable()
         setListener()
@@ -278,6 +276,8 @@ class WriteQnaFragment : BaseFragment<FragmentWriteQnaBinding>(FragmentWriteQnaB
 
     private fun setInstance() {
         mainActivity = requireActivity() as MainActivity
+        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        mainActivity.hideBottomNavi(true)
 
         // binding
         btnSend = binding.fragmentWriteQuestionBtnSend
