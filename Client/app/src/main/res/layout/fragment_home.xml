@@ -21,17 +21,18 @@
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/fragment_home_profileLayout"
                     android:layout_width="match_parent"
@@ -62,96 +63,6 @@
                         app:lottie_autoPlay="true"
                         app:lottie_fileName="bell.json"
                         app:lottie_loop="false" />
-                    <TextView
-                        android:id="@+id/fragment_home_tvHi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="15dp"
-                        android:text="반가워요, "
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/fragment_home_userImg" />
-
-                    <TextView
-                        android:id="@+id/fragment_home_userNick"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="30dp"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/fragment_home_tvHi"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/fragment_home_tvHi"
-                        app:layout_constraintTop_toTopOf="@+id/fragment_home_tvHi"
-                        app:userNick="@{loginUser.nickname}" />
-
-
-                    <TextView
-                        android:id="@+id/fragment_home_userNick2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="15dp"
-                        android:textColor="@color/black"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/fragment_home_tvHi"
-                        app:userNick="@{loginUser.nickname}" />
-
-                    <TextView
-                        android:id="@+id/fragment_home_userNickPets"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="의 아이들"
-                        android:textColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="@+id/fragment_home_userNick2"
-                        app:layout_constraintStart_toEndOf="@+id/fragment_home_userNick2"
-                        app:layout_constraintTop_toTopOf="@+id/fragment_home_userNick2" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_home_rvPets"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        app:homePetListData="@{viewModel.myPetsList}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/fragment_home_userNickPets" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_home_rvTodayCalenderNoti"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/fragment_home_rvPets"
-                        app:schedulerTodayListData="@{viewModel.schedule}" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/fragment_home_profileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/fragment_home_userImg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="15dp"
-                        android:src="@drawable/logo"
-                        app:imageUrlUser="@{loginUser.profileImage}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/fragment_home_tvHi"
