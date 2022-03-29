@@ -20,7 +20,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import android.widget.ArrayAdapter
-
+import com.google.android.material.snackbar.Snackbar
 
 
 private const val TAG = "JoinFragment_ccd"
@@ -61,9 +61,10 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             if(res == true) {
                 showConfirmDialog()
 //                certBtnClickEvent()
-            } else {
-                showCustomToast("중복된 이메일입니다.")
             }
+//            else {
+//                showCustomToast("중복된 이메일입니다.")
+//            }
         }
 
     }
@@ -107,11 +108,20 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
             }
         }
 
-        if(existEmailRes.data["isExisted"] == false && existEmailRes.message == "중복된 이메일 없음") {
+        if(existEmailRes.data["type"] == "false" && existEmailRes.message == "중복된 이메일 없음") {
             return true
-        } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {
-            binding.joinFragmentClCertNum.visibility = View.GONE
-            return false
+        } else if(existEmailRes.message == "이미 존재하는 이메일") {
+            val socialType = existEmailRes.data["type"]
+            if(socialType == "none") {
+                binding.joinFragmentClCertNum.visibility = View.GONE
+                showCustomToast("이미 존재하는 이메일입니다.")
+                return false
+            } else {
+                Snackbar.make(requireView(), "이미 가입하신 적이 있으시네요! \n$socialType (으)로 로그인 해주세요╰(*°▽°*)╯", Snackbar.LENGTH_LONG).show()
+                (requireActivity() as LoginActivity).onBackPressed()
+                return false
+            }
+
         } else {
             showCustomToast("서버 통신에 실패했습니다.")
             Log.d(TAG, "existEmailChk: ${existEmailRes.message}")
