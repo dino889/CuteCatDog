@@ -63,8 +63,7 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
             postId = getInt("postId")
         }
         mainActivity.hideBottomNavi(true)
-        mInputMethodManager =
-            mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        mInputMethodManager = mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         mOnGlobalLayoutListener.onGlobalLayout()
     }
 
