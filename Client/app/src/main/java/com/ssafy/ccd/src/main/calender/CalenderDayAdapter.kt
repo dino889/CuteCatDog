@@ -74,6 +74,7 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             var strDate = "${strMonth}월 ${day.text}일"
             var comDate = "${month}월 ${monthOfday}일"
             var week = CommonUtils.convertWeek(position%7)
+
             if(strDate.equals(comDate)){
                 holder.layout.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
                 holder.layout.setOnClickListener {
