@@ -52,6 +52,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.core.view.marginBottom
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.ssafy.ccd.src.main.home.Community.LocalCommentFragment
 import kotlin.math.round
 
@@ -75,6 +78,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
     // viewModel
     lateinit var mainViewModels: MainViewModels
+
+    private var mauth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -538,6 +543,24 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             } else {
                 Log.e(TAG, "uploadToken: 토큰 정보 등록 중 통신 오류", )
             }
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        var user = mauth.currentUser
+        if(user!=null){
+
+        }else{
+            signInAnonymously()
+        }
+    }
+    private fun signInAnonymously(){
+        mauth.signInAnonymously().addOnSuccessListener(this, OnSuccessListener<AuthResult>() {
+
+        }).addOnFailureListener(this) {
+            Log.e(TAG, "signInAnonymously: ")
         }
     }
 

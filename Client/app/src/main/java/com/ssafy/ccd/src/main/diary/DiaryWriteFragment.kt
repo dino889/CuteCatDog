@@ -35,6 +35,7 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentDiaryWriteBinding
 import com.ssafy.ccd.src.dto.Diary
 import com.ssafy.ccd.src.dto.Hashtag
+import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Photo
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.DiaryService
@@ -43,12 +44,24 @@ import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import retrofit2.Response
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.core.app.ActivityCompat.startActivityForResult
+
+import android.provider.MediaStore
+
+import android.content.Intent
+import android.widget.Toast
+
+import android.content.ClipData
+import android.graphics.ImageDecoder
+import java.io.IOException
+
 
 private const val TAG = "DiaryWriteFragment"
 class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiaryWriteBinding::bind,R.layout.fragment_diary_write) {
@@ -64,6 +77,12 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     private var hashs = arrayListOf<Hashtag>()
     var flag = 1;
     var diaryId = -1
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.apply {
@@ -79,10 +98,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         }
         mainActivity.hideBottomNavi(true)
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainActivity = context as MainActivity
-    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,10 +118,17 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         binding.fragmentDiaryWriteDatePicker.setOnClickListener {
             setBirth()
         }
+
         binding.fragmentDiaryWriteAddCameraBtn.setOnClickListener{
-            mainActivity.getAlbum(GALLERY_CODE)
-            loadImage()
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = MediaStore.Images.Media.CONTENT_TYPE
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 다중 이미지를 가져올 수 있도록 세팅
+            intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            startActivityForResult(intent, 8888)
+//            mainActivity.getAlbum(GALLERY_CODE)
+//            loadImage()
         }
+
         binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
             var title = binding.fragmentDiaryWriteTitle.text.toString()
             var date = binding.fragmentDiaryWriteDate.text.toString()
@@ -151,8 +174,9 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             this@DiaryWriteFragment.findNavController().popBackStack()
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun initData(){
+    private fun initData(){
         if(flag == 2){
             runBlocking {
                 mainViewModel.getDiaryDetail(diaryId)
@@ -192,7 +216,8 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         }
 
     }
-    fun setBirth(){
+
+    private fun setBirth(){
         val calendar:Calendar = Calendar.getInstance()
         try{
             curDate = dataFormat.parse(binding.fragmentDiaryWriteDate.text.toString())
@@ -209,6 +234,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         val dialog = DatePickerDialog(requireContext(), dateSetListener, curYear, curMonth, curDay)
         dialog.show()
     }
+
     private val dateSetListener =
         DatePickerDialog.OnDateSetListener {datePicker, i, i2, i3 ->
             val selectedCalendar = Calendar.getInstance()
@@ -219,10 +245,12 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             val curDate = selectedCalendar.time
             setSelectedDate(curDate)
         }
+
     private fun setSelectedDate(curDate: Date){
         val selectedDateStr = dataFormat.format(curDate)
         binding.fragmentDiaryWriteDate.setText(selectedDateStr)
     }
+
     private fun loadImage(){
         Log.d(TAG, "loadImage: this?")
         mainViewModel.photoUriList.observe(viewLifecycleOwner, {
@@ -237,6 +265,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
         })
     }
+
     fun addFireBase(){
         if(mainViewModel.photoUriList.value?.size == null){
             Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
@@ -250,6 +279,10 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 .addOnSuccessListener {
                     storageReferenceChild.downloadUrl
                         .addOnSuccessListener {
+                            if(i == fileNames.size - 1) {
+//                              this@DiaryWriteFragment.findNavController().popBackStack()
+                                (requireActivity() as MainActivity).onBackPressed()
+                            }
                             Log.d(TAG, "addFireBase: $it")
                         }
                 }
@@ -257,55 +290,60 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         }
     }
     fun insertDiary(diary:Diary) {
-        GlobalScope.launch {
-            var response = DiaryService().insertDiaryService(diary)
-            val res = response.body()
-            if (response.code() == 200) {
-                if (res != null) {
-                    Log.d(TAG, "insertDiary: ${res}")
+        var response : Response<Message>
+        runBlocking {
+            response = DiaryService().insertDiaryService(diary)
+        }
+        val res = response.body()
+        if (response.code() == 200) {
+            if (res != null) {
+                Log.d(TAG, "insertDiary: ${res}")
 //                    addFireBase()
-                    if (res.success) {
-                        if (!mainViewModel.photoUriList.value!!.isEmpty()) {
-                            addFireBase()
-                        }
-                        mainActivity.runOnUiThread(Runnable {
-                            this@DiaryWriteFragment.findNavController()
-                                .navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
-                        })
+                if (res.success) {
+                    if (!mainViewModel.photoUriList.value!!.isEmpty()) {
+                        addFireBase()
                     }
-                } else {
-                    if (res != null) {
-                        Log.d(TAG, "insertDiary: ${res.message}")
-                    }
+//                        mainActivity.runOnUiThread(Runnable {
+//                            this@DiaryWriteFragment.findNavController()
+//                                .navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
+//                        })
                 }
             } else {
-                Log.d(TAG, "insertDiary: ${response.code()}")
+                if (res != null) {
+                    Log.d(TAG, "insertDiary: ${res.message}")
+                }
             }
+        } else {
+            Log.d(TAG, "insertDiary: ${response.code()}")
         }
     }
+
     fun updateDiary(diary:Diary){
-        GlobalScope.launch {
-            var response = DiaryService().updateDiaryService(diary)
-            val res = response.body()
-            if(response.code() == 200){
-                Log.d(TAG, "updateDiary1: ${res}")
-                if(res!=null){
-                    if(res.success){
-                        Log.d(TAG, "updateDiary2: ${res}")
-                        addFireBase()
-                        mainActivity.runOnUiThread(Runnable {
-                            this@DiaryWriteFragment.findNavController().navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
-                        })
-                    }else{
-                        Log.d(TAG, "updateDiary3: ")
-                    }
+        var response : Response<Message>
+
+        runBlocking {
+            response = DiaryService().updateDiaryService(diary)
+        }
+        val res = response.body()
+        if(response.code() == 200){
+            Log.d(TAG, "updateDiary1: ${res}")
+            if(res!=null){
+                if(res.success){
+                    Log.d(TAG, "updateDiary2: ${res}")
+                    addFireBase()
+//                    mainActivity.runOnUiThread(Runnable {
+//                        this@DiaryWriteFragment.findNavController().navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
+//                    })
                 }else{
-                    Log.d(TAG, "updateDiary4: ")
+                    Log.d(TAG, "updateDiary3: ")
                 }
             }else{
-                Log.d(TAG, "updateDiary: ${response.code()} ${res?.message}")
+                Log.d(TAG, "updateDiary4: ")
             }
+        }else{
+            Log.d(TAG, "updateDiary: ${response.code()} ${res?.message}")
         }
+
     }
     private fun convertFileName(){
         for(item in 0 until mainViewModel.photoUriList.value!!.size) {
@@ -319,11 +357,11 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
 //            mainViewModel.photoList.value?.add(Photo(0, fileName))
         }
     }
+
     private fun GetFileExtension(uri: Uri?):String? {
         val mimeTypeMap = MimeTypeMap.getSingleton()
         contentResolver = mainActivity.contentResolver
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
-
     }
 
     private fun getFilterHashTag(){
@@ -416,21 +454,87 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         mauth.signInAnonymously().addOnSuccessListener(requireActivity(), OnSuccessListener<AuthResult>() {
             
         }).addOnFailureListener(mainActivity) {
-            Log.e(TAG, "signInAnonymously: ",)
+            Log.e(TAG, "signInAnonymously: ")
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 8888) {
+            if (data == null) {   // 어떤 이미지도 선택하지 않은 경우
+                showCustomToast("이미지를 선택하지 않았습니다.")
+            } else {   // 이미지를 하나라도 선택한 경우
+                if (data.clipData == null) {     // 이미지를 하나만 선택한 경우
+                    Log.e("single choice: ", data.data.toString())
+                    val imageUri = data.data
+
+                    mainViewModel.uploadImages = imageUri
+                    imageUri.let { mainViewModel.insertPhotoUriList(it!!) }
+                    if (mainViewModel.uploadImages == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
+                    else {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                Log.d(TAG, "onActivityResult: here?")
+                                mainViewModel.uploadedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, mainViewModel.uploadImages!!))
+                            } else {
+                                Log.d(TAG, "onActivityResult: here2?")
+                                mainViewModel.uploadedImage = MediaStore.Images.Media.getBitmap(contentResolver, mainViewModel.uploadImages)
+                            }
+                        } catch ( e: IOException) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+
+                    mainViewModel.photoUriList.observe(viewLifecycleOwner, {
+                        Log.d(TAG, "loadImage: ${it}")
+                        photoAdapter = DiaryPhotoAdapter()
+                        photoAdapter.photoList = it
+
+                        binding.fragmentDiaryWriteCameraRv.apply {
+                            layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                            adapter = photoAdapter
+                            adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                        }
+                    })
+                } else {      // 이미지를 여러장 선택한 경우
+                    val clipData = data.clipData
+                    Log.e("clipData", clipData!!.itemCount.toString())
+                    if (clipData.itemCount > 10 ) {   // 선택한 이미지가 11장 이상인 경우
+                        showCustomToast("사진은 10장까지 선택 가능합니다.")
+                    } else {   // 선택한 이미지가 1장 이상 10장 이하인 경우
+                        Log.e(TAG, "multiple choice")
+                        for (i in 0 until clipData.itemCount) {
+                            val imageUri = clipData.getItemAt(i).uri // 선택한 이미지들의 uri를 가져온다.
+                            try {
+//                                uriList.add(imageUri) //uri를 list에 담는다.
+                                mainViewModel.uploadImages = imageUri
+                                imageUri.let { mainViewModel.insertPhotoUriList(it!!) }
+                            } catch (e: Exception) {
+                                Log.e(TAG, "File select error", e)
+                            }
+                        }
+                        mainViewModel.photoUriList.observe(viewLifecycleOwner, {
+                            Log.d(TAG, "loadImage: ${it}")
+                            photoAdapter = DiaryPhotoAdapter()
+                            photoAdapter.photoList = it
+
+                            binding.fragmentDiaryWriteCameraRv.apply {
+                                layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                                adapter = photoAdapter
+                                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
         mainActivity.hideBottomNavi(false)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiaryWriteFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
     }
 }
