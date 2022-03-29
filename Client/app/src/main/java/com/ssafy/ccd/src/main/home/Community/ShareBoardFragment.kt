@@ -49,11 +49,11 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivity.hideBottomNavi(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.hideBottomNavi(true)
 
         binding.mainViewModel = mainViewModel
 
