@@ -81,14 +81,16 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     // SimpleDateFormat 으로 포맷 결정
     var result: String = dataFormat.format(curDate)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainActivity.hideBottomNavi(true)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,7 +118,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                     fileName = ""
                 }else{
                     timeName = System.currentTimeMillis().toString();
-                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+GetFileExtension(mainViewModel.uploadedImageUri)
+                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+getFileExtension(mainViewModel.uploadedImageUri)
                 }
                 var pet = Pet(
                     birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
@@ -135,7 +137,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                     fileName = ""
                 }else{
                     timeName = System.currentTimeMillis().toString();
-                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+GetFileExtension(mainViewModel.uploadedImageUri)
+                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+getFileExtension(mainViewModel.uploadedImageUri)
                 }
                 var pet = Pet(
                     birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
@@ -215,7 +217,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             childFragmentManager.popBackStack()
         }
 
-        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+GetFileExtension(mainViewModel.uploadedImageUri))
+        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+getFileExtension(mainViewModel.uploadedImageUri))
 
         storageReferenceChild.putFile(mainViewModel.uploadedImageUri!!)
             .addOnSuccessListener{
@@ -317,7 +319,8 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             }
         }
     }
-    fun GetFileExtension(uri: Uri?): String? {
+
+    private fun getFileExtension(uri: Uri?): String? {
         val mimeTypeMap = MimeTypeMap.getSingleton()
         contentResolver = mainActivity.contentResolver
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
@@ -358,6 +361,12 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     private fun setSelectedDate(curDate: Date) {
         val selectedDateStr = dataFormat.format(curDate)
         binding.addPetFragmentTietBirth.setText(selectedDateStr) // 버튼의 텍스트 수정
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.hideBottomNavi(false)
     }
 
 }
