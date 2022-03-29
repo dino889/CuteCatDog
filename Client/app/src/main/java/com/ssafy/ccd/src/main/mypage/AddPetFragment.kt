@@ -1,70 +1,53 @@
 package com.ssafy.ccd.src.main.mypage
 
-import android.app.Activity.RESULT_CANCELED
-import android.app.Activity.RESULT_OK
+import android.Manifest
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAddPetBinding
-import com.ssafy.ccd.databinding.FragmentMyPageBinding
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.webkit.MimeTypeMap
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import android.widget.DatePicker
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import com.google.gson.Gson
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.PetService
-import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.*
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.time.LocalDate
+import retrofit2.Response
 
 private const val TAG = "AddPetFragment_ccd"
 class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding::bind, R.layout.fragment_add_pet) {
     var curDate = Date() // 현재
     private lateinit var mainActivity : MainActivity
     private var petId = -1
-//    private val mainViewModel: MainViewModels by activityViewModels()
+
+    private val STORAGE_CODE = 99
+    private val STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
     var kindId = 0
@@ -81,6 +64,13 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     // SimpleDateFormat 으로 포맷 결정
     var result: String = dataFormat.format(curDate)
 
+    // 사진 선택
+    private lateinit var imgUri: Uri    // 파일 uri
+    private var fileExtension : String? = ""    // 파일 확장자
+    private var imgSelectedChk = false
+
+//    private var timeName = "" // firebase storage upload file name
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -88,19 +78,25 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
         mainActivity.hideBottomNavi(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.hideBottomNavi(true)
+
         runBlocking {
             mainViewModel.getPetKindsAllList()
         }
 
         initListener()
-        Log.d(TAG, "onViewCreated: ${mainViewModel.petId}")
-        if(mainViewModel.petId!! > 0){
+
+        if(mainViewModel.petId > 0){
             runBlocking {
                 mainViewModel.getPetDetailList(mainViewModel.petId)
             }
@@ -108,12 +104,14 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             initData()
         }
 
-        binding.addPetFragmentIbSelectImg.setOnClickListener {
-            mainActivity.getAlbum(GALLERY_CODE)
-            loadImage()
-        }
+//        binding.addPetFragmentIbSelectImg.setOnClickListener {
+//            mainActivity.getAlbum(GALLERY_CODE)
+//            loadImage()
+//        }
+
+        // 등록 or 수정 버튼 클릭 이벤트
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
-            if(flag==1){
+            if(flag == 1){
                 if(mainViewModel.uploadedImageUri == null || mainViewModel.uploadedImageUri.toString() == ""){
                     fileName = ""
                 }else{
@@ -154,10 +152,15 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             }
         }
 
+        // back btn click
         binding.fragmentAddPetBack.setOnClickListener {
             this@AddPetFragment.findNavController().popBackStack()
         }
+
+        // 이미지 선택 버튼 클릭 이벤트
+        selectImgBtnEvent()
     }
+
     fun initData(){
         binding.fragmentAddPetSuccessBtn.setText("수정")
 
@@ -204,12 +207,32 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         })
     }
 
+    /**
+     * 사진 선택 버튼 클릭 이벤트
+     */
+    private fun selectImgBtnEvent() {
+
+        if (::imgUri.isInitialized) {
+            Log.d(TAG, "selectImgBtnEvent: $imgUri")
+        } else {
+            imgUri = Uri.EMPTY
+            Log.d(TAG, "fileUri 초기화  $imgUri")
+        }
+
+        binding.addPetFragmentIbSelectImg.setOnClickListener {
+            if (mainActivity.checkPermission(STORAGE, STORAGE_CODE)) {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = MediaStore.Images.Media.CONTENT_TYPE
+                filterActivityLauncher.launch(intent)
+            }
+        }
+    }
 
     fun loadImage(){
         Log.d(TAG, "loadImage: ${mainViewModel.uploadedImageUri}")
         binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
-
     }
+
     fun addFireBase(){
         if(mainViewModel.uploadedImageUri == null){
             Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
@@ -223,6 +246,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             .addOnSuccessListener{
                 storageReferenceChild.downloadUrl
                     .addOnSuccessListener {
+                        (requireActivity() as MainActivity).onBackPressed()
                         Log.d(TAG, "addFireBase: ${it}")
                     }
             }
@@ -274,50 +298,54 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         }
     }
     fun insertPet(pet:Pet){
-        GlobalScope.launch {
-            var response = PetService().petsCreateService(pet)
-            val res = response.body()
-            if(response.code() == 200){
-                if(res!=null){
-                    if(res.success){
-                        if(mainViewModel.uploadedImageUri != null){
-                            addFireBase()
-                        }
-                        mainActivity.runOnUiThread(Runnable {
-                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
-                        })
-                    }else{
-                        Log.d(TAG, "insertPet: ${res.message}")
+        var response : Response<Message>
+        runBlocking {
+            response = PetService().petsCreateService(pet)
+
+        }
+        val res = response.body()
+        if(response.code() == 200){
+            if(res!=null){
+                if(res.success){
+                    if(mainViewModel.uploadedImageUri != null){
+                        addFireBase()
                     }
+//                        mainActivity.runOnUiThread(Runnable {
+//                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+//                        })
                 }else{
-                    Log.d(TAG, "insertPet: ")
+                    Log.d(TAG, "insertPet: ${res.message}")
                 }
+            }else{
+                Log.d(TAG, "insertPet: ")
+            }
+        }
+    }
+
+    fun updatePets(pet:Pet){
+        var response : retrofit2.Response<Message>
+        runBlocking {
+            response = PetService().petsUpdateService(pet)
+            Log.d(TAG, "updatePets: ${response.code()}")
+        }
+        val res = response.body()
+        if(response.code() == 200){
+            if(res!=null){
+                if(res.success){
+                    if(mainViewModel.uploadedImageUri != null){
+                        addFireBase()
+                    }
+//                    mainActivity.runOnUiThread(Runnable {
+//                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
+//                    })
+                }else{
+                    Log.d(TAG, "updatePet: ${res.message}")
+                }
+            }else{
+                Log.d(TAG, "updatePet: ")
             }
         }
 
-    }
-    fun updatePets(pet:Pet){
-        GlobalScope.launch {
-            var response = PetService().petsUpdateService(pet)
-            Log.d(TAG, "updatePets: ${response.code()}")
-            val res = response.body()
-            if(response.code() == 200){
-                if(res!=null){
-                    if(res.success){
-                        if(mainViewModel.uploadedImageUri != null){
-                            addFireBase()
-                        }
-                        mainActivity.runOnUiThread(Runnable {
-                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
-                        })
-                    }else{
-                        Log.d(TAG, "updatePet: ${res.message}")
-                    }
-                }else{
-                    Log.d(TAG, "updatePet: ")
-                }
-            }
-        }
     }
 
     private fun getFileExtension(uri: Uri?): String? {
@@ -325,6 +353,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         contentResolver = mainActivity.contentResolver
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
     }
+
     private fun setBirth() {
 
         val calendar: Calendar = Calendar.getInstance()
@@ -363,6 +392,37 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         binding.addPetFragmentTietBirth.setText(selectedDateStr) // 버튼의 텍스트 수정
     }
 
+    /**
+     * 갤러리 사진 선택 result
+     */
+    private val filterActivityLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if(it.resultCode == AppCompatActivity.RESULT_OK && it.data != null) {
+                imgSelectedChk = false
+                val currentImageUri = it.data?.data
+
+                try {
+                    currentImageUri?.let {
+                        imgUri = currentImageUri
+                        mainViewModel.uploadedImageUri = currentImageUri
+                        fileExtension = requireActivity().contentResolver.getType(currentImageUri)
+                        // 사진 set
+                        Glide.with(this)
+                            .load(currentImageUri)
+                            .into(binding.addPEtFragmentIvPetImage)
+
+                        fileExtension = fileExtension!!.substring(fileExtension!!.lastIndexOf("/") + 1, fileExtension!!.length)
+
+                    }
+                } catch(e:Exception) {
+                    e.printStackTrace()
+                }
+            } else if(it.resultCode == AppCompatActivity.RESULT_CANCELED){
+                showCustomToast("사진 선택 취소")
+            } else {
+                Log.d(TAG,"filterActivityLauncher 실패")
+            }
+        }
 
     override fun onDestroy() {
         super.onDestroy()

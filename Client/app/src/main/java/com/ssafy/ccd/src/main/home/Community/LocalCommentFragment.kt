@@ -62,7 +62,6 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
         arguments?.apply {
             postId = getInt("postId")
         }
-        mainActivity.hideBottomNavi(true)
         mInputMethodManager = mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         mOnGlobalLayoutListener.onGlobalLayout()
     }
@@ -70,7 +69,7 @@ class LocalCommentFragment : BaseFragment<FragmentLocalCommentBinding>(FragmentL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mainActivity.hideBottomNavi(true)
         mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
 
         runBlocking {

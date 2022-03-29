@@ -86,6 +86,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        mainActivity.hideBottomNavi(true)
 
         mainActivity.runOnUiThread(kotlinx.coroutines.Runnable {
             inputObservable()
