@@ -39,21 +39,13 @@ class CalendarWritePetAdapter():RecyclerView.Adapter<CalendarWritePetAdapter.Pet
                 val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
                 val storageRef = storage.reference
                 Log.d(TAG, "onBind: ${data.photoPath}")
-                storageRef.child("${data.photoPath}").downloadUrl.addOnSuccessListener(object :
-                    OnSuccessListener<Uri> {
-                    override fun onSuccess(p0: Uri?) {
-                        Log.d(TAG, "onBind: this is photoPath not null")
-                        Glide.with(itemView)
-                            .load(p0)
-                            .circleCrop()
-                            .into(itemView.findViewById(R.id.fragment_calender_pets_item))
-                    }
-
-                }).addOnFailureListener(object: OnFailureListener {
-                    override fun onFailure(p0: Exception) {
-                        Log.d(TAG, "onFailure: ${p0.toString()}")
-                    }
-                })
+                storageRef.child("${data.photoPath}").downloadUrl.addOnSuccessListener { p0 ->
+                    Log.d(TAG, "onBind: this is photoPath not null")
+                    Glide.with(itemView)
+                        .load(p0)
+                        .circleCrop()
+                        .into(itemView.findViewById(R.id.fragment_calender_pets_item))
+                }.addOnFailureListener { p0 -> Log.d(TAG, "onFailure: ${p0.toString()}") }
             }
 
         }

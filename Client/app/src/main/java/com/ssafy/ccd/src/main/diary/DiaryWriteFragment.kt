@@ -75,7 +75,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             if(check == 3){
                 flag = 3;
             }
-            Log.d(TAG, "onCreate: ${check}")
+            Log.d(TAG, "onCreate: $check")
         }
         mainActivity.hideBottomNavi(true)
     }

@@ -71,6 +71,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
+        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,7 +162,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
         if(response.code() == 200 || response.code() == 500) {
             val res = response.body()
             if(res != null) {
-                if(res.success == true && res.data["isSuccess"] == true) {
+                if(res.success && res.data["isSuccess"] == true) {
                     showCustomToast("게시글 등록이 완료되었습니다")
                 } else if(res.data["isSuccess"] == false) {
                     showCustomToast("게시글 등록 실패")
@@ -227,7 +228,7 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
         if(response.code() == 200 || response.code() == 500) {
             val res = response.body()
             if(res != null) {
-                if(res.success == true && res.data["isSuccess"] == true) {
+                if(res.success && res.data["isSuccess"] == true) {
                     showCustomToast("게시글 수정이 완료되었습니다")
                     if(pageBack) {
                         (requireActivity() as MainActivity).onBackPressed()

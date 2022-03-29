@@ -13,6 +13,7 @@ import com.ssafy.ccd.src.main.MainActivity
 import android.security.keystore.KeyGenParameterSpec
 import android.util.Base64
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import com.facebook.CallbackManager
@@ -39,6 +40,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         var userId = -1
         if(sharedPreferencesUtil.getAutoLogin() != null) {
