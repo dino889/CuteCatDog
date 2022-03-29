@@ -206,23 +206,36 @@
                     android:maxEms="500" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/fragment_diaryWrite_contentLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="8dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/textInputLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
             <MultiAutoCompleteTextView
                 android:id="@+id/fragment_diaryWrite_hashTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="30dp"
-                android:layout_marginTop="5dp"
                 android:background="@android:drawable/editbox_background"
+                android:completionThreshold="1"
                 android:fontFamily="@font/font_family_ccd"
                 android:hint="HashTag"
-                android:completionThreshold="1"
                 android:padding="15dp"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
 
             <!--        <androidx.recyclerview.widget.RecyclerView-->

@@ -63,7 +63,13 @@ import android.content.ClipData
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.provider.CalendarContract
+import android.widget.EditText
+import com.jakewharton.rxbinding3.widget.textChanges
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 private const val TAG = "DiaryWriteFragment"
@@ -80,7 +86,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     private var hashs = arrayListOf<Hashtag>()
     var flag = 1;
     var diaryId = -1
-
+    private lateinit var editTextSubscription: Disposable
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -123,6 +129,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         binding.fragmentDiaryWriteDatePicker.setOnClickListener {
             setBirth()
         }
+        inputObservable()
         mainViewModel.photoUriList.observe(viewLifecycleOwner, {
             if(it.size == 10){
                 binding.fragmentDiaryWriteAddCameraBtn.setBackgroundColor(Color.parseColor("#FFAD88"))
@@ -547,8 +554,47 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
         }
     }
-
-
+    private fun contentLenChk(input:String):Boolean{
+        binding.fragmentDiaryWriteContentLength.text = "(${input.length} / 500)"
+        if(input.trim().isEmpty()){
+            binding.textInputLayout3.error = "Required Field"
+            binding.fragmentDiaryWriteContent.requestFocus()
+            return false
+        }else if(input.length < 30 || input.length > 500){
+            binding.textInputLayout3.error = "작성된 내용의 길이를 확인해주세요"
+            binding.fragmentDiaryWriteContent.requestFocus()
+            return false
+        }else{
+            binding.textInputLayout3.error = null
+            return true
+        }
+    }
+    private fun inputObservable(){
+        binding.fragmentDiaryWriteContent.setQueryDebounce{
+            contentLenChk(it)
+        }
+    }
+    private fun EditText.setQueryDebounce(queryFunction: (String) -> Unit): Disposable {
+        val editTextChangeObservable = this.textChanges()
+        editTextSubscription = editTextChangeObservable
+            // 마지막 글자 입력 0.5초 후에 onNext 이벤트로 데이터 발행
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            // 구독을 통해 이벤트 응답 처리
+            .subscribeBy(
+                onNext = {
+                    Log.d(TAG, "onNext : $it")
+                    queryFunction(it.toString())
+                },
+                onComplete = {
+                    Log.d(TAG, "onComplete")
+                },
+                onError = {
+                    Log.i(TAG, "onError : $it")
+                }
+            )
+        return editTextSubscription  // Disposable 반환
+    }
     override fun onDestroy() {
         super.onDestroy()
         mainActivity.hideBottomNavi(false)
