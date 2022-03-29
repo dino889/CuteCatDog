@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,16 +49,39 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
     }
     fun setListener(){
-        initCalendar()
-        initAdapter()
+        initSpinner()
+        initCalendar(0)
+        initAdapter(0)
         binding.fragmentCalendarAllList.setOnClickListener {
             petAdapter.selectItem = -1
             petAdapter.notifyDataSetChanged()
             binding.fragmentCalendarAllCheck.visibility = View.VISIBLE
-            initCalendar()
+            initCalendar(0)
+        }
+
+    }
+    fun initSpinner(){
+        var types = arrayListOf<String>("선택안함","접종","산책","기타")
+        var adapter = ArrayAdapter(requireContext(),R.layout.support_simple_spinner_dropdown_item,types)
+        binding.calendarFragmentTypeSpinner.adapter = adapter
+        binding.calendarFragmentTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                initCalendar(position)
+                initAdapter(position)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
         }
     }
-    fun initAdapter(){
+
+    fun initAdapter(typeId:Int){
         mainViewModel.myPetsList.observe(viewLifecycleOwner, {
             petAdapter = CalendarWritePetAdapter()
             petAdapter.list = it
@@ -72,26 +97,36 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
                     petAdapter.selectItem = position
                     binding.fragmentCalendarAllCheck.visibility = View.INVISIBLE
                     petAdapter.notifyDataSetChanged()
-                    initPetFilter(id)
+                    initPetFilter(id,typeId)
                 }
             })
         })
 
     }
-    fun initPetFilter(petId:Int){
+    fun initPetFilter(petId:Int,typeId:Int){
         mainViewModel.calendarList.observe(viewLifecycleOwner, {
-            val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
             var date = arrayListOf<String>()
+            Log.d(TAG, "initPetFilter: ${typeId}")
             for(i in 0..it.size-1){
-                if(it[i].petId == petId){
-                    date.add(CommonUtils.makeBirthString(it[i].datetime))
+                if(typeId > 0){
+
+                    if(it[i].type == typeId){
+                        if(it[i].petId == petId){
+                            date.add(CommonUtils.makeBirthString(it[i].datetime))
+                        }
+                    }
+                }else{
+                    if(it[i].petId == petId){
+                        date.add(CommonUtils.makeBirthString(it[i].datetime))
+                    }
                 }
+
             }
             Log.d(TAG, "initCalendar: ${date}")
             monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
 
             binding.fragmentCalenderCustomCalender.apply {
-                layoutManager = monthListManager
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
                 adapter = monthListAdapter
                 scrollToPosition(Int.MAX_VALUE/2)
             }
@@ -102,19 +137,24 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
         })
     }
-    fun initCalendar(){
+    fun initCalendar(type:Int){
         mainViewModel.calendarList.observe(viewLifecycleOwner, {
-            val monthListManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
-
             var date = arrayListOf<String>()
             for(i in 0..it.size-1){
-                date.add(CommonUtils.makeBirthString(it[i].datetime))
+                if(type > 0){
+                    if(it[i].type == type){
+                        date.add(CommonUtils.makeBirthString(it[i].datetime))
+                    }
+                }else{
+                    date.add(CommonUtils.makeBirthString(it[i].datetime))
+                }
+
             }
             Log.d(TAG, "initCalendar: ${date}")
             monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
 
             binding.fragmentCalenderCustomCalender.apply {
-                layoutManager = monthListManager
+                layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
                 adapter = monthListAdapter
                 scrollToPosition(Int.MAX_VALUE/2)
             }
