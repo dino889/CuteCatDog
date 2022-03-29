@@ -86,18 +86,18 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         binding.localBoardFragmentRvPostList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         localBoardAdapter = LocalBoardAdapter(requireContext())
 
-        mainViewModel.likePostsByUserId.observe(viewLifecycleOwner, {
+        mainViewModel.likePostsByUserId.observe(viewLifecycleOwner) {
             localBoardAdapter.userLikePost = it
 //            localBoardAdapter.notifyDataSetChanged()
-        })
+        }
 
 //        localBoardAdapter.submitList(mainViewModel.locPostList.value)
 //        localBoardAdapter.userList = mainViewModel.allUserList.value!!
 
-        mainViewModel.locPostList.observe(viewLifecycleOwner, {
+        mainViewModel.locPostList.observe(viewLifecycleOwner) {
             localBoardAdapter.postList = it
             localBoardAdapter.userList = mainViewModel.allUserList.value!!
-        })
+        }
 
         binding.localBoardFragmentRvPostList.adapter = localBoardAdapter
         localBoardAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -149,7 +149,7 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         if(response.code() == 200 || response.code() == 500) {
             val res = response.body()
             if(res != null) {
-                if(res.success == true && res.data["isSuccess"] == true) {
+                if(res.success && res.data["isSuccess"] == true) {
                     showCustomToast("게시글이 삭제되었습니다.")
                     runBlocking {
                         mainViewModel.getPostListByType(1)
