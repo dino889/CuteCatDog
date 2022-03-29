@@ -44,6 +44,16 @@ import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.network.api.FCMApi
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
+import java.time.LocalDate
+import android.widget.EditText
+
+import android.view.MotionEvent
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import androidx.core.view.marginBottom
+import com.ssafy.ccd.src.main.home.Community.LocalCommentFragment
+import kotlin.math.round
 
 
 private const val TAG = "MainActivity_ccd"
@@ -108,9 +118,15 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         if(state) {
             binding.bottomAppBar.visibility = View.GONE
             binding.activityMainFabCam.visibility = View.GONE
+            val param = binding.activityMainNavHost.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(0,0,0, 0)
+            binding.activityMainNavHost.layoutParams = param
         } else {
             binding.bottomAppBar.visibility = View.VISIBLE
             binding.activityMainFabCam.visibility = View.VISIBLE
+            val param = binding.activityMainNavHost.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(0,0,0, round(60 * resources.displayMetrics.density).toInt())
+            binding.activityMainNavHost.layoutParams = param
         }
     }
 
@@ -415,6 +431,10 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     fun hideBottomAppBar(){
         binding.bottomAppBar.visibility = View.GONE
         binding.activityMainFabCam.visibility = View.GONE
+        binding.isGone = true
+        val param = binding.activityMainNavHost.layoutParams as ViewGroup.MarginLayoutParams
+        param.setMargins(0,0,0, 0)
+        binding.activityMainNavHost.layoutParams = param
     }
 
     /**
@@ -424,6 +444,10 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     fun showBottomAppBar(){
         binding.bottomAppBar.visibility = View.VISIBLE
         binding.activityMainFabCam.visibility = View.VISIBLE
+        binding.isGone = false
+        val param = binding.activityMainNavHost.layoutParams as ViewGroup.MarginLayoutParams
+        param.setMargins(0,0,0, round(60 * resources.displayMetrics.density).toInt())
+        binding.activityMainNavHost.layoutParams = param
     }
 
     /**

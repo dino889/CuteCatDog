@@ -44,7 +44,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageButton
-                        android:id="@+id/fragment_qna_back"
+                        android:id="@+id/fragmentQnaBoardDetail_ibBack"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginStart="10dp"
