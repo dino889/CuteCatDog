@@ -181,6 +181,9 @@
             android:name="postId"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_localBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <fragment
@@ -195,6 +198,9 @@
             android:name="postId"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_qnaBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <fragment
@@ -211,7 +217,11 @@
         <argument
             android:name="postId"
             app:argType="integer"
-            android:defaultValue="-1"/></fragment>
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_shareBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/writeBoardFragment"
@@ -252,5 +262,10 @@
         android:name="com.ssafy.ccd.src.main.home.Community.WriteShareBoardFragment"
         android:label="WriteShareBoardFragment"
         tools:layout="@layout/fragment_write_share_board" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>

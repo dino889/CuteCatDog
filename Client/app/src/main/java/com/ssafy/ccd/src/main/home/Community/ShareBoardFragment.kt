@@ -87,7 +87,7 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         if (animator is SimpleItemAnimator){          //아이템 애니메이커 기본 하위클래스
             animator.supportsChangeAnimations = false  //애니메이션 값 false (리사이클러뷰가 화면을 다시 갱신 했을때 뷰들의 깜빡임 방지)
         }
-
+        searchBtnClickEvent()
         binding.shareBoardFragmentRvPostList.adapter = shareBoardAdapter
         shareBoardAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
@@ -145,7 +145,11 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
 
 
     }
-
+    private fun searchBtnClickEvent(){
+        binding.shareFragmentIbSearch.setOnClickListener {
+            this@ShareBoardFragment.findNavController().navigate(R.id.action_shareBoardFragment_to_searchFragment)
+        }
+    }
     /**
      * 뒤로가기 버튼 클릭 이벤트
      */

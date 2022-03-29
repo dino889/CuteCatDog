@@ -35,6 +35,9 @@ class QnABoardFragment : BaseFragment<FragmentQnaBoardBinding>(FragmentQnaBoardB
      * 리스너 설정
      */
     private fun setListener() {
+        binding.fragmentQnaSearch.setOnClickListener {
+            this@QnABoardFragment.findNavController().navigate(R.id.action_qnaBoardFragment_to_searchFragment)
+        }
         binding.fragmentQnaBack.setOnClickListener {
             this@QnABoardFragment.findNavController().popBackStack()
         }

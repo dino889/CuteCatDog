@@ -3,6 +3,8 @@ package com.ssafy.ccd.src.main.home.Community
 import android.content.Context
 import android.util.Log
 import android.view.*
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -23,10 +25,6 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
     lateinit var postList : MutableList<Board>
     lateinit var userList: MutableList<User>
     lateinit var userLikePost: MutableList<Int>
-
-//    init {
-//        setHasStableIds(true)
-//    }
 
     inner class LocalBoardViewHolder(private val binding: ItemLocalListBinding) : RecyclerView.ViewHolder(binding.root) {
         val heartBtn = binding.fragmentLocalboardHeart
@@ -150,5 +148,7 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
             return oldItem.id == newItem.id
         }
     }
+
+
 
 }
