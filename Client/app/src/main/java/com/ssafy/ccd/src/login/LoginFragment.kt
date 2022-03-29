@@ -130,10 +130,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
             existEmailRes = mainViewModel.existsChkUserEmail(user.email)
         }
 
-        if(existEmailRes.data["isExisted"] == false && existEmailRes.message == "중복된 이메일 없음") {
+        if(existEmailRes.data["type"] == "false" && existEmailRes.message == "중복된 이메일 없음") {
             snsLoginJoin(user)
             return true
-        } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {
+        } else if(existEmailRes.message == "이미 존재하는 이메일") {
+
             login(user.email, user.password)
             return false
         } else {
@@ -368,7 +369,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
                         val uid = user.uid
                         val image = user.photoUrl.toString()
 
-                        val newUser = User(email, nickname, uid, image, "facebook")
+                        val newUser = User(email = email, nickname = nickname, password = uid, profileImage = image, "facebook")
                         existEmailChk(newUser)
                         Log.d(TAG, "signInWithCredential:success $newUser")
                     }

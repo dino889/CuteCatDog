@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
@@ -198,13 +199,20 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(Fragmen
             }
         }
 
-        if(existEmailRes.data["isExisted"] == false && existEmailRes.message == "중복된 이메일 없음") {
+        if(existEmailRes.data["type"] == "false" && existEmailRes.message == "중복된 이메일 없음") {
             binding.resetPwFragmentClCertNum.visibility = View.INVISIBLE
             showCustomToast("존재하는 이메일이 없습니다. 입력 값을 다시 확인해 주세요.")
             return false
-        } else if(existEmailRes.data["isExisted"] == true && existEmailRes.message == "이미 존재하는 이메일") {  // true
-            binding.resetPwFragmentClCertNum.visibility = View.VISIBLE  // 인증번호 입력 보이도록하기
-            return true
+        } else if(existEmailRes.message == "이미 존재하는 이메일") {  // true
+            val socialType = existEmailRes.data["type"]
+            if(socialType == "none") {
+                binding.resetPwFragmentClCertNum.visibility = View.VISIBLE  // 인증번호 입력 보이도록하기
+                return true
+            } else {
+                Snackbar.make(requireView(), "소셜 로그인 회원이시네요! \n$socialType (으)로 로그인 해주세요╰(*°▽°*)╯", Snackbar.LENGTH_LONG).show()
+                (requireActivity() as LoginActivity).onBackPressed()
+                return false
+            }
         } else {
             showCustomToast("서버 통신에 실패했습니다.")
             Log.d(TAG, "existEmailChk: ${existEmailRes.message}")
