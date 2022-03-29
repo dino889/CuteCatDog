@@ -460,7 +460,10 @@ fun bindConvertNotificationType(imageView: ImageView,type:Int){
         imageView.setImageResource(R.drawable.notiuser)
     }
 }
-
+@BindingAdapter("imageUriSize")
+fun bindConvertUriSize(textView: TextView,size:Int){
+    textView.text = "${size}/10"
+}
 //@BindingAdapter("localReplyListData")
 //fun bindLocalReplyList(recyclerView: RecyclerView, data: MutableList<Comment>) {
 //    var adapter = recyclerView.adapter as LocalCommentReplyAdapter

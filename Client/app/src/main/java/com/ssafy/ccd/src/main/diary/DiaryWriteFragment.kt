@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.diary
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.ContentResolver
 import android.content.Context
@@ -59,7 +60,9 @@ import android.content.Intent
 import android.widget.Toast
 
 import android.content.ClipData
+import android.graphics.Color
 import android.graphics.ImageDecoder
+import android.provider.CalendarContract
 import java.io.IOException
 
 
@@ -99,6 +102,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         mainActivity.hideBottomNavi(true)
     }
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,6 +110,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
 
         mainViewModel.allClearPhotoList()
         mainViewModel.allClearPhotoUriList()
+        binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getHashTags()
         }
@@ -118,15 +123,24 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         binding.fragmentDiaryWriteDatePicker.setOnClickListener {
             setBirth()
         }
+        mainViewModel.photoUriList.observe(viewLifecycleOwner, {
+            if(it.size == 10){
+                binding.fragmentDiaryWriteAddCameraBtn.setBackgroundColor(Color.parseColor("#FFAD88"))
+            }
+            binding.photosize.setText(CommonUtils.converPhotoSize(it.size))
+        })
 
         binding.fragmentDiaryWriteAddCameraBtn.setOnClickListener{
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = MediaStore.Images.Media.CONTENT_TYPE
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 다중 이미지를 가져올 수 있도록 세팅
-            intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            startActivityForResult(intent, 8888)
-//            mainActivity.getAlbum(GALLERY_CODE)
-//            loadImage()
+            if(mainViewModel.photoUriList.value!!.size < 10){
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = MediaStore.Images.Media.CONTENT_TYPE
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 다중 이미지를 가져올 수 있도록 세팅
+                intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                startActivityForResult(intent, 8888)
+            }else{
+                showCustomToast("사진을 추가하실 수 없습니다.")
+            }
+
         }
 
         binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
@@ -303,10 +317,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                     if (!mainViewModel.photoUriList.value!!.isEmpty()) {
                         addFireBase()
                     }
-//                        mainActivity.runOnUiThread(Runnable {
-//                            this@DiaryWriteFragment.findNavController()
-//                                .navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
-//                        })
                 }
             } else {
                 if (res != null) {
@@ -510,7 +520,13 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                             try {
 //                                uriList.add(imageUri) //uri를 list에 담는다.
                                 mainViewModel.uploadImages = imageUri
-                                imageUri.let { mainViewModel.insertPhotoUriList(it!!) }
+                                imageUri.let {
+                                    if(mainViewModel.photoUriList.value!!.size < 10){
+                                        mainViewModel.insertPhotoUriList(it!!)
+                                    } else{
+                                        showCustomToast("더이상 선택할 수 없습니다.")
+                                    }
+                                }
                             } catch (e: Exception) {
                                 Log.e(TAG, "File select error", e)
                             }

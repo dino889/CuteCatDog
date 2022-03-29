@@ -120,4 +120,8 @@ object CommonUtils {
 
         return simpleDateFormat.format(date)
     }
+
+    fun converPhotoSize(size:Int):String{
+        return "${size}/10"
+    }
 }
