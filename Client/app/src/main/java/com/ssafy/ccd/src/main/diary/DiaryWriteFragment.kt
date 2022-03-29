@@ -99,7 +99,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
             Log.d(TAG, "onCreate: $check")
         }
-        mainActivity.hideBottomNavi(true)
+
     }
 
     @SuppressLint("ResourceAsColor")
@@ -114,7 +114,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         runBlocking {
             mainViewModel.getHashTags()
         }
-
+        mainActivity.hideBottomNavi(true)
         FirebaseAuth.getInstance().signInAnonymously()
         if(flag==2 || flag == 3){
             initData()
