@@ -58,6 +58,8 @@ class DiaryDetailFragment : BaseFragment<FragmentDiaryDetailBinding>(FragmentDia
             popupMenu.setOnMenuItemClickListener(listener)
             popupMenu.show()
         }
+
+        backBtnClickEvent()
     }
     inner class PopupMenuListener: PopupMenu.OnMenuItemClickListener {
         override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -113,12 +115,10 @@ class DiaryDetailFragment : BaseFragment<FragmentDiaryDetailBinding>(FragmentDia
             }
         }
     }
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DiaryDetailFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+
+    private fun backBtnClickEvent() {
+        binding.fragmentDiaryDetailBack.setOnClickListener {
+            this@DiaryDetailFragment.findNavController().popBackStack()
+        }
     }
 }
