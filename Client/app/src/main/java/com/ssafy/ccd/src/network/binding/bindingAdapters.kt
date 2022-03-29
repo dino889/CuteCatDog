@@ -27,6 +27,7 @@ import com.ssafy.ccd.src.main.diary.DiaryPhotoRvAdapter
 import com.ssafy.ccd.src.main.home.BoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalBoardAdapter
 import com.ssafy.ccd.src.main.home.Community.LocalCommentAdapter
+import com.ssafy.ccd.src.main.home.Community.SearchAdapter
 import com.ssafy.ccd.src.main.home.Community.ShareBoardAdapter
 import com.ssafy.ccd.src.main.home.HomeProfilePetsAdapter
 import com.ssafy.ccd.src.main.home.NotificationAdapter
@@ -424,6 +425,18 @@ fun bindBoardAllListbyUser(recyclerView: RecyclerView, data:MutableList<Board>){
     adapter.list = data
     adapter.notifyDataSetChanged()
 }
+@BindingAdapter("searchBoardList")
+fun bindSearchBoardList(recyclerView: RecyclerView, data:List<Board>?){
+    var adapter = recyclerView.adapter as SearchAdapter
+    if(recyclerView.adapter == null){
+        adapter.setHasStableIds(true)
+        recyclerView.adapter = adapter
+    }else{
+        adapter = recyclerView.adapter as SearchAdapter
+    }
+    adapter.list = data as MutableList<Board>
+    adapter.notifyDataSetChanged()
+}
 @BindingAdapter("boardType")
 fun bindConvertBoardType(textView: TextView,type:Int){
     if(type == 1){
@@ -447,6 +460,7 @@ fun bindConvertNotificationType(imageView: ImageView,type:Int){
         imageView.setImageResource(R.drawable.notiuser)
     }
 }
+
 //@BindingAdapter("localReplyListData")
 //fun bindLocalReplyList(recyclerView: RecyclerView, data: MutableList<Comment>) {
 //    var adapter = recyclerView.adapter as LocalCommentReplyAdapter

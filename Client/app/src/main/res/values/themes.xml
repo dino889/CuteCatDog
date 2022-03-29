@@ -32,4 +32,8 @@
         parent="Widget.Design.BottomSheet.Modal">
         <item name ="android:background">@drawable/bottomsheet_background_rounded</item>
     </style>
+
+    <style name = "MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name = "searchIcon">@drawable/search</item>
+    </style>
 </resources>

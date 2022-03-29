@@ -56,8 +56,16 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         initRecyclerView()
         backBtnClickEvent()
         writeBtnClickEvent()
+        searchBtnClickEvent()
     }
-
+    /***
+     * 검색버튼 클릭이벤트 ( 제목으로 찾기 )
+     */
+    private fun searchBtnClickEvent(){
+        binding.fragmentLocalSearch.setOnClickListener {
+            this@LocalBoardFragment.findNavController().navigate(R.id.action_localBoardFragment_to_searchFragment)
+        }
+    }
     /**
      * 뒤로가기 버튼 클릭 이벤트
      */
