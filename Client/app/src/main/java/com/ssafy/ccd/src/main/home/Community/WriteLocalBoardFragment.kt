@@ -78,12 +78,12 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
         arguments?.apply {
             postId = getInt("postId")
         }
-        mainActivity.hideBottomNavi(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.hideBottomNavi(true)
 
         mainActivity.runOnUiThread(kotlinx.coroutines.Runnable {
             inputObservable()

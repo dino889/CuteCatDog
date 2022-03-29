@@ -79,7 +79,6 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
         arguments?.apply {
             postId = getInt("postId")
         }
-        mainActivity.hideBottomNavi(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
