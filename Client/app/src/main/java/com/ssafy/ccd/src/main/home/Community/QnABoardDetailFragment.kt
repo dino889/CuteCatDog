@@ -120,6 +120,10 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
             mainViewModel.writeType = 2
             this@QnABoardDetailFragment.findNavController().navigate(R.id.writeQnaFragment)
         }
+
+        binding.fragmentQnaBoardDetailIbBack.setOnClickListener {
+            this@QnABoardDetailFragment.findNavController().popBackStack()
+        }
     }
 
     /**
