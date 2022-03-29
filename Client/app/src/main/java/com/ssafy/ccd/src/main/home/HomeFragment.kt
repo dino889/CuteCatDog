@@ -78,6 +78,13 @@ class HomeFragment : Fragment() {
         mainActivity = context as MainActivity
     }
 
+    /**
+     * @author All
+     * @since 03/22/22
+     * Firebase Store 사용시에
+     * BaseFragment를 사용할 수
+     * 없어서 해당 부분으로 교체
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -118,6 +125,11 @@ class HomeFragment : Fragment() {
         moveBoardDetailClickEvent()
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 리스너 설정
+     */
     private fun setListener() {
         ivHomeUserImg.setOnClickListener {
             this@HomeFragment.findNavController().navigate(R.id.homeFragment)
@@ -132,6 +144,11 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 객체 생성
+     */
     private fun setInstance() {
         mainActivity = context as MainActivity
         binding.viewModel = mainViewModel
@@ -152,6 +169,11 @@ class HomeFragment : Fragment() {
         ))
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 어뎁터 초기설정
+     */
     private fun initAdapter(){
         // myPetsList Adapter
         mainViewModel.myPetsList.observe(viewLifecycleOwner) {
@@ -208,6 +230,11 @@ class HomeFragment : Fragment() {
         autoScrollStop()
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 롤링배너 핸들러
+     */
     private inner class MyHandler : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -219,10 +246,20 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 롤링배너 정지 함수
+     */
     private fun autoScrollStop(){
         myHandler.removeMessages(0) // 핸들러를 중지시킴
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 롤링배너 초기화 관련 함수
+     */
     private fun initBanner() {
         binding.fragmentHomeVpBanner.adapter = BannerAdapter(list)
         binding.fragmentHomeVpBanner.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -243,6 +280,11 @@ class HomeFragment : Fragment() {
         binding.wormDotsIndicator.setViewPager2(binding.fragmentHomeVpBanner)
     }
 
+    /**
+     * @author Jueun
+     * @since 03/22/22
+     * 롤링배너 관련 함수
+     */
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0)
         myHandler.sendEmptyMessageDelayed(0, intervalTime)
