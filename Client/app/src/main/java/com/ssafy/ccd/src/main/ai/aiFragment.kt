@@ -307,7 +307,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
 
     }
-    fun showBottomShareDialog(){
+//    fun showBottomShareDialog(){
 //        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
 //        val dialog = BottomSheetDialog(requireContext())
 //        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -439,6 +439,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             e.printStackTrace()
         }
     }
+
     fun setFabClickEvent(){
         binding.fragmentAiFabMain.setOnClickListener {
             toggleTab()
@@ -458,6 +459,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             Log.d(TAG, "showBottomShareDialog: eng?")
         }
     }
+
     private fun toggleTab(){
         showCustomToast("true? $isFabOpen")
         if(isFabOpen){

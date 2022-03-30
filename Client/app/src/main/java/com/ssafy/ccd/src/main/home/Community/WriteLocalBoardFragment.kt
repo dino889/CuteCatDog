@@ -191,7 +191,6 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
 
             if(titleLenChk(title) && contentLenChk(content)) {
                 val beforeFileName = beforePost.photoPath.substring(beforePost.photoPath.lastIndexOf("/") + 1, beforePost.photoPath.length)
-                Log.d(TAG, "modifyBtnClickEvent: fn : $fileName / be : ${beforePost.photoPath} / $beforeFileName")
                 if(fileName == "" || fileName == beforeFileName) {
                     fileName = beforePost.photoPath
                 }
