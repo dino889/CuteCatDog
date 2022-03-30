@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-<!--        <variable-->
-<!--            name=""-->
-<!--            type="" />-->
+        <variable
+            name="pet"
+            type="com.ssafy.ccd.src.dto.Pet" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,7 +97,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@color/main_30p"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    app:imageUrlDiary="@{pet.photoPath}"/>
 
 
             </com.google.android.material.card.MaterialCardView>
@@ -156,7 +157,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/et_background_normal"
-                        android:hint="이름" />
+                        android:hint="이름"
+                        android:text="@{pet.name}"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -174,7 +176,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/et_background_normal"
-                        android:hint="생일" />
+                        android:hint="생일"
+                        app:myPageConvertBirth="@{pet.birth}"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
