@@ -55,6 +55,9 @@ import androidx.core.view.marginBottom
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.kakao.sdk.common.KakaoSdk
+import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.main.home.Community.LocalCommentFragment
 import kotlin.math.round
 
@@ -83,7 +86,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        KakaoSdk.init(this,"78b660953c918503e1a723afddb4d6e8")
         setInit()
         setNavigation()
         setInstance()

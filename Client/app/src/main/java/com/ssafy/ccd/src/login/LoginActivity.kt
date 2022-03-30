@@ -72,8 +72,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 //        logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
 
 //         kakao 플랫폼 키 해시 등록
-//        val keyHash = Utility.getKeyHash(this)
-//        Log.d("kakaoKeyHash", "onCreate: $keyHash")
+        val keyHash = Utility.getKeyHash(this)
+        Log.d("kakaoKeyHash", "onCreate: $keyHash")
     }
 
 
