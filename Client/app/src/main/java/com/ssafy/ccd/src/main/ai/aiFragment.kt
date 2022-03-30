@@ -492,7 +492,6 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             }
             isFabOpen = !isFabOpen
 
-
     }
     companion object {
         // TensorFlow 관련 Final 값

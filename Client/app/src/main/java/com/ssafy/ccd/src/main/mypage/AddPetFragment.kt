@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.src.main.MainActivity
@@ -50,12 +51,15 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     private val STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
+
     var kindId = 0
     var gender = -1
     var isNeutered = -1
     var fileName = ""
     var timeName = ""
     var flag = 1
+
+
     //firebase
     private var storageReference: StorageReference? = null
     private lateinit var contentResolver : ContentResolver
@@ -69,7 +73,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     private var fileExtension : String? = ""    // 파일 확장자
     private var imgSelectedChk = false
 
-//    private var timeName = "" // firebase storage upload file name
+    private lateinit var beforePet: Pet
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -78,6 +82,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.apply {
+            petId = getInt("petId")
+        }
+        Log.d(TAG, "onCreate: $petId")
     }
 
     override fun onResume() {
@@ -94,14 +102,16 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             mainViewModel.getPetKindsAllList()
         }
 
-        initListener()
 
-        if(mainViewModel.petId > 0){
+        if(petId > 0){
             runBlocking {
-                mainViewModel.getPetDetailList(mainViewModel.petId)
+                mainViewModel.getPetDetailList(petId)
             }
             flag = 2
             initData()
+            modifyBtnClickEvent()
+        } else {
+            confirmBtnClickEvent()
         }
 
 //        binding.addPetFragmentIbSelectImg.setOnClickListener {
@@ -109,48 +119,60 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 //            loadImage()
 //        }
 
-        // 등록 or 수정 버튼 클릭 이벤트
-        binding.fragmentAddPetSuccessBtn.setOnClickListener {
-            if(flag == 1){
-                if(mainViewModel.uploadedImageUri == null || mainViewModel.uploadedImageUri.toString() == ""){
-                    fileName = ""
-                }else{
-                    timeName = System.currentTimeMillis().toString();
-                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+getFileExtension(mainViewModel.uploadedImageUri)
-                }
-                var pet = Pet(
-                    birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
-                    gender = gender,
-                    id=0,
-                    isNeutered = isNeutered,
-                    kindId = kindId,
-                    name = binding.addPetFragmentTietName.text.toString(),
-                    photoPath = fileName,
-                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                )
-                Log.d(TAG, "onViewCreated: INSERT")
-                insertPet(pet)
-            }else{
-                if(mainViewModel.uploadedImageUri == null || mainViewModel.uploadedImageUri.toString() == "" ){
-                    fileName = ""
-                }else{
-                    timeName = System.currentTimeMillis().toString();
-                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+getFileExtension(mainViewModel.uploadedImageUri)
-                }
-                var pet = Pet(
-                    birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
-                    gender = gender,
-                    id=mainViewModel.petId,
-                    isNeutered = isNeutered,
-                    kindId = kindId,
-                    name = binding.addPetFragmentTietName.text.toString(),
-                    photoPath = fileName,
-                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                )
-                Log.d(TAG, "onViewCreated: UPDATE")
-                updatePets(pet)
-            }
-        }
+//        // 등록 or 수정 버튼 클릭 이벤트
+//        binding.fragmentAddPetSuccessBtn.setOnClickListener {
+//            if(flag == 1){
+//                if(imgUri == null || imgUri.toString() == ""){
+//                    fileName = ""
+//                }else{
+//                    timeName = System.currentTimeMillis().toString();
+//                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+getFileExtension(imgUri)
+//                }
+//                var pet = Pet(
+//                    birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
+//                    gender = gender,
+//                    id=0,
+//                    isNeutered = isNeutered,
+//                    kindId = kindId,
+//                    name = binding.addPetFragmentTietName.text.toString(),
+//                    photoPath = fileName,
+//                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+//                )
+//                Log.d(TAG, "onViewCreated: INSERT")
+//                insertPet(pet)
+//            }else{
+//
+//                if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY){
+//                    fileName = ""
+//                }else{
+//                    timeName = System.currentTimeMillis().toString();
+//                    fileName = "${ApplicationClass.sharedPreferencesUtil.getUser().id}/${timeName}."+ getFileExtension(imgUri)
+//                }
+//
+//                Log.d(TAG, "onViewCreated: $fileName")
+//
+//                val beforeFileName = beforePet.photoPath.substring(beforePet.photoPath.lastIndexOf("/") + 1, beforePet.photoPath.length)
+//                if(fileName == "" || fileName == beforeFileName) {
+//                    fileName = beforePet.photoPath
+//                }
+//                Log.d(TAG, "onViewCreated: $fileName")
+//
+//
+//                var pet = Pet(
+//                    birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
+//                    gender = gender,
+//                    id=mainViewModel.petId,
+//                    isNeutered = isNeutered,
+//                    kindId = kindId,
+//                    name = binding.addPetFragmentTietName.text.toString(),
+//                    photoPath = fileName,
+//                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+//                )
+//                Log.d(TAG, "onViewCreated: UPDATE")
+//
+//                updatePets(pet)
+//            }
+//        }
 
         // back btn click
         binding.fragmentAddPetBack.setOnClickListener {
@@ -159,16 +181,22 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
         // 이미지 선택 버튼 클릭 이벤트
         selectImgBtnEvent()
+        initListener()
+
     }
+
 
     fun initData(){
         binding.fragmentAddPetSuccessBtn.setText("수정")
 
         mainViewModel.pet.observe(viewLifecycleOwner, {
-            binding.addPetFragmentTietName.setText(it.name.toString())
-            binding.addPetFragmentTietBirth.setText(it.birth.toString())
+            binding.pet = it
+            beforePet = it
+//            binding.addPetFragmentTietName.setText(it.name.toString())
+//            binding.addPetFragmentTietBirth.setText(it.birth.toString())
             binding.addPetFragmentAutoKind.setText(it.kindId.toString())
-            mainViewModel.uploadedImageUri = it.photoPath.toUri()
+//            imgUri = it.photoPath.toUri()
+
             if(it.isNeutered == 0){
                 binding.addPetFragmentRbNeuteringX.isChecked = true
                 binding.addPetFragmentRbNeuteringO.isChecked = false
@@ -184,28 +212,98 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 binding.addPetFragmentRbGendeMan.isChecked = false
                 binding.addPetFragmentRbGenderWoman.isChecked = true
             }
-            if(it.birth!=null){
-                var birth = CommonUtils.makeBirthString(it.birth)
-                binding.addPetFragmentTietBirth.setText(birth)
-            }
-            if(it.photoPath == null || it.photoPath==""){
-                binding.addPEtFragmentIvPetImage.setImageResource(R.drawable.logo)
-                mainViewModel.uploadedImageUri = null
-            }else{
-                var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
-                var storageRef = storage.reference
-                storageRef.child("${it.photoPath}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                    override fun onSuccess(p0: Uri?) {
-                        binding.addPEtFragmentIvPetImage.setImageURI(p0)
-                    }
-
-                }).addOnFailureListener(object: OnFailureListener {
-                    override fun onFailure(p0: Exception) {
-                    }
-                })
-            }
+//            if(it.birth!=null){
+//                var birth = CommonUtils.makeBirthString(it.birth)
+//                binding.addPetFragmentTietBirth.setText(birth)
+//            }
+//            if(it.photoPath == null || it.photoPath==""){
+//                binding.addPEtFragmentIvPetImage.setImageResource(R.drawable.logo)
+//                mainViewModel.uploadedImageUri = null
+//            }else{
+//                var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+//                var storageRef = storage.reference
+//                storageRef.child("${it.photoPath}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+//                    override fun onSuccess(p0: Uri?) {
+//                        binding.addPEtFragmentIvPetImage.setImageURI(p0)
+//                    }
+//
+//                }).addOnFailureListener(object: OnFailureListener {
+//                    override fun onFailure(p0: Exception) {
+//                    }
+//                })
+//            }
         })
     }
+
+    /**
+     * 완료 버튼 클릭 이벤트 - insert
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun confirmBtnClickEvent() {    // 게시글 insert
+        binding.fragmentAddPetSuccessBtn.setOnClickListener {
+
+            val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            val fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
+                ""
+            } else{
+                timeName = System.currentTimeMillis().toString()
+                "${userId}/${timeName}."+ fileExtension
+            }
+            if(fileName == "") {
+                showCustomToast("사진을 선택해 주세요")
+            } else {
+                var pet = Pet(
+                            birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
+                            gender = gender,
+                            id=0,
+                            isNeutered = isNeutered,
+                            kindId = kindId,
+                            name = binding.addPetFragmentTietName.text.toString(),
+                            photoPath = fileName,
+                            userId = ApplicationClass.sharedPreferencesUtil.getUser().id)
+                insertPet(pet)
+
+            }
+        }
+    }
+
+
+    /**
+     * 수정 버튼 클릭 이벤트 - update
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun modifyBtnClickEvent() {    // 게시글 insert Or Update
+        binding.fragmentAddPetSuccessBtn.setOnClickListener {
+
+            val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            var fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
+                ""
+            } else{
+                timeName = System.currentTimeMillis().toString()
+                "${userId}/${timeName}."+ fileExtension
+            }
+
+            val beforeFileName = beforePet.photoPath.substring(beforePet.photoPath.lastIndexOf("/") + 1, beforePet.photoPath.length)
+            if(fileName == "" || fileName == beforeFileName) {
+                fileName = beforePet.photoPath
+            }
+
+            var pet = Pet(
+                birth = CommonUtils.makeBirthMilliSecond(binding.addPetFragmentTietBirth.text.toString()),
+                gender = gender,
+                id= petId,
+                isNeutered = isNeutered,
+                kindId = kindId,
+                name = binding.addPetFragmentTietName.text.toString(),
+                photoPath = fileName,
+                userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+            )
+
+            updatePets(pet)
+
+        }
+    }
+
 
     /**
      * 사진 선택 버튼 클릭 이벤트
@@ -228,21 +326,21 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         }
     }
 
-    fun loadImage(){
-        Log.d(TAG, "loadImage: ${mainViewModel.uploadedImageUri}")
-        binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
-    }
+//    fun loadImage(){
+//        Log.d(TAG, "loadImage: ${mainViewModel.uploadedImageUri}")
+//        binding.addPEtFragmentIvPetImage.setImageURI(mainViewModel.uploadedImageUri)
+//    }
 
     fun addFireBase(){
-        if(mainViewModel.uploadedImageUri == null){
+        if(imgUri == null || imgUri == Uri.EMPTY){
             Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
             showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
             childFragmentManager.popBackStack()
         }
 
-        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+getFileExtension(mainViewModel.uploadedImageUri))
+        val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(timeName+"."+fileExtension)
 
-        storageReferenceChild.putFile(mainViewModel.uploadedImageUri!!)
+        storageReferenceChild.putFile(imgUri!!)
             .addOnSuccessListener{
                 storageReferenceChild.downloadUrl
                     .addOnSuccessListener {
@@ -261,6 +359,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             setBirth()
         }
     }
+
+    /**
+     * 품종 자동완성 초기화
+     */
     private fun initKinds(){
         var kinds = mutableListOf<String>()
         for(item in 0..mainViewModel.kinds.value!!.size-1){
@@ -275,6 +377,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             kindId = mainViewModel.kinds.value!![position].id
         }
     }
+
+    /**
+     * 성별 선택 클릭 리스너
+     */
     private fun selectedGender() {
         binding.addPetFragmentRgGender.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
@@ -287,6 +393,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             }
         }
     }
+
+    /**
+     * 중성화 여부 선택 클릭 리스너
+     */
     private fun selectedNeutered(){
         binding.addPetFragmentRgNeutering.setOnCheckedChangeListener{ group, checkedId ->
             when(checkedId){
@@ -297,19 +407,23 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             }
         }
     }
+
+
     fun insertPet(pet:Pet){
         var response : Response<Message>
         runBlocking {
             response = PetService().petsCreateService(pet)
+            addFireBase()
 
         }
         val res = response.body()
         if(response.code() == 200){
             if(res!=null){
-                if(res.success){
-                    if(mainViewModel.uploadedImageUri != null){
-                        addFireBase()
-                    }
+                if(res.success && res.data["isSuccess"] == true){
+                    showCustomToast("등록이 완료되었습니다.")
+//                    if(imgUri != null){
+//                        addFireBase()
+//                    }
 //                        mainActivity.runOnUiThread(Runnable {
 //                            this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
 //                        })
@@ -323,18 +437,29 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     }
 
     fun updatePets(pet:Pet){
-        var response : retrofit2.Response<Message>
+        var pageBack = false
+        var response : Response<Message>
         runBlocking {
             response = PetService().petsUpdateService(pet)
             Log.d(TAG, "updatePets: ${response.code()}")
+            if(pet.photoPath != beforePet.photoPath) {
+                addFireBase()
+                pageBack = false
+            } else {
+                pageBack = true
+            }
         }
         val res = response.body()
         if(response.code() == 200){
             if(res!=null){
-                if(res.success){
-                    if(mainViewModel.uploadedImageUri != null){
-                        addFireBase()
+                if(res.success && res.data["isSuccess"] == true){
+                    showCustomToast("수정이 완료되었습니다")
+                    if(pageBack) {
+                        (requireActivity() as MainActivity).onBackPressed()
                     }
+//                    if(mainViewModel.uploadedImageUri != null){
+//                        addFireBase()
+//                    }
 //                    mainActivity.runOnUiThread(Runnable {
 //                        this@AddPetFragment.findNavController().navigate(R.id.action_addPetFragment_to_myPageFragment)
 //                    })
@@ -404,7 +529,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 try {
                     currentImageUri?.let {
                         imgUri = currentImageUri
-                        mainViewModel.uploadedImageUri = currentImageUri
+//                        mainViewModel.uploadedImageUri = currentImageUri
                         fileExtension = requireActivity().contentResolver.getType(currentImageUri)
                         // 사진 set
                         Glide.with(this)

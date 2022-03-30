@@ -172,7 +172,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             petAdapter.setAddClickListener(object: PetListRecyclerviewAdapter.AddClickListener {
                 override fun onClick(view: View, position: Int) {
                     //AddPetFragment로 넘기기
-                    this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment)
+                    this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment, bundleOf("postId" to -1))
                 }
             })
 
@@ -335,8 +335,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         override fun onMenuItemClick(item: MenuItem?): Boolean {
             when(item?.itemId){
                 R.id.modify->{
-                    this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment)
-                    mainViewModel.petId = petId
+                    this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment, bundleOf("petId" to petId))
+//                    mainViewModel.petId = petId
                 }
                 R.id.delete -> {
                     deletePets(petId)
