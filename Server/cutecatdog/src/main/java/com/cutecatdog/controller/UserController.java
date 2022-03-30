@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 @Api(tags = "User")
 public class UserController {
 
@@ -47,7 +49,8 @@ public class UserController {
         try {
             response.setSuccess(true);
             HashMap<String, Boolean> data = new HashMap<>();
-            if (userService.checkEmail(userDto.getEmail()) != null) {
+            // log.info("res {}", userService.checkEmail(userDto.getEmail()));
+            if (userService.checkEmail(userDto.getEmail()) == null) {
                 if (userService.addUser(userDto)) {
                     response.setMessage("회원가입 성공");
                     data.put("isSignup", true);
