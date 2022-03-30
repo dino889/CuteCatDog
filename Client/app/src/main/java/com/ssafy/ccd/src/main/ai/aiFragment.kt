@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.ai
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
@@ -102,6 +103,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     // 결과
     private lateinit var result:String
     private lateinit var filePath:File
+    private var isFabOpen = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,12 +115,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         progressDialog.show()
         setInit()
 
-        binding.fragmentAiShare.setOnClickListener {
-            showBottomShareDialog()
-        }
     }
 
     private fun setListener() {
+        setFabClickEvent()
         // 뒤로가기 버튼
         ivBack.setOnClickListener {
             this@aiFragment.findNavController().navigate(R.id.homeFragment)
@@ -308,36 +308,36 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     }
     fun showBottomShareDialog(){
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val param = WindowManager.LayoutParams()
-        param.width = WindowManager.LayoutParams.MATCH_PARENT
-        param.height = WindowManager.LayoutParams.WRAP_CONTENT
-        val window = dialog.window
-        dialog.setContentView(dialogView)
-        dialog.show()
-
-        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_Diary).setOnClickListener {
-            Log.d(TAG, "showBottomShareDialog: ")
-            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
-
-            var check = 3
-            val flag = bundleOf("flag" to check)
-            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
-            Log.d(TAG, "showBottomShareDialog: eng?")
-            dialog.dismiss()
-        }
-        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_kakao).setOnClickListener {
-            kakaoLink()
-            dialog.dismiss()
-        }
-        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_insta).setOnClickListener {
-            shareInstagram()
-            dialog.dismiss()
-        }
-
-    }
+//        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
+//        val dialog = BottomSheetDialog(requireContext())
+//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        val param = WindowManager.LayoutParams()
+//        param.width = WindowManager.LayoutParams.MATCH_PARENT
+//        param.height = WindowManager.LayoutParams.WRAP_CONTENT
+//        val window = dialog.window
+//        dialog.setContentView(dialogView)
+//        dialog.show()
+//
+//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_Diary).setOnClickListener {
+//            Log.d(TAG, "showBottomShareDialog: ")
+//            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+//
+//            var check = 3
+//            val flag = bundleOf("flag" to check)
+//            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
+//            Log.d(TAG, "showBottomShareDialog: eng?")
+//            dialog.dismiss()
+//        }
+//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_kakao).setOnClickListener {
+//            kakaoLink()
+//            dialog.dismiss()
+//        }
+//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_insta).setOnClickListener {
+//            shareInstagram()
+//            dialog.dismiss()
+//        }
+//
+//    }
 
     fun kakaoLink(){
         val params = FeedTemplate
@@ -438,6 +438,40 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         }catch (e: Exception){
             e.printStackTrace()
         }
+    }
+    fun setFabClickEvent(){
+        binding.fragmentAiFabMain.setOnClickListener {
+            toggleTab()
+        }
+        binding.fragmentAiShareSns.setOnClickListener {
+            shareInstagram()
+        }
+        binding.fragmentAiShareKakao.setOnClickListener {
+            kakaoLink()
+        }
+        binding.fragmentAiToDiary.setOnClickListener {
+            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+
+            var check = 3
+            val flag = bundleOf("flag" to check)
+            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
+            Log.d(TAG, "showBottomShareDialog: eng?")
+        }
+    }
+    private fun toggleTab(){
+        showCustomToast("true? $isFabOpen")
+        if(isFabOpen){
+            ObjectAnimator.ofFloat(binding.fragmentAiShareSns,"translationY",0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiShareKakao,"translationY",0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,"translationY",0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,View.ROTATION,45f,0f).apply { start() }
+        }else{
+            ObjectAnimator.ofFloat(binding.fragmentAiShareSns,"translationY",-460f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiShareKakao,"translationY",-320f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,"translationY",-180f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,View.ROTATION,0f,45f).apply { start() }
+        }
+        isFabOpen = !isFabOpen
     }
     companion object {
         // TensorFlow 관련 Final 값

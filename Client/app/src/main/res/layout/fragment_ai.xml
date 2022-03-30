@@ -51,18 +51,6 @@
                     app:layout_constraintTop_toTopOf="@+id/fragmentAi_ivBack"
                     app:layout_constraintVertical_bias="0.625" />
 
-                <ImageButton
-                    android:id="@+id/fragment_ai_share"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/share"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -338,6 +326,59 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_ai_shareKakao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/kakaotalk"
+                app:backgroundTint="@color/grey"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_ai_fabMain"
+                app:layout_constraintEnd_toEndOf="@id/fragment_ai_fabMain"
+                app:layout_constraintStart_toStartOf="@id/fragment_ai_fabMain"
+                app:layout_constraintTop_toTopOf="@id/fragment_ai_fabMain"
+                app:rippleColor="@color/grey" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_ai_shareSns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/instagram"
+                app:backgroundTint="@color/grey"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_ai_fabMain"
+                app:layout_constraintEnd_toEndOf="@id/fragment_ai_fabMain"
+                app:layout_constraintStart_toStartOf="@id/fragment_ai_fabMain"
+                app:layout_constraintTop_toTopOf="@id/fragment_ai_fabMain"
+                app:rippleColor="@color/grey" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_ai_toDiary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/diary"
+                app:backgroundTint="@color/grey"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_ai_fabMain"
+                app:layout_constraintEnd_toEndOf="@id/fragment_ai_fabMain"
+                app:layout_constraintStart_toStartOf="@id/fragment_ai_fabMain"
+                app:layout_constraintTop_toTopOf="@id/fragment_ai_fabMain"
+                app:rippleColor="@color/grey" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fragment_ai_fabMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
+                android:src="@drawable/send"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
