@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -32,11 +33,17 @@ import com.google.firebase.storage.StorageReference
 import com.kakao.kakaolink.v2.KakaoLinkResponse
 import com.kakao.kakaolink.v2.KakaoLinkService
 import com.kakao.message.template.ButtonObject
+
 import com.kakao.message.template.ContentObject
-import com.kakao.message.template.FeedTemplate
 import com.kakao.message.template.LinkObject
 import com.kakao.network.ErrorResult
 import com.kakao.network.callback.ResponseCallback
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.link.LinkClient
+import com.kakao.sdk.link.WebSharerClient
+import com.kakao.sdk.talk.TalkApiClient
+import com.kakao.sdk.template.model.*
+
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
@@ -45,6 +52,8 @@ import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.main.information.InformationActivity
 import com.ssafy.ccd.src.main.information.InformationMainFragment
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.runBlocking
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
@@ -64,6 +73,7 @@ import java.nio.channels.FileChannel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.log
 import kotlin.math.min
 
@@ -104,6 +114,9 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private lateinit var result:String
     private lateinit var filePath:File
     private var isFabOpen = false
+
+    //KaKao
+//    private lateinit var defaultFeed: FeedTemplate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -304,174 +317,182 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                 ""
             }
         }
-
-
     }
-    fun showBottomShareDialog(){
-//        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_ai_bottom_dialog,null)
-//        val dialog = BottomSheetDialog(requireContext())
-//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//        val param = WindowManager.LayoutParams()
-//        param.width = WindowManager.LayoutParams.MATCH_PARENT
-//        param.height = WindowManager.LayoutParams.WRAP_CONTENT
-//        val window = dialog.window
-//        dialog.setContentView(dialogView)
-//        dialog.show()
-//
-//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_Diary).setOnClickListener {
-//            Log.d(TAG, "showBottomShareDialog: ")
-//            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
-//
-//            var check = 3
-//            val flag = bundleOf("flag" to check)
-//            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
-//            Log.d(TAG, "showBottomShareDialog: eng?")
-//            dialog.dismiss()
-//        }
-//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_kakao).setOnClickListener {
-//            kakaoLink()
-//            dialog.dismiss()
-//        }
-//        dialogView.findViewById<ConstraintLayout>(R.id.fragment_ai_dialog_insta).setOnClickListener {
-//            shareInstagram()
-//            dialog.dismiss()
-//        }
-//
-//    }
 
-    fun kakaoLink(){
-        val params = FeedTemplate
-            .newBuilder(
-                ContentObject.newBuilder(
-                    "ㅋㅋㄷ 감정분석",
-                    mainViewModels.uploadedImageUri.toString(),
-                    LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                        .setMobileWebUrl("https://developers.kakao.com").build()
-                )
-                    .setDescrption("내친구의 반려동물! 어떤 분석결과가 나왔는지 함께 확인하세요!!")
-                    .build()
+    fun shareInstagram() {
+            Log.d(TAG, "shareInstagram: InstagramClick")
+
+            mainActivity.checkPermission(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ), 99
             )
-            .addButton(
-                ButtonObject(
-                    "웹에서 보기",
-                    LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                        .setMobileWebUrl("https://developers.kakako.com")
-                        .build()
-                )
-            )
-            .addButton(
-                ButtonObject(
-                    "앱에서 보기",
-                    LinkObject.newBuilder()
-                        .setWebUrl("https://developers.kakao.com")
-                        .setMobileWebUrl("https://developers.kakao.com")
-                        .setAndroidExecutionParams("key1=value1")
-                        .build()
-                )
-            ).build()
 
-        val serverCallbackArgs: MutableMap<String,String> = HashMap()
-        serverCallbackArgs["user_id"] = ApplicationClass.sharedPreferencesUtil.getUser().id.toString()
-        
-        KakaoLinkService.getInstance().sendDefault(
-            requireContext(),
-            params,
-            serverCallbackArgs,
-            object : ResponseCallback<KakaoLinkResponse?>(){
-                override fun onFailure(errorResult: ErrorResult?) {
-                    Log.d(TAG, "onFailure: ${errorResult.toString()}")
+            Log.d(TAG, "shareInstagram: ${mainViewModels.uploadedImageUri}")
+            var bitmap = mainViewModels.uploadedImage
+            var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
+            var folderName = ""
+            var fileName = ""
+            var cnt = 0;
+            for (i in realPath.toString().length - 1..0) {
+                fileName += realPath!!.get(i)
+                cnt++;
+                if (realPath!!.get(i) == '/') {
+                    break;
                 }
-
-                override fun onSuccess(result: KakaoLinkResponse?) {
-                }
-
             }
+            folderName = realPath!!.substring(0, realPath!!.length - cnt)
+            var fullPath = folderName
+            var img_dir = "${Environment.getExternalStorageDirectory()}/tmp"
+            try {
+                filePath = File(fullPath, fileName)
+                Log.d(TAG, "shareInstagram22: ${filePath}")
+                if (!filePath.isDirectory) {
+                    filePath.mkdir()
+                }
+                var fos = FileOutputStream(File(fullPath, fileName))
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                fos.flush()
+                fos.close()
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            var share = Intent(Intent.ACTION_SEND)
+            share.setType("image/*")
+            var uri = Uri.fromFile(File(fullPath, fileName))
+            try {
+                share.putExtra(Intent.EXTRA_STREAM, uri)
+                share.putExtra(Intent.EXTRA_TEXT, "텍스트는 지원안함")
+                share.setPackage("com.instagram.android")
+                startActivity(share)
+            } catch (e: ActivityNotFoundException) {
+                showCustomToast("인스타그램을 설치해주세요")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+    }
+    private fun shareKakao(){
+        Log.d(TAG, "shareKakao: ${mainViewModels.uploadedImageUri}")
+        val defaultFeed = FeedTemplate(
+            content = Content(
+                title = "내 반려동물 감정분석은?",
+                description = "친구의 반려동물 감정은 ${binding.fragmentAiResultEmotion.text.toString()}입니다 :)",
+                imageUrl = "${mainViewModels.uploadedImageUri}",
+                link = Link(
+                    webUrl = "https://developers.kakao.com",
+                    mobileWebUrl = "https://developers.kakao.com"
+                )
+            ),
+            itemContent = ItemContent(
+                profileText = "ㅋㅋㄷ",
+                profileImageUrl = "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+            ),
+            null,
+            buttons = listOf(
+                Button(
+                    "웹으로 보기",
+                    Link(
+                        webUrl = "https://developers.kakao.com",
+                        mobileWebUrl = "https://developers.kakao.com"
+                    )
+                ),
+                Button(
+                    "앱으로 보기",
+                    Link(
+                        androidExecutionParams = mapOf("key1" to "value1", "key2" to "value2"),
+                        iosExecutionParams = mapOf("key1" to "value1", "key2" to "value2")
+                    )
+                )
+            )
         )
 
-    }
 
-    fun shareInstagram(){
-        mainActivity.checkPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),99)
+        // 카카오톡 설치여부 확인
+        if (LinkClient.instance.isKakaoLinkAvailable(requireContext())) {
+            // 카카오톡으로 카카오링크 공유 가능
+            LinkClient.instance.defaultTemplate(requireContext(), defaultFeed) { linkResult, error ->
+                if (error != null) {
+                    Log.e(TAG, "카카오링크 보내기 실패", error)
+                }
+                else if (linkResult != null) {
+                    Log.d(TAG, "카카오링크 보내기 성공 ${linkResult.intent}")
+                    startActivity(linkResult.intent)
 
-        Log.d(TAG, "shareInstagram: ${mainViewModels.uploadedImageUri}")
-        var bitmap = mainViewModels.uploadedImage
-        var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
-        var folderName = ""
-        var fileName = ""
-        var cnt = 0;
-        for(i in realPath.toString().length-1..0){
-            fileName += realPath!!.get(i)
-            cnt++;
-            if(realPath!!.get(i) == '/'){
-                break;
+                    // 카카오링크 보내기에 성공했지만 아래 경고 메시지가 존재할 경우 일부 컨텐츠가 정상 동작하지 않을 수 있습니다.
+                    Log.w(TAG, "Warning Msg: ${linkResult.warningMsg}")
+                    Log.w(TAG, "Argument Msg: ${linkResult.argumentMsg}")
+                }
+            }
+        } else {
+            // 카카오톡 미설치: 웹 공유 사용 권장
+            // 웹 공유 예시 코드
+            val sharerUrl = WebSharerClient.instance.defaultTemplateUri(defaultFeed)
+
+            // CustomTabs으로 웹 브라우저 열기
+
+            // 1. CustomTabs으로 Chrome 브라우저 열기
+            try {
+                KakaoCustomTabsClient.openWithDefault(requireContext(), sharerUrl)
+            } catch(e: UnsupportedOperationException) {
+                // Chrome 브라우저가 없을 때 예외처리
+            }
+
+            // 2. CustomTabs으로 디바이스 기본 브라우저 열기
+            try {
+                KakaoCustomTabsClient.open(requireContext(), sharerUrl)
+            } catch (e: ActivityNotFoundException) {
+                // 인터넷 브라우저가 없을 때 예외처리
             }
         }
-        folderName = realPath!!.substring(0,realPath!!.length-cnt)
-        var fullPath = folderName
-        var img_dir = "${Environment.getExternalStorageDirectory()}/tmp"
-        try{
-            filePath = File(fullPath,fileName)
-            Log.d(TAG, "shareInstagram22: ${filePath}")
-            if(!filePath.isDirectory){
-                filePath.mkdir()
+    }
+    fun setFabClickEvent() {
+            binding.fragmentAiFabMain.setOnClickListener {
+                toggleTab()
             }
-            var fos = FileOutputStream(File(fullPath,fileName))
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            fos.flush()
-            fos.close()
-        }catch (e:FileNotFoundException){
-            e.printStackTrace()
-        }catch (e:IOException){
-            e.printStackTrace()
+            binding.fragmentAiShareSns.setOnClickListener {
+                shareInstagram()
+            }
+            binding.fragmentAiShareKakao.setOnClickListener {
+                shareKakao()
+            }
+            binding.fragmentAiToDiary.setOnClickListener {
+                mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+
+                var check = 3
+                val flag = bundleOf("flag" to check)
+                this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
+                Log.d(TAG, "showBottomShareDialog: eng?")
+            }
         }
 
-        var share = Intent(Intent.ACTION_SEND)
-        share.setType("image/*")
-        var uri = Uri.fromFile(File(fullPath,fileName))
-        try{
-            share.putExtra(Intent.EXTRA_STREAM,uri)
-            share.putExtra(Intent.EXTRA_TEXT,"텍스트는 지원안함")
-            share.setPackage("com.instagram.android")
-            startActivity(share)
-        }catch (e:ActivityNotFoundException){
-            showCustomToast("인스타그램을 설치해주세요")
-        }catch (e: Exception){
-            e.printStackTrace()
-        }
-    }
-    fun setFabClickEvent(){
-        binding.fragmentAiFabMain.setOnClickListener {
-            toggleTab()
-        }
-        binding.fragmentAiShareSns.setOnClickListener {
-            shareInstagram()
-        }
-        binding.fragmentAiShareKakao.setOnClickListener {
-            kakaoLink()
-        }
-        binding.fragmentAiToDiary.setOnClickListener {
-            mainViewModels.emotions = binding.fragmentAiResultEmotion.text.toString()
+        fun toggleTab() {
+            showCustomToast("true? $isFabOpen")
+            if (isFabOpen) {
+                ObjectAnimator.ofFloat(binding.fragmentAiShareSns, "translationY", 0f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiShareKakao, "translationY", 0f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, "translationY", 0f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 45f, 0f)
+                    .apply { start() }
+            } else {
+                ObjectAnimator.ofFloat(binding.fragmentAiShareSns, "translationY", -460f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiShareKakao, "translationY", -320f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, "translationY", -180f)
+                    .apply { start() }
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 0f, 45f)
+                    .apply { start() }
+            }
+            isFabOpen = !isFabOpen
 
-            var check = 3
-            val flag = bundleOf("flag" to check)
-            this@aiFragment.findNavController().navigate(R.id.diaryWriteFragment, flag)
-            Log.d(TAG, "showBottomShareDialog: eng?")
-        }
-    }
-    private fun toggleTab(){
-        showCustomToast("true? $isFabOpen")
-        if(isFabOpen){
-            ObjectAnimator.ofFloat(binding.fragmentAiShareSns,"translationY",0f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiShareKakao,"translationY",0f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,"translationY",0f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,View.ROTATION,45f,0f).apply { start() }
-        }else{
-            ObjectAnimator.ofFloat(binding.fragmentAiShareSns,"translationY",-460f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiShareKakao,"translationY",-320f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,"translationY",-180f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fragmentAiToDiary,View.ROTATION,0f,45f).apply { start() }
-        }
-        isFabOpen = !isFabOpen
+
     }
     companion object {
         // TensorFlow 관련 Final 값
