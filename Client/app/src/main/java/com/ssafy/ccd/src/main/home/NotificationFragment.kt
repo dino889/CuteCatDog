@@ -36,10 +36,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
         arguments?.let {
         }
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainActivity = context as MainActivity
-    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel

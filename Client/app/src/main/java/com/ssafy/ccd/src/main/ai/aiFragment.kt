@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -49,9 +50,14 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiBinding
+import com.ssafy.ccd.src.dto.Board
+import com.ssafy.ccd.src.dto.History
+import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.main.information.InformationActivity
 import com.ssafy.ccd.src.main.information.InformationMainFragment
+import com.ssafy.ccd.src.network.service.BoardService
+import com.ssafy.ccd.src.network.service.HistoryService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -67,6 +73,7 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.label.TensorLabel
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import retrofit2.Response
 import java.io.*
 
 import java.nio.MappedByteBuffer
@@ -116,6 +123,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     private lateinit var filePath:File
     private var isFabOpen = false
 
+    // history 등록 결과
+    private var isRegistered = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -126,6 +135,8 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         progressDialog.show()
         setInit()
+
+        insertHistory()
 
     }
 
@@ -447,6 +458,90 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             isFabOpen = !isFabOpen
 
     }
+
+
+    private fun insertHistory() {   // setInit() 뒤에 호출
+        val imgUri = mainViewModels.uploadedImageUri
+        val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+
+        val fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
+            ""
+        } else{
+            val timeName = System.currentTimeMillis().toString()
+            "${userId}/${timeName}."+ getFileExtension(imgUri)
+        }
+        if(fileName == "") {
+            showCustomToast("사진을 선택해 주세요")
+        } else {
+            val history = History(
+                userId = userId,
+                emotion = result,
+                photoPath = fileName,
+                datetime = System.currentTimeMillis().toString())
+
+            var response : Response<Message>
+
+            runBlocking {
+                response = HistoryService().insetHistory(history)
+                uploadUserImgToFirebase(history)
+            }
+
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if(res.success == true && res.data["isSuccess"] == true) {
+
+                    } else if(res.data["isSuccess"] == false) {
+                        showCustomToast("history 등록 실패")
+                        Log.e(TAG, "insertHistory: ${res.message}", )
+                    } else {
+                        Log.e(TAG, "insertHistory: 서버 통신 실패 ${res.message}", )
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    /**
+     * 이미지 firebase storage 업로드
+     */
+    private fun uploadUserImgToFirebase(history: History) {
+        if(mainViewModels.uploadedImageUri == null || mainViewModels.uploadedImageUri == Uri.EMPTY) {
+            Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
+            showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
+            childFragmentManager.popBackStack()
+        }
+
+        val pathString = history.photoPath.substring(history.photoPath.lastIndexOf("/") + 1, history.photoPath.length)
+
+        val storageReferenceChild = FirebaseStorage.getInstance()
+            .getReference("${history.userId}")
+            .child(pathString)
+
+        storageReferenceChild.putFile(mainViewModels.uploadedImageUri!!)
+            .addOnSuccessListener{
+                storageReferenceChild.downloadUrl
+                    .addOnSuccessListener {
+                        isRegistered = true
+
+                        Log.d(TAG, "uploadUserImgToFirebase: $it")
+                    }
+            }
+    }
+
+    /**
+     * 이미지 파일 확장자 찾기
+     */
+    private fun getFileExtension(uri: Uri?): String? {
+        val mimeTypeMap = MimeTypeMap.getSingleton()
+        contentResolver = mainActivity.contentResolver
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+
+
     companion object {
         // TensorFlow 관련 Final 값
         private const val IMAGE_MEAN = 0.0f

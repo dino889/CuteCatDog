@@ -11,5 +11,6 @@ class RetrofitUtil {
         val boardService = ApplicationClass.retrofit.create(BoardApi::class.java)
         val calendarService = ApplicationClass.retrofit.create(CalendarApi::class.java)
         val notificationService = ApplicationClass.retrofit.create(NotificationApi::class.java)
+        val historyService = ApplicationClass.retrofit.create(HistoryApi::class.java)
     }
 }
