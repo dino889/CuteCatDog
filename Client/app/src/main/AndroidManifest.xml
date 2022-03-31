@@ -29,12 +29,12 @@
         android:usesCleartextTraffic="true">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.ssafy.ccd.fileprovider"
+            android:authorities="com.ssafy.ccd"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/provider_paths" />
         </provider>
         <activity
             android:name=".src.main.information.InformationActivity"

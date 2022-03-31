@@ -330,62 +330,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         var share = Intent(Intent.ACTION_SEND)
         share.setType(type)
         var media = File(realPath)
-        var uri = FileProvider.getUriForFile(requireContext(),"com.ssafy.ccd.provider",media)
+        var uri = FileProvider.getUriForFile(requireContext(),"com.ssafy.ccd",media)
 //        var uri = Uri.fromFile(media)
         share.putExtra(Intent.EXTRA_STREAM, uri)
         startActivity(Intent.createChooser(share,"Share to"))
-//            mainActivity.checkPermission(
-//                arrayOf(
-//                    Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//                ), 99
-//            )
-//
-//            Log.d(TAG, "shareInstagram: ${mainViewModels.uploadedImageUri}")
-//            var bitmap = mainViewModels.uploadedImage
-//            var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
-//            var folderName = ""
-//            var fileName = ""
-//            var cnt = 0;
-//            for (i in realPath.toString().length - 1..0) {
-//                fileName += realPath!!.get(i)
-//                cnt++;
-//                if (realPath!!.get(i) == '/') {
-//                    break;
-//                }
-//            }
-//            folderName = realPath!!.substring(0, realPath!!.length - cnt)
-//            var fullPath = folderName
-//            var img_dir = "${Environment.getExternalStorageDirectory()}/tmp"
-//            try {
-//                filePath = File(fullPath, fileName)
-//                Log.d(TAG, "shareInstagram22: ${filePath}")
-//                if (!filePath.isDirectory) {
-//                    filePath.mkdir()
-//                }
-//                var fos = FileOutputStream(File(fullPath, fileName))
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-//                fos.flush()
-//                fos.close()
-//            } catch (e: FileNotFoundException) {
-//                e.printStackTrace()
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//
-//            var share = Intent(Intent.ACTION_SEND)
-//            share.setType("image/*")
-//            var uri = Uri.fromFile(File(fullPath, fileName))
-//            try {
-//                share.putExtra(Intent.EXTRA_STREAM, uri)
-//                share.putExtra(Intent.EXTRA_TEXT, "텍스트는 지원안함")
-//                share.setPackage("com.instagram.android")
-//                startActivity(share)
-//            } catch (e: ActivityNotFoundException) {
-//                showCustomToast("인스타그램을 설치해주세요")
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
     }
     private fun shareKakao(){
         Log.d(TAG, "shareKakao: ${mainViewModels.uploadedImageUri}")
