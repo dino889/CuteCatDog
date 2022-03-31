@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.home
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,15 +25,17 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
     var typeId = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         mainActivity.hideBottomNavi(true)
 
+        arguments?.let {
+        }
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getNotificationAll(userId)
