@@ -4,20 +4,20 @@
 <mapper namespace="com.cutecatdog.mapper.HistoryMapper">
 	
 	<select id="selectHistory" resultType="HistoryDto">
-		SELECT id, emotion, datetime
+		SELECT id,user_id, emotion, datetime, photo_path
 		FROM tbl_history
-    WHERE pet_id = #{petId}
+    WHERE user_id = #{userId}
 	</select>
 
   <select id="selectHistoryTime" resultType="HistoryDto">
-    SELECT id, emotion, datetime
+    SELECT id, emotion, datetime, photo_path
 		FROM tbl_history
     WHERE datetime &gt;= #{startdate}  AND datetime &lt; #{enddate}
   </select>
 
   <insert id="insertHistory" parameterType="HistoryRequestDto">
-    INSERT INTO tbl_history (pet_id,emotion,datetime)
-		VALUES (#{petId},#{emotion},#{datetime})
+    INSERT INTO tbl_history (user_id,emotion,datetime,photo_path)
+		VALUES (#{userId},#{emotion},#{datetime},#{photoPath})
   </insert>
 
   <delete id="deleteHistory" parameterType="int">
@@ -25,4 +25,9 @@
     FROM tbl_history
     WHERE id = #{id}
   </delete>
+  <select id="selectHistoryDetail" resultType="HistoryDto" parameterType="int">
+    SELECT *
+    FROM tbl_history
+    WHERE id = #{id}
+  </select>
 </mapper>

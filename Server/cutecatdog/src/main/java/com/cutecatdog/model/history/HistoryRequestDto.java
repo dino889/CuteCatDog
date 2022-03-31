@@ -6,7 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HistoryRequestDto {
-  Integer petId;
+  Integer userId;
   String emotion;
   String datetime;
+  String photoPath;
 }

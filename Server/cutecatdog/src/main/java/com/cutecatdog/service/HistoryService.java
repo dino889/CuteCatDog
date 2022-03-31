@@ -10,6 +10,8 @@ public interface HistoryService {
 
   public List<HistoryDto> findHistory(int petId) throws Exception;
 
+  public HistoryDto findHistoryDetail(int id) throws Exception;
+
   public List<HistoryDto> findHistoryTime(HistoryTimeDto historyTimeDto) throws Exception;
 
   public boolean addHistroy(HistoryRequestDto historyRequestDto) throws Exception;

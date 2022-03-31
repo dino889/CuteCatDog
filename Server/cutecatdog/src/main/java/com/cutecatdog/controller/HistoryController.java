@@ -37,12 +37,12 @@ public class HistoryController {
 
 	@ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
 	@GetMapping()
-	public ResponseEntity<Message> historyList(@RequestParam int petId) throws Exception {
+	public ResponseEntity<Message> historyList(@RequestParam int userId) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 
 		List<HistoryDto> historys = new ArrayList<HistoryDto>();
-		historys = historyService.findHistory(petId);
+		historys = historyService.findHistory(userId);
 		HashMap<String, List<HistoryDto>> map = new HashMap<>();
 		map.put("historys", historys);
 		message.setData(map);
@@ -50,16 +50,32 @@ public class HistoryController {
 		return new ResponseEntity<Message>(message, status);
 	}
 
+	@ApiOperation(value = "반려동물 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
+	@GetMapping("/detail")
+	public ResponseEntity<Message> historyDetail(@RequestParam int id) throws Exception {
+		HttpStatus status = HttpStatus.OK;
+		Message message = new Message();
+
+		HistoryDto history = new HistoryDto();
+		history = historyService.findHistoryDetail(id);
+		HashMap<String, HistoryDto> map = new HashMap<>();
+		map.put("history", history);
+		message.setData(map);
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+	}
+
+
 	@ApiOperation(value = "반려동물 지난 일 보기", notes = "반려 동물의 지난 일을 본다", response = List.class)
-	@GetMapping("{pet_id}")
-	public ResponseEntity<Message> historyList(@PathVariable("pet_id") int petId, @RequestParam String startdate,
+	@GetMapping("{user_id}")
+	public ResponseEntity<Message> historyList(@PathVariable("user_id") int userId, @RequestParam String startdate,
 			String enddate) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
 		HistoryTimeDto historyTimeDto = new HistoryTimeDto();
 		historyTimeDto.setEnddate(enddate);
 		historyTimeDto.setStartdate(startdate);
-		historyTimeDto.setPetId(petId);
+		historyTimeDto.setUserId(userId);
 		List<HistoryDto> historys = new ArrayList<>();
 		historys = historyService.findHistoryTime(historyTimeDto);
 		HashMap<String, List<HistoryDto>> map = new HashMap<>();
