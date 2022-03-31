@@ -82,6 +82,7 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
 
     override fun onDestroy() {
         super.onDestroy()
+        mainActivity.hideBottomNavi(false)
 //        (requireActivity() as MainActivity).showBottomAppBar()
     }
 

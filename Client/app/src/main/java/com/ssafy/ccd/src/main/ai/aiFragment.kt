@@ -131,6 +131,16 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     // history 등록 결과
     private var isRegistered = false
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity =  (requireActivity() as MainActivity)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         runBlocking {
@@ -183,7 +193,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     private fun setInstance() {
         // mainActivity 관련 객체
-        mainActivity =  (requireActivity() as MainActivity)
+
         contentResolver = mainActivity.contentResolver
         mainViewModels = mainActivity.mainViewModels
         intent = Intent(requireActivity(), InformationActivity::class.java)

@@ -52,8 +52,8 @@
 
         <ImageView
             android:id="@+id/fragment_ai_Image"
-            android:layout_width="250dp"
-            android:layout_height="0dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="34dp"
             android:layout_marginBottom="34dp"
             android:scaleType="fitXY"
@@ -139,16 +139,16 @@
 
             <FrameLayout
                 android:id="@+id/frameLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/fragment_selectAi_dog"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/dog" />
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -163,8 +163,8 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/frameLayout3"
@@ -172,8 +172,8 @@
 
                 <ImageView
                     android:id="@+id/fragment_selectAi_cat"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/cat" />
 
                 <com.airbnb.lottie.LottieAnimationView
