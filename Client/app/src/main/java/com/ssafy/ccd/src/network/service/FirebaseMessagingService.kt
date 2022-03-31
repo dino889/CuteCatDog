@@ -48,7 +48,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
                 notify(101, builder1.build())
             }
 
-            val intent = Intent("com.ssafy.groute")
+            val intent = Intent("com.ssafy.ccd")
             sendBroadcast(intent)
         }
 

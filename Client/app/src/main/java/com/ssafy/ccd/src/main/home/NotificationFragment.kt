@@ -1,7 +1,11 @@
 package com.ssafy.ccd.src.main.home
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +53,8 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
         binding.fragmentNotiBack.setOnClickListener {
             this@NotificationFragment.findNavController().popBackStack()
         }
+
+        receiveFcm()
     }
     fun initSpinner(){
         var filtering = arrayListOf<String>("전체","공지사항","이벤트","개인")
@@ -97,6 +103,21 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
             }
         })
 
+    }
+
+    private fun receiveFcm() {
+        // notification 수신
+        val intentFilter = IntentFilter("com.ssafy.ccd")
+        val receiver = object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action = intent!!.action
+                runBlocking {
+                    mainViewModel.getNotificationAll(userId)
+                }
+                notiAdapter.notifyDataSetChanged()
+            }
+        }
+        mainActivity.registerReceiver(receiver, intentFilter)
     }
 
     override fun onDestroy() {

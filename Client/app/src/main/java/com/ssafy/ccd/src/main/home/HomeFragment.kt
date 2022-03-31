@@ -1,7 +1,9 @@
 package com.ssafy.ccd.src.main.home
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -123,6 +125,8 @@ class HomeFragment : Fragment() {
         initBanner()
 
         moveBoardDetailClickEvent()
+
+        ringTheBell()
     }
 
     /**
@@ -331,5 +335,21 @@ class HomeFragment : Fragment() {
         binding.fragmentHomeCommuShareBtnBack.setOnClickListener {
             this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_ShareBoardFragment)
         }
+    }
+
+    /**
+     * @author Jiwoo
+     * @since 03/31/22
+     * fcm 수신 시 알림 animation
+     */
+    private fun ringTheBell() {
+        val intentFilter = IntentFilter("com.ssafy.ccd")
+        val receiver = object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action = intent!!.action
+                binding.fragmentHomeNoti.playAnimation()
+            }
+        }
+        mainActivity.registerReceiver(receiver, intentFilter)
     }
 }
