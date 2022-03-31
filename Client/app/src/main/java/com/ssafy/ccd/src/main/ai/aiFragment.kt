@@ -28,6 +28,10 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -77,6 +81,7 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.log
 import kotlin.math.min
+import kotlin.math.round
 
 private const val TAG = "aiFragment"
 open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,R.layout.fragment_ai) {
@@ -181,7 +186,11 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
         // Android Binding 객체
         imageView = binding.fragmentAiImage
-        imageView.setImageURI(mainViewModels.uploadedImageUri)
+        Glide.with(requireContext())
+            .load(mainViewModels.uploadedImageUri)
+            .into(imageView)
+//            .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(30)))
+//        imageView.setImageURI(mainViewModels.uploadedImageUri)
         tvEmotion = binding.fragmentAiResultEmotion
         tvSolution = binding.fragmentAiResultSolution
         ivBack = binding.fragmentAiIvBack
@@ -424,7 +433,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         }
 
         fun toggleTab() {
-            showCustomToast("true? $isFabOpen")
+
             if (isFabOpen) {
                 ObjectAnimator.ofFloat(binding.fragmentAiShareSns, "translationY", 0f)
                     .apply { start() }
@@ -432,16 +441,16 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                     .apply { start() }
                 ObjectAnimator.ofFloat(binding.fragmentAiToDiary, "translationY", 0f)
                     .apply { start() }
-                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 45f, 0f)
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 70f, 0f)
                     .apply { start() }
             } else {
-                ObjectAnimator.ofFloat(binding.fragmentAiShareSns, "translationY", -460f)
+                ObjectAnimator.ofFloat(binding.fragmentAiShareSns, "translationY", -600f)
                     .apply { start() }
-                ObjectAnimator.ofFloat(binding.fragmentAiShareKakao, "translationY", -320f)
+                ObjectAnimator.ofFloat(binding.fragmentAiShareKakao, "translationY", -400f)
                     .apply { start() }
-                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, "translationY", -180f)
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, "translationY", -200f)
                     .apply { start() }
-                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 0f, 45f)
+                ObjectAnimator.ofFloat(binding.fragmentAiToDiary, View.ROTATION, 0f, 70f)
                     .apply { start() }
             }
             isFabOpen = !isFabOpen
