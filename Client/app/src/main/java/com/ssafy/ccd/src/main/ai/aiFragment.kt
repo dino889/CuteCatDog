@@ -509,7 +509,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                 val res = response.body()
                 if(res != null) {
                     if(res.success == true && res.data["isSuccess"] == true) {
-
+                        isRegistered = true
                     } else if(res.data["isSuccess"] == false) {
                         showCustomToast("history 등록 실패")
                         Log.e(TAG, "insertHistory: ${res.message}", )

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.pet.PetDto;
+import com.cutecatdog.model.pet.PetWithKind;
 import com.cutecatdog.service.PetService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,11 +92,11 @@ public class PetController {
 	public ResponseEntity<Message> petDetails(@PathVariable("id") int id) throws Exception {
 		HttpStatus status = HttpStatus.OK;
 		Message message = new Message();
-		List<PetDto> pets = new ArrayList<>();
+		List<PetWithKind> pets = new ArrayList<>();
 		// pets = petService.findPetDetail(id);
 		// HashMap<String,List<PetDto>> map = new HashMap<>();
-		PetDto pet = petService.findPetDetail(id);
-		HashMap<String, PetDto> map = new HashMap<>();
+		PetWithKind pet = petService.findPetDetail(id);
+		HashMap<String, PetWithKind> map = new HashMap<>();
 		map.put("pet", pet);
 		message.setData(map);
 		message.setSuccess(true);
