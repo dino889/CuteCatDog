@@ -183,8 +183,6 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             this@AddPetFragment.findNavController().popBackStack()
         }
 
-
-
     }
 
 
@@ -243,6 +241,16 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmBtnClickEvent() {    // 게시글 insert
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
+            for (item in mainViewModel.kinds.value!!) {
+                val kind = binding.addPetFragmentAutoKind.text.toString()
+                if(kind == item.name) {
+                    kindId = item.id
+                }
+            }
+
+            if(kindId < 0) {
+                showCustomToast("품종 선택이 잘못되었습니다. \n다시 선택해 주세요.")
+            }
 
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             val fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
@@ -251,6 +259,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 timeName = System.currentTimeMillis().toString()
                 "${userId}/${timeName}."+ fileExtension
             }
+
+
+
             if(fileName == "") {
                 showCustomToast("사진을 선택해 주세요")
             } else {
@@ -277,6 +288,17 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
     private fun modifyBtnClickEvent() {    // 게시글 insert Or Update
         binding.fragmentAddPetSuccessBtn.setOnClickListener {
 
+            for (item in mainViewModel.kinds.value!!) {
+                val kind = binding.addPetFragmentAutoKind.text.toString()
+                if(kind == item.name) {
+                    kindId = item.id
+                }
+            }
+
+            if(kindId < 0) {
+                showCustomToast("품종 선택이 잘못되었습니다. \n다시 선택해 주세요.")
+            }
+            
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             var fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
                 ""
@@ -358,7 +380,6 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         selectedNeutered()
 
         binding.addPetFragmentTietBirth.setText(result)
-        Log.d(TAG, "initListener: $result")
         binding.addPetFragmentTietBirth.setOnClickListener {
             setBirth()
         }
@@ -373,13 +394,19 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             var name = mainViewModel.kinds.value!![item].name
             kinds.add(name)
         }
-        Log.d(TAG, "initKinds: ${kinds}")
+//        Log.d(TAG, "initKinds: ${kinds}")
         var adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_dropdown_item_1line,kinds)
         binding.addPetFragmentAutoKind.setAdapter(adapter)
 
         binding.addPetFragmentAutoKind.setOnItemClickListener { parent, view, position, id ->
-            kindId = mainViewModel.kinds.value!![position].id
-            Log.d(TAG, "initKinds: $kindId")
+            for (item in mainViewModel.kinds.value!!) {
+                val kind = binding.addPetFragmentAutoKind.text.toString()
+                if(kind == item.name) {
+                    kindId = item.id
+                }
+            }
+//            kindId = mainViewModel.kinds.value!![position].id
+            Log.d(TAG, "initKinds: id = $id / $position / $kindId")
         }
     }
 
