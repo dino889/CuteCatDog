@@ -182,7 +182,7 @@
                             android:id="@+id/myPageFragment_tvPetBreed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(viewModel.pet.kindId)}"
+                            android:text="@{viewModel.pet.kind}"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/black"
                             app:layout_constraintBottom_toBottomOf="parent"

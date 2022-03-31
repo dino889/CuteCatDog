@@ -194,9 +194,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             beforePet = it
             binding.addPetFragmentTietName.setText(it.name.toString())
             binding.addPetFragmentTietBirth.setText(it.birth.toString())
+            Log.d(TAG, "initData: ${it.kind}")
 
-            setKind()
-            binding.addPetFragmentAutoKind.setText(it.kindId.toString()) // 품종 아이디 세팅 하는 부분
+            binding.addPetFragmentAutoKind.setText(it.kind.toString()) // 품종 아이디 세팅 하는 부분
 //            imgUri = it.photoPath.toUri()
 
             if(it.isNeutered == 0){
@@ -237,9 +237,6 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         })
     }
 
-    /**
-     * 수정 시 품종 set 하는
-     */
 
     /**
      * 완료 버튼 클릭 이벤트 - insert
