@@ -102,6 +102,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             mainViewModel.getPetKindsAllList()
         }
 
+        // 이미지 선택 버튼 클릭 이벤트
+        selectImgBtnEvent()
+        initListener()
 
         if(petId > 0){
             runBlocking {
@@ -111,6 +114,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             initData()
             modifyBtnClickEvent()
         } else {
+//            setBirth()
             confirmBtnClickEvent()
         }
 
@@ -179,9 +183,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             this@AddPetFragment.findNavController().popBackStack()
         }
 
-        // 이미지 선택 버튼 클릭 이벤트
-        selectImgBtnEvent()
-        initListener()
+
 
     }
 
@@ -192,9 +194,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         mainViewModel.pet.observe(viewLifecycleOwner, {
             binding.pet = it
             beforePet = it
-//            binding.addPetFragmentTietName.setText(it.name.toString())
-//            binding.addPetFragmentTietBirth.setText(it.birth.toString())
-            binding.addPetFragmentAutoKind.setText(it.kindId.toString())
+            binding.addPetFragmentTietName.setText(it.name.toString())
+            binding.addPetFragmentTietBirth.setText(it.birth.toString())
+            binding.addPetFragmentAutoKind.setText(it.kindId.toString()) // 품종 아이디 세팅 하는 부분
 //            imgUri = it.photoPath.toUri()
 
             if(it.isNeutered == 0){
@@ -212,26 +214,26 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
                 binding.addPetFragmentRbGendeMan.isChecked = false
                 binding.addPetFragmentRbGenderWoman.isChecked = true
             }
-//            if(it.birth!=null){
-//                var birth = CommonUtils.makeBirthString(it.birth)
-//                binding.addPetFragmentTietBirth.setText(birth)
-//            }
-//            if(it.photoPath == null || it.photoPath==""){
-//                binding.addPEtFragmentIvPetImage.setImageResource(R.drawable.logo)
-//                mainViewModel.uploadedImageUri = null
-//            }else{
-//                var storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
-//                var storageRef = storage.reference
-//                storageRef.child("${it.photoPath}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-//                    override fun onSuccess(p0: Uri?) {
-//                        binding.addPEtFragmentIvPetImage.setImageURI(p0)
-//                    }
-//
-//                }).addOnFailureListener(object: OnFailureListener {
-//                    override fun onFailure(p0: Exception) {
-//                    }
-//                })
-//            }
+            if(it.birth!=null){
+                var birth = CommonUtils.makeBirthString(it.birth)
+                binding.addPetFragmentTietBirth.setText(birth)
+            }
+
+
+
+            if(it.photoPath == null || it.photoPath == ""){
+                Glide.with(this)
+                    .load(R.drawable.logo)
+                    .into(binding.addPEtFragmentIvPetImage)
+            } else {
+                val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
+                val storageRef = storage.reference
+                storageRef.child(it.photoPath).downloadUrl.addOnSuccessListener { p0 ->
+                    Glide.with(this)
+                        .load(p0)
+                        .into(binding.addPEtFragmentIvPetImage)
+                }.addOnFailureListener { }
+            }
         })
     }
 
@@ -354,7 +356,9 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
         initKinds()
         selectedGender()
         selectedNeutered()
+
         binding.addPetFragmentTietBirth.setText(result)
+        Log.d(TAG, "initListener: $result")
         binding.addPetFragmentTietBirth.setOnClickListener {
             setBirth()
         }
@@ -375,6 +379,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
         binding.addPetFragmentAutoKind.setOnItemClickListener { parent, view, position, id ->
             kindId = mainViewModel.kinds.value!![position].id
+            Log.d(TAG, "initKinds: $kindId")
         }
     }
 

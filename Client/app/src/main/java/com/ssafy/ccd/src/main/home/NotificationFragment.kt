@@ -23,6 +23,12 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
     private lateinit var notiAdapter:NotificationAdapter
     var userId = ApplicationClass.sharedPreferencesUtil.getUser().id
     var typeId = -1
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity.hideBottomNavi(true)
@@ -98,7 +104,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
 
     override fun onDestroy() {
         super.onDestroy()
-        mainActivity.hideBottomNavi(true)
+        mainActivity.hideBottomNavi(false)
     }
 
     companion object {

@@ -97,8 +97,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@color/main_30p"
-                    android:scaleType="fitCenter"
-                    app:imageUrlDiary="@{pet.photoPath}"/>
+                    android:scaleType="fitCenter" />
+<!--                    app:imageUrlDiary="@{pet.photoPath}"/>-->
 
 
             </com.google.android.material.card.MaterialCardView>
@@ -157,8 +157,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/et_background_normal"
-                        android:hint="이름"
-                        android:text="@{pet.name}"/>
+                        android:hint="이름"/>
+<!--                        android:text="@{pet.name}"/>-->
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -176,8 +176,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/et_background_normal"
-                        android:hint="생일"
-                        app:myPageConvertBirth="@{pet.birth}"/>
+                        android:hint="생일"/>
+<!--                        app:myPageConvertBirth="@{pet.birth}"/>-->
 
                 </com.google.android.material.textfield.TextInputLayout>
 
