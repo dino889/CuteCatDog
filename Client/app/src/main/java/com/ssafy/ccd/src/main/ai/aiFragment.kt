@@ -125,7 +125,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
 
     // 결과
     private lateinit var result:String
-    private lateinit var filePath:File
+    var filePath:String = ""
     private var isFabOpen = false
 
     // history 등록 결과
@@ -349,12 +349,12 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         startActivity(Intent.createChooser(share,"Share to"))
     }
     private fun shareKakao(){
-        Log.d(TAG, "shareKakao: ${mainViewModels.uploadedImageUri}")
+        Log.d(TAG, "shareKakao: ${filePath}")
         val defaultFeed = FeedTemplate(
             content = Content(
                 title = "내 반려동물 감정분석은?",
                 description = "친구의 반려동물 감정은 ${binding.fragmentAiResultEmotion.text.toString()}입니다 :)",
-                imageUrl = "${mainViewModels.uploadedImageUri}",
+                imageUrl = filePath.toString(),
                 link = Link(
                     webUrl = "https://developers.kakao.com",
                     mobileWebUrl = "https://developers.kakao.com"
@@ -362,7 +362,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             ),
             itemContent = ItemContent(
                 profileText = "ㅋㅋㄷ",
-                profileImageUrl = "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+                profileImageUrl = "https://firebasestorage.googleapis.com/v0/b/cutecatdog-32527.appspot.com/o/logo%2Flogo.png?alt=media&token=e13450dd-0911-4558-bd8f-265fe5d16165",
             ),
             null,
             buttons = listOf(
@@ -534,7 +534,7 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
                 storageReferenceChild.downloadUrl
                     .addOnSuccessListener {
                         isRegistered = true
-
+                        filePath = it.toString()
                         Log.d(TAG, "uploadUserImgToFirebase: $it")
                     }
             }
