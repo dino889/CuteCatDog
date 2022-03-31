@@ -19,5 +19,7 @@ public interface HistoryMapper {
   public boolean insertHistory(HistoryRequestDto historyRequestDto) throws SQLException;
 
   public boolean deleteHistory(int id) throws SQLException;
+
+  public HistoryDto selectHistoryDetail(int id) throws SQLException;
   
 }

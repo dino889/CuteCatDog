@@ -7,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class HistoryDto {
   Integer id;
-  Integer petId;
+  Integer userId;
   String emotion;
   String datetime;
+  String photoPath;
 }

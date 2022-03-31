@@ -36,5 +36,10 @@ public class HistoryServiceImpl implements HistoryService{
   public boolean removeHistory(int id) throws Exception{
     return sqlSession.getMapper(HistoryMapper.class).deleteHistory(id);
   }
+
+  @Override
+  public HistoryDto findHistoryDetail(int id) throws Exception {
+    return sqlSession.getMapper(HistoryMapper.class).selectHistoryDetail(id);
+  }
   
 }
