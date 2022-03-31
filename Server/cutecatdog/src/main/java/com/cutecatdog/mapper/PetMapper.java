@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.cutecatdog.model.pet.PetDto;
+import com.cutecatdog.model.pet.PetWithKind;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,7 +14,7 @@ public interface PetMapper {
 
   public boolean insertPet(PetDto petDto) throws SQLException;
 
-  public PetDto selectPetDetail(int id) throws SQLException;
+  public PetWithKind selectPetDetail(int id) throws SQLException;
 
   public boolean updatePet(PetDto petDto) throws SQLException;
 

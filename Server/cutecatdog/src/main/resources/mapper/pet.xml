@@ -8,10 +8,14 @@
 		FROM tbl_pet
 	</select>
 
-	<select id="selectPetDetail" parameterType="int" resultType="PetDto">
-		SELECT id,user_id, kind_id, name, birth, photo_path,gender,is_neutered
+	<select id="selectPetDetail" parameterType="int" resultType="PetWithKind">
+		<!-- SELECT id,user_id, kind_id, name, birth, photo_path,gender,is_neutered
 		FROM tbl_pet
-    WHERE id = #{id}
+    WHERE id = #{id} -->
+		SELECT p.id, p.user_id, k.name AS kind, p.name, p.birth, p.photo_path, p.gender, p.is_neutered
+		FROM tbl_pet p LEFT OUTER JOIN tbl_kind k
+		ON p.kind_id = k.id
+		WHERE p.id = #{id}
 	</select>
 
   <insert id="insertPet" parameterType="PetDto">

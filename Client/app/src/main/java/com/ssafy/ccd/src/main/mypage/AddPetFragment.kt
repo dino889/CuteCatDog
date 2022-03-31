@@ -194,6 +194,8 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             beforePet = it
             binding.addPetFragmentTietName.setText(it.name.toString())
             binding.addPetFragmentTietBirth.setText(it.birth.toString())
+
+            setKind()
             binding.addPetFragmentAutoKind.setText(it.kindId.toString()) // 품종 아이디 세팅 하는 부분
 //            imgUri = it.photoPath.toUri()
 
@@ -234,6 +236,10 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             }
         })
     }
+
+    /**
+     * 수정 시 품종 set 하는
+     */
 
     /**
      * 완료 버튼 클릭 이벤트 - insert
@@ -298,7 +304,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
             if(kindId < 0) {
                 showCustomToast("품종 선택이 잘못되었습니다. \n다시 선택해 주세요.")
             }
-            
+
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
             var fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
                 ""

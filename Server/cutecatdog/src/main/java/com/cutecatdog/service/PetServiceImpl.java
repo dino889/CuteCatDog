@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cutecatdog.mapper.PetMapper;
 import com.cutecatdog.model.pet.PetDto;
+import com.cutecatdog.model.pet.PetWithKind;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class PetServiceImpl implements PetService{
   }
 
   @Override
-  public PetDto findPetDetail(int id) throws Exception {
+  public PetWithKind findPetDetail(int id) throws Exception {
     return sqlSession.getMapper(PetMapper.class).selectPetDetail(id);
   }
 
