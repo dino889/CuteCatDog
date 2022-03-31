@@ -321,17 +321,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
     fun shareInstagram() {
         var type: String? = "image/*"
         var realPath = mainViewModels.uploadedImageUri?.let { mainActivity.getPath(it) }
-//        Log.d(TAG, "shareInstagram: ${realPath}")
-//        var filename = realPath!!.substring(realPath!!.lastIndexOf("/")+1,realPath.length)
-//
-//        Log.d(TAG, "shareInstagram: ${filename}")
-//        var mediaPath = Environment.getExternalStorageDirectory().toString() + filename
-//        Log.d(TAG, "shareInstagram: InstagramClick ${mediaPath}")
         var share = Intent(Intent.ACTION_SEND)
         share.setType(type)
         var media = File(realPath)
         var uri = FileProvider.getUriForFile(requireContext(),"com.ssafy.ccd",media)
-//        var uri = Uri.fromFile(media)
         share.putExtra(Intent.EXTRA_STREAM, uri)
         startActivity(Intent.createChooser(share,"Share to"))
     }
@@ -415,7 +408,6 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
             }
             binding.fragmentAiShareSns.setOnClickListener {
                 //instagram
-
                 shareInstagram()
             }
             binding.fragmentAiShareKakao.setOnClickListener {

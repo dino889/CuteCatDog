@@ -11,6 +11,7 @@
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:autoText="true"
         android:background="@drawable/home_pet_footer_background"
         android:drawableTop="@drawable/home_button_back_image"
         android:gravity="center"
