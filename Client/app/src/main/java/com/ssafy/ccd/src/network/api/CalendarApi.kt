@@ -27,4 +27,10 @@ interface CalendarApi {
 
     @GET("/calendar/{user_id}")
     suspend fun calendarListbyWeek(@Path("user_id")user_id:Int):Response<Message>
+
+    @GET("/walk")
+    suspend fun recommandWorkSpace(@Query("lat")lat:Double,@Query("lng")lng:Double,@Query("range")range:Double) : Response<Message>
+
+    @GET("/calendar/detail/{id}")
+    suspend fun getCalendarDetail(@Path("id")id:Int):Response<Message>
 }

@@ -4,6 +4,7 @@ import com.ssafy.ccd.src.dto.Calendar
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.util.RetrofitUtil
 import retrofit2.Response
+import retrofit2.Retrofit
 
 class CalendarService {
 
@@ -33,5 +34,12 @@ class CalendarService {
 
     suspend fun getCalendarListByWeek(userId:Int):Response<Message>{
         return RetrofitUtil.calendarService.calendarListbyWeek(userId)
+    }
+    suspend fun recommandWalkSpacce(lat:Double, lng:Double, range:Double) : Response<Message>{
+        return RetrofitUtil.calendarService.recommandWorkSpace(lat,lng,range)
+    }
+
+    suspend fun getCalendarDetail(id:Int):Response<Message>{
+        return RetrofitUtil.calendarService.getCalendarDetail(id)
     }
 }

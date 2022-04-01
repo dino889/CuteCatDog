@@ -706,6 +706,8 @@ class MainViewModels : ViewModel() {
     private val _calendarList = MutableLiveData<MutableList<Calendar>>()
     private val _calendar = MutableLiveData<MutableList<Schedule>>()
     private val _calendarWeekList = MutableLiveData<MutableList<Schedule>>()
+    private val _calendarDetail = MutableLiveData<Schedule>()
+    private val _walkSpace = MutableLiveData<MutableList<Walk>>()
 
     val calendarList : LiveData<MutableList<Calendar>>
         get() = _calendarList
@@ -713,6 +715,10 @@ class MainViewModels : ViewModel() {
         get() = _calendar
     val scheduleWeekList : LiveData<MutableList<Schedule>>
         get() = _calendarWeekList
+    val scheduleDetail : LiveData<Schedule>
+        get() = _calendarDetail
+    val walk : LiveData<MutableList<Walk>>
+        get() = _walkSpace
 
     fun setCalendarList(list:MutableList<Calendar>) = viewModelScope.launch {
         _calendarList.value = list
@@ -722,6 +728,12 @@ class MainViewModels : ViewModel() {
     }
     fun setScheduleWeek(list: MutableList<Schedule>) = viewModelScope.launch {
         _calendarWeekList.value = list
+    }
+    fun setScheduleDetail(schedule: Schedule) = viewModelScope.launch {
+        _calendarDetail.value = schedule
+    }
+    fun setWalkSpace(list: MutableList<Walk>) = viewModelScope.launch {
+        _walkSpace.value = list
     }
     suspend fun getCalendarListbyUser(userId:Int){
         val response = CalendarService().getCalendarListByUser(userId)
@@ -790,6 +802,36 @@ class MainViewModels : ViewModel() {
                         var type = object: TypeToken<MutableList<Schedule?>?>() {}.type
                         var schedules = CommonUtils.parseDto<MutableList<Schedule>>(res.data.get("schedules")!!,type)
                         setScheduleWeek(schedules)
+                    }
+                }
+            }
+        }
+    }
+    suspend fun recommandWalkSapce(lat:Double, lng:Double){
+        val response = CalendarService().recommandWalkSpacce(lat,lng,1.0)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object:TypeToken<MutableList<Walk?>?>() {}.type
+                        var walks = CommonUtils.parseDto<MutableList<Walk>>(res.data.get("walks")!!,type)
+                        setWalkSpace(walks)
+                    }
+                }
+            }
+        }
+    }
+    suspend fun getCalendarDetail(id:Int){
+        val response = CalendarService().getCalendarDetail(id)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var type = object:TypeToken<Schedule?>() {}.type
+                        var schedules = CommonUtils.parseDto<Schedule>(res.data.get("schedules")!!,type)
+                        setScheduleDetail(schedules)
                     }
                 }
             }
