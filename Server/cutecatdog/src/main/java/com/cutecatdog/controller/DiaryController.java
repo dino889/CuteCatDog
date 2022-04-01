@@ -153,43 +153,9 @@ public class DiaryController {
         return new ResponseEntity<>(response, status);
     }
 
-    @ApiOperation(value = "날짜로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. end_date를 쓰면 기간으로, 비우면(null또는 '') 날짜로 조회", response = Map.class)
-    @GetMapping("/{user_id}/{start_date}")
-    public ResponseEntity<Message> diaryListByDate(@PathVariable(required = true)int user_id, @PathVariable(required = true)String start_date)
-            throws Exception {
-        Message response = new Message();
-        HttpStatus status = null;
-        try {
-            response.setSuccess(true);
-            HashMap<String, List<DiaryDto>> data = new HashMap<>();
-            DiaryParamDto diaryParamDto = new DiaryParamDto();
-            diaryParamDto.setUserId(user_id);
-            diaryParamDto.setStart_date(start_date);
-            data.put("diarys", diaryService.findDiaryByDate(diaryParamDto));
-            response.setData(data);
-            if (data.get("diarys").size() > 0) {
-                for (DiaryDto diaryDto : data.get("diarys")) {
-                    diaryDto.setHashtag(hashtagService.findHashtag(diaryDto.getId()));
-                    diaryDto.setPhoto(photoService.findPhoto(diaryDto.getId()));
-                }
-                response.setMessage("일기 목록 조회 성공");
-                status = HttpStatus.OK;
-            } else {
-                response.setMessage("일기 목록 없음");
-                status = HttpStatus.OK;
-            }
-        } catch (Exception e) {
-            response.setSuccess(false);
-            response.setMessage(e.getMessage());
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-
-        return new ResponseEntity<>(response, status);
-    }
-
-    @ApiOperation(value = "기간으로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. end_date를 쓰면 기간으로, 비우면(null또는 '') 날짜로 조회", response = Map.class)
-    @GetMapping("/{user_id}/{start_date}/{end_date}")
-    public ResponseEntity<Message> diaryListByPeriod(@PathVariable(required = true)int user_id, @PathVariable(required = true)String start_date, @PathVariable(required = true)String end_date)
+    @ApiOperation(value = "날짜/기간으로 일기 조회", notes = "날짜 또는 기간 별로 일기를 조회한다. end_date를 쓰면 기간으로, 비우면 날짜로 조회", response = Map.class)
+    @GetMapping({"/{user_id}/{start_date}/{end_date}", "/{user_id}/{start_date}"})
+    public ResponseEntity<Message> diaryListByPeriod(@PathVariable(required = true)int user_id, @PathVariable(required = true)String start_date, @PathVariable(required = false)String end_date)
             throws Exception {
         Message response = new Message();
         HttpStatus status = null;
