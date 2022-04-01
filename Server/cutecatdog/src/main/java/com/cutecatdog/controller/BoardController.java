@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.cutecatdog.common.message.Message;
+import com.cutecatdog.model.UserDto;
 import com.cutecatdog.model.board.BoardAddRequestDto;
 import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
@@ -14,11 +15,14 @@ import com.cutecatdog.model.comment.CommentAddShowRequestDto;
 import com.cutecatdog.model.comment.CommentModifyRequestDto;
 import com.cutecatdog.model.comment.CommentRequestDto;
 import com.cutecatdog.model.comment.commentDto;
+import com.cutecatdog.model.fcm.FCMParamDto;
 import com.cutecatdog.model.like.LikeDeleteDto;
 import com.cutecatdog.model.like.LikeRequestDto;
 import com.cutecatdog.service.BoardService;
 import com.cutecatdog.service.CommentService;
+import com.cutecatdog.service.FCMService;
 import com.cutecatdog.service.LikeService;
+import com.cutecatdog.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +54,11 @@ public class BoardController {
   @Autowired
   private LikeService likeService;
 
+  @Autowired
+  private UserService userService;
+
+  @Autowired
+  private FCMService fcmService;
 
   @ApiOperation(value = "게시글 전체 보기", notes = "", response = List.class)
   @GetMapping()
@@ -238,6 +247,21 @@ public class BoardController {
 		HttpStatus status = null;
     HashMap<String,Boolean> map = new HashMap<>();
 		if (commentService.addComment(commentAddShowRequestDto)) {
+      //대댓글 알림 전송
+      FCMParamDto fcmParamDto = new FCMParamDto();
+      BoardDetailDto boardDetailDto = boardService.findDetailBoard(commentAddShowRequestDto.getBoardId());
+      String title = boardDetailDto.getTitle();
+      if (title.length()>10) {
+        title = title.substring(0, 10) + "...";
+      }
+      fcmParamDto.setContent("\""+title+"\" 게시글에 대댓글이 달렸습니다.");
+      fcmParamDto.setTitle("ㅋㅋㄷ 대댓글 알림");
+      fcmParamDto.setType(3);
+      long UnixTime = System.currentTimeMillis()/1000;
+      fcmParamDto.setDatetime(String.valueOf(UnixTime));
+      UserDto user = userService.findUser(boardDetailDto.getUserId());
+      fcmParamDto.setToken(user.getDeviceToken());
+      fcmService.sendMessageTo(fcmParamDto);
 			status = HttpStatus.OK;
       map.put("isSuccess", true);
 			message.setSuccess(true);
@@ -260,6 +284,23 @@ public class BoardController {
 		if (commentService.addRealComment(commentRequestDto)) {
 			status = HttpStatus.OK;
       map.put("isSuccess", true);
+
+      //댓글 알림 전송
+      FCMParamDto fcmParamDto = new FCMParamDto();
+      BoardDetailDto boardDetailDto = boardService.findDetailBoard(commentRequestDto.getBoardId());
+      String title = boardDetailDto.getTitle();
+      if (title.length()>10) {
+        title = title.substring(0, 10) + "...";
+      }
+      fcmParamDto.setContent("\""+title+"\" 게시글에 댓글이 달렸습니다.");
+      fcmParamDto.setTitle("ㅋㅋㄷ 댓글 알림");
+      fcmParamDto.setType(3);
+      long UnixTime = System.currentTimeMillis()/1000;
+      fcmParamDto.setDatetime(String.valueOf(UnixTime));
+      UserDto user = userService.findUser(boardDetailDto.getUserId());
+      fcmParamDto.setToken(user.getDeviceToken());
+      fcmService.sendMessageTo(fcmParamDto);
+
 			message.setSuccess(true);
       message.setData(map);
 			return new ResponseEntity<Message>(message, status);

@@ -32,8 +32,8 @@
 	</select>
 
     <insert id="insertNotification" parameterType="NotificationDto">
-		INSERT INTO tbl_notification (user_id, type, title, content, datetime)
-		VALUES (#{userId},#{type}, #{title},#{content},#{datetime})
+        INSERT INTO tbl_notification (user_id, type, title, content, datetime)
+        VALUES (#{userId},#{type}, #{title},#{content},#{datetime})
 	</insert>
 
     <!-- <update id="updateNotification" parameterType="NotificationDto">
