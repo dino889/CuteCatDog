@@ -11,7 +11,7 @@
 
 <select id="selectWalk" parameterType="WalkRequestDto" resultType="WalkResponseDto">
 		SELECT
-		place, (
+		lat,lng,place, (
 			6371 * acos (
 			cos ( RADIANS(#{lat}) )
 			* cos( RADIANS(lat))
