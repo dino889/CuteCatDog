@@ -9,6 +9,22 @@
     ORDER BY b.time desc
 	</select>
 
+	<select id="selectDongBoard" resultType="BoardResponsDto" parameterType="BoardWhereDto">
+    SELECT b.lat,b.lng,b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt,(
+      6371 * acos (
+      cos ( RADIANS(#{lat}) )
+      * cos( RADIANS(lat) )
+      * cos( RADIANS(lng) - RADIANS(#{lng}))
+      + sin ( RADIANS(#{lat}) )
+      * sin( RADIANS(lat) )
+    )
+) AS distance
+    FROM tbl_board b 
+    HAVING distance &lt; 10
+    ORDER BY b.time desc
+	</select>
+  
+
   <select id="selectUserBoard" resultType="BoardDto" parameterType="int">
     SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time ,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt
     FROM tbl_board b 
@@ -25,7 +41,7 @@
 	</select>
 
   <insert id="insertBoard" parameterType="BoardAddRequestDto">
-    INSERT INTO tbl_board (user_id,title,content,author,type_id,photo_path,time) VALUES(#{userId},#{title},#{content},#{author},#{typeId},#{photoPath},#{time})
+    INSERT INTO tbl_board (user_id,lat,lng,title,content,author,type_id,photo_path,time) VALUES(#{userId},#{lat},#{lng},#{title},#{content},#{author},#{typeId},#{photoPath},#{time})
   </insert>
 
   <update id="updateBoard" parameterType="BoardModifyRequestDto">

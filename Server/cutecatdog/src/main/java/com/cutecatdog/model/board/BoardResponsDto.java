@@ -15,5 +15,7 @@ public class BoardResponsDto {
   Integer count;
   String time;
   String photoPath;
+  Double lat;
+  Double lng;
   Integer commentCnt;
 }

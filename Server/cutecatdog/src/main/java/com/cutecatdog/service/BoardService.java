@@ -7,6 +7,7 @@ import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
+import com.cutecatdog.model.board.BoardWhereDto;
 
 public interface BoardService {
 
@@ -23,6 +24,8 @@ public interface BoardService {
   public BoardDetailDto findDetailBoard(int id) throws Exception;
 
   public List<BoardDto> findUserBoard(int userId) throws Exception;
+
+  public List<BoardResponsDto> findDongBoard(BoardWhereDto dto) throws Exception;
 
   
 }

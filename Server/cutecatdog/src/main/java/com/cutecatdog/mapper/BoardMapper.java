@@ -8,6 +8,7 @@ import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
+import com.cutecatdog.model.board.BoardWhereDto;
 import com.cutecatdog.model.comment.commentDto;
 import com.cutecatdog.model.like.LikeUserResponsDto;
 
@@ -33,5 +34,7 @@ public interface BoardMapper {
   public List<LikeUserResponsDto> selectLike(int id) throws SQLException;
 
   public List<BoardDto> selectUserBoard(int userId) throws SQLException;
+
+  public List<BoardResponsDto> selectDongBoard(BoardWhereDto dto) throws SQLException;
   
 }

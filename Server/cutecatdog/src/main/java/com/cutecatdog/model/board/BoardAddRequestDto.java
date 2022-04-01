@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class BoardAddRequestDto {
   Integer userId;
+  Double lat;
+  Double lng;
   String title;
   String content;
   String author;

@@ -8,6 +8,7 @@ import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
+import com.cutecatdog.model.board.BoardWhereDto;
 import com.cutecatdog.model.comment.commentDto;
 import com.cutecatdog.model.like.LikeUserResponsDto;
 
@@ -60,5 +61,10 @@ public class BoardServiceImpl implements BoardService{
   @Override
   public List<BoardDto> findUserBoard(int userId) throws Exception {
     return sqlSession.getMapper(BoardMapper.class).selectUserBoard(userId);
+  }
+
+  @Override
+  public List<BoardResponsDto> findDongBoard(BoardWhereDto dto) throws Exception {
+    return sqlSession.getMapper(BoardMapper.class).selectDongBoard(dto);
   }  
 }

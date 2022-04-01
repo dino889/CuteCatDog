@@ -9,6 +9,7 @@ import com.cutecatdog.model.board.BoardDetailDto;
 import com.cutecatdog.model.board.BoardDto;
 import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
+import com.cutecatdog.model.board.BoardWhereDto;
 import com.cutecatdog.model.comment.CommentAddShowRequestDto;
 import com.cutecatdog.model.comment.CommentModifyRequestDto;
 import com.cutecatdog.model.comment.CommentRequestDto;
@@ -65,6 +66,23 @@ public class BoardController {
 		return new ResponseEntity<Message>(message, status);
   }
 
+  @ApiOperation(value = "우리 동네 게시글 보기", notes = "", response = List.class)
+  @GetMapping("/type/my")
+  public ResponseEntity<Message> boardDongList(@RequestParam("lat") double lat,@RequestParam("lng") double lng) throws Exception {
+    HttpStatus status = HttpStatus.OK;
+    Message message = new Message();
+    BoardWhereDto dto = new BoardWhereDto();
+    dto.setLat(lat);
+    dto.setLng(lng);
+    List<BoardResponsDto> boards;
+		boards = boardService.findDongBoard(dto);
+		HashMap<String,List<BoardResponsDto>> map = new HashMap<>();
+		map.put("boards", boards);
+		message.setData(map);
+		message.setSuccess(true);
+		return new ResponseEntity<Message>(message, status);
+  }
+
   @ApiOperation(value = "게시글 타입 보기", notes = "", response = List.class)
   @GetMapping("/type/{typeId}")
   public ResponseEntity<Message> boardTypeList(@PathVariable("typeId") int typeId) throws Exception{
@@ -102,6 +120,7 @@ public class BoardController {
     Message message = new Message();
     HttpStatus status = null;
     HashMap<String, Boolean> map = new HashMap<>();
+    
     if (boardService.addBoard(boardAddRequestDto)) {
       status = HttpStatus.OK;
       map.put("isSuccess", true);
