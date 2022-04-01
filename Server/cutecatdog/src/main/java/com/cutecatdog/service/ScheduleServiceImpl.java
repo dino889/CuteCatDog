@@ -53,8 +53,13 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public List<ScheduleDto> findScheduleDetail(ScheduleDto scheduleDto) throws Exception {
-        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleDetail(scheduleDto);
+    public ScheduleDto findScheduleDetail(int id) throws Exception {
+        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleDetail(id);
+    }
+
+    @Override
+    public List<ScheduleDto> findScheduleDate(ScheduleDto scheduleDto) throws Exception {
+        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleDate(scheduleDto);
     }
 
     @Override

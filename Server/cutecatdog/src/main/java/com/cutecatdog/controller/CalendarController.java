@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.cutecatdog.common.message.Message;
 import com.cutecatdog.model.Calendar.ScheduleDto;
-import com.cutecatdog.model.pet.PetDto;
 import com.cutecatdog.service.PetService;
 import com.cutecatdog.service.ScheduleService;
 
@@ -64,7 +63,7 @@ public class CalendarController {
 
     @ApiOperation(value = "사용자 등록 일정 날짜별 조회", notes = "사용자가 등록한 일정을 모두 조회한다.", response = Map.class)
     @GetMapping("/{user_id}/{datetime}")
-    public ResponseEntity<Message> scheduleDetail(@PathVariable(name = "user_id", required = true)int userId, @PathVariable(name = "datetime", required = true)String datetime) throws Exception {
+    public ResponseEntity<Message> scheduleDate(@PathVariable(name = "user_id", required = true)int userId, @PathVariable(name = "datetime", required = true)String datetime) throws Exception {
         Message response = new Message();
         HttpStatus status = null;
         try {
@@ -74,7 +73,7 @@ public class CalendarController {
             sch.setUserId(userId);
             HashMap<String, List<HashMap<String, ?>>> data = new HashMap<>();
             data.put("schedules", new ArrayList<>());
-            List<ScheduleDto> list = scheduleService.findScheduleDetail(sch);
+            List<ScheduleDto> list = scheduleService.findScheduleDate(sch);
             for (ScheduleDto scheduleDto : list) {
                 HashMap<String, Object> hash = new HashMap<>();
                 hash.put("schedule", scheduleDto);
@@ -88,6 +87,37 @@ public class CalendarController {
             } else {
                 response.setMessage("해당 날짜의 일정이 없습니다.");
             }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ApiOperation(value = "일정 상세 조회", notes = "일정의 상세 정보와 해당 일정의 반려 동물 정보를 조회한다.", response = Map.class)
+    @GetMapping("detail/{id}")
+    public ResponseEntity<Message> scheduleDetail(@PathVariable("id") int id) throws Exception {
+        Message response = new Message();
+        HttpStatus status = null;
+        try {
+            response.setSuccess(true);
+            HashMap<String, HashMap<String, ?>> data = new HashMap<>();
+            HashMap<String, Object> hash = new HashMap<>();
+            ScheduleDto scheduleDto  = scheduleService.findScheduleDetail(id);
+            if (scheduleDto != null) {
+                hash.put("schedule", scheduleDto);
+                hash.put("pet", petService.findPetDetail(scheduleDto.getPetId()));
+                data.put("schedules", hash);
+                response.setMessage("일정 상세정보 조회 성공");
+            }else{
+                data.put("scheduleResponse", null);
+                response.setMessage("해당 id의 일정이 없습니다.");
+            }
+            response.setData(data);
+            
+            status = HttpStatus.OK;
         } catch (Exception e) {
             response.setSuccess(false);
             response.setMessage(e.getMessage());
