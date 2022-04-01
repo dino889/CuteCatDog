@@ -11,9 +11,12 @@ data class Board(
     val count: Int,
     val time: String,
     val photoPath: String,
-    val commentCnt: Int
+    val commentCnt: Int,
+    val lat: Double,
+    val lng: Double
 ) {
-    constructor(userId: Int, typeId: Int, author: String, title: String, content: String, time: String, photoPath: String) : this(0, userId, typeId, author, title, content, listOf(), 0, time, photoPath, 0) // insert
-    constructor(id: Int, typeId: Int, title: String, content: String, photoPath: String) : this(id, 0, typeId, "",  title, content, listOf(), 0, "", photoPath, 0)    // 게시글 수정 update
-    constructor(id: Int, userId: Int) : this(id, userId, 0, "",  "", "", listOf(), 0, "", "", 0)    // 게시글 좋아요 클릭
+    constructor(userId: Int, typeId: Int, author: String, title: String, content: String, time: String, photoPath: String) : this(0, userId, typeId, author, title, content, listOf(), 0, time, photoPath, 0, 0.0, 0.0) // insert
+    constructor(userId: Int, typeId: Int, author: String, title: String, content: String, time: String, photoPath: String, lat: Double, lng: Double) : this(0, userId, typeId, author, title, content, listOf(), 0, time, photoPath, 0, lat, lng) // insert - 울동네
+    constructor(id: Int, typeId: Int, title: String, content: String, photoPath: String) : this(id, 0, typeId, "",  title, content, listOf(), 0, "", photoPath, 0, 0.0, 0.0)    // 게시글 수정 update
+    constructor(id: Int, userId: Int) : this(id, userId, 0, "",  "", "", listOf(), 0, "", "", 0, 0.0, 0.0)    // 게시글 좋아요 클릭
 }

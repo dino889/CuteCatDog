@@ -56,6 +56,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
 
         receiveFcm()
     }
+
     fun initSpinner(){
         var filtering = arrayListOf<String>("전체","공지사항","이벤트","개인")
         var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_dropdown_item_1line,filtering)

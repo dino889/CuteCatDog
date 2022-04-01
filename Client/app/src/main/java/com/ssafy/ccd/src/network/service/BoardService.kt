@@ -38,4 +38,6 @@ class BoardService {
     suspend fun selectBoardByUserId(userId:Int) = RetrofitUtil.boardService.selectBoardByUserId(userId)
 
     suspend fun checkLikeByBoardIdAndUserId(boardId:Int, userId:Int) = RetrofitUtil.boardService.checkLikeByBoardIdAndUserId(boardId, userId)
+
+    suspend fun selectLocalPostList(lat: Double, lng: Double) = RetrofitUtil.boardService.selectLocalPostList(lat, lng)
 }

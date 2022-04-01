@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.network.viewmodel
 
 import android.graphics.Bitmap
+import android.location.Location
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.type.LatLng
 import com.ssafy.ccd.src.dto.*
 import com.ssafy.ccd.src.dto.Calendar
 import com.ssafy.ccd.src.network.service.*
@@ -29,8 +31,11 @@ class MainViewModels : ViewModel() {
      * USER ViewModel
      */
     private val _allUserList = MutableLiveData<MutableList<User>>()
-    val _loginUserInfo = MutableLiveData<User>()
+    private val _loginUserInfo = MutableLiveData<User>()
     private val _userInfo = MutableLiveData<User>()
+
+    private var _userLoc : Location? = null
+    private var _userAddr : String? = null
 
     val allUserList :  LiveData<MutableList<User>>
         get() = _allUserList
@@ -41,6 +46,11 @@ class MainViewModels : ViewModel() {
     val userInformation : LiveData<User>
         get() = _userInfo
 
+    val userLoc : Location?
+        get() = _userLoc
+
+    val userAddr : String?
+        get() = _userAddr
 
     private fun setLoginUserInfo(user: User) = viewModelScope.launch {
         _loginUserInfo.value = user
@@ -53,6 +63,12 @@ class MainViewModels : ViewModel() {
     private fun setAllUserList(userList : MutableList<User>) = viewModelScope.launch {
         _allUserList.value = userList
     }
+
+    fun setUserLoc(location : Location, addr: String) {
+        _userLoc = location
+        _userAddr = addr
+    }
+
 
     suspend fun getAllUserList() {
         val response = UserService().selectAllUsers()

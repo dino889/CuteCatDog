@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.ssafy.ccd"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -139,7 +139,7 @@ dependencies {
     // TedPermission
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.2.3'
 
-    //volley
+    // volley
     implementation 'com.android.volley:volley:1.2.1'
 
     // picasso
@@ -184,4 +184,5 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
     implementation 'com.google.guava:guava:27.0.1-android'
 
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 }

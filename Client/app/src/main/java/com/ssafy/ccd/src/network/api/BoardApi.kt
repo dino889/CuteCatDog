@@ -72,4 +72,8 @@ interface BoardApi {
     // 좋아요 가능한지 확인
     @GET("/board/isLike")
     suspend fun checkLikeByBoardIdAndUserId(@Path("boardId")boardId:Int, @Path("userId")userId:Int) : Response<Message>
+
+    // 울동네 게시글 리스트 조회
+    @GET("/board/type/my")
+    suspend fun selectLocalPostList(@Query("lat") lat: Double, @Query("lng") lng: Double) : Response<Message>
 }
