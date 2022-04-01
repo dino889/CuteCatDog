@@ -17,13 +17,16 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.view.menu.MenuView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.CalendarService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
@@ -33,7 +36,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val date:ArrayList<String>,var viewModel:MainViewModels, var owner:LifecycleOwner,var context:Context):RecyclerView.Adapter<CalenderDayAdapter.DayViewHolder>() {
+class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val date:ArrayList<String>,var viewModel:MainViewModels, var owner:LifecycleOwner,var context:Context,var fragment:CalenderFragment, var mainActivity: MainActivity):RecyclerView.Adapter<CalenderDayAdapter.DayViewHolder>() {
     val ROW = 6
 
     inner class DayViewHolder(val layout: View):RecyclerView.ViewHolder(layout)
@@ -71,18 +74,18 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             if(day.text.toString().length == 1){
                 strDay = "0${strDay}"
             }
-            var strDate = "${strMonth}월 ${day.text}일"
+            var strDate = "${strMonth}월 ${strDay}일"
             var comDate = "${month}월 ${monthOfday}일"
             var week = CommonUtils.convertWeek(position%7)
-
             if(strDate.equals(comDate)){
-                holder.layout.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
+                holder.itemView.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
                 holder.layout.setOnClickListener {
                     runBlocking {
                         viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date[i]))
                     }
                     showDetailDialog(comDate,week,CommonUtils.makeBirthMilliSecond(date[i]))
                 }
+                break;
             }
         }
 
@@ -142,6 +145,17 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
                             }
                         }
                     }
+                }
+            })
+
+            detailAdapter.setClickListener(object: CalendarDetailAdapter.ItemClickListner {
+                override fun onClick(view: View, position: Int, calendarId: Int) {
+                    mainActivity.runOnUiThread {
+                        var calendarId = bundleOf("calendarId" to calendarId)
+                        fragment.findNavController().navigate(R.id.calendarDetailFragment,calendarId)
+                    }
+                    dialog.dismiss()
+//                    fragment.findNavController().navigate(R.id.action_calenderFragment_to_calendarDetailFragment,calendarId)
                 }
             })
 

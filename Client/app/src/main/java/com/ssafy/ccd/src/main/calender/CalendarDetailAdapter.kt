@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.main.calender
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
@@ -33,6 +34,9 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
                 Log.d(TAG, "bind: 삭제")
                 removeData(this.layoutPosition)
             }
+            itemView.setOnClickListener{
+                clickListener.onClick(it,position,list[position].schedule.id)
+            }
         }
     }
     fun removeData(position: Int){
@@ -47,5 +51,13 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
     private lateinit var removeListener : RemoveListener
     fun setRemoveListener(removeListener: RemoveListener){
         this.removeListener = removeListener
+    }
+
+    interface ItemClickListner{
+        fun onClick(view: View, position:Int, calendarId: Int)
+    }
+    private lateinit var clickListener : ItemClickListner
+    fun setClickListener(clickListner: ItemClickListner){
+        this.clickListener = clickListner
     }
 }

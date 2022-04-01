@@ -1,5 +1,6 @@
 package com.ssafy.ccd.src.main.calender
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentCalenderBinding
 import com.ssafy.ccd.src.dto.Pet
+import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.main.mypage.PetListRecyclerviewAdapter
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.runBlocking
@@ -27,10 +29,16 @@ private const val TAG = "CalenderFragment"
 class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderBinding::bind, R.layout.fragment_calender) {
     private lateinit var petAdapter: CalendarWritePetAdapter
     private lateinit var monthListAdapter : CalenderMonthAdapter
+    private lateinit var mainActivity:MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,7 +131,7 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
             }
             Log.d(TAG, "initCalendar: ${date}")
-            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner,this,mainActivity)
 
             binding.fragmentCalenderCustomCalender.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
@@ -151,7 +159,7 @@ class CalenderFragment : BaseFragment<FragmentCalenderBinding>(FragmentCalenderB
 
             }
             Log.d(TAG, "initCalendar: ${date}")
-            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner)
+            monthListAdapter = CalenderMonthAdapter(requireContext(),date,mainViewModel,viewLifecycleOwner,this, mainActivity)
 
             binding.fragmentCalenderCustomCalender.apply {
                 layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)

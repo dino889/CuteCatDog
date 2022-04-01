@@ -91,6 +91,10 @@
         <action
             android:id="@+id/action_calenderFragment_to_addPetFragment"
             app:destination="@id/addPetFragment" />
+        <action
+            android:id="@+id/action_calenderFragment_to_calendarDetailFragment"
+            app:destination="@id/calendarDetailFragment" />
+
     </fragment>
 
     <fragment
@@ -271,5 +275,14 @@
         android:name="com.ssafy.ccd.src.main.home.Community.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/calendarDetailFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalendarDetailFragment"
+        android:label="CalendarDetailFragment">
+        <argument
+            android:name="calendarId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
 
 </navigation>

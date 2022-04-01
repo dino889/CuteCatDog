@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
+import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.GlobalScope
@@ -30,7 +31,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CalenderMonthAdapter(val context: Context, val date:ArrayList<String>, val viewModel: MainViewModels, val owner: LifecycleOwner):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
+class CalenderMonthAdapter(val context: Context, val date:ArrayList<String>, val viewModel: MainViewModels, val owner: LifecycleOwner,var fragment:CalenderFragment,var mainActivity: MainActivity):RecyclerView.Adapter<CalenderMonthAdapter.MonthViewHolder>() {
     val center = Int.MAX_VALUE/2
     private var calender = Calendar.getInstance()
 
@@ -58,7 +59,7 @@ class CalenderMonthAdapter(val context: Context, val date:ArrayList<String>, val
         }
 
         val dayListManager = GridLayoutManager(holder.layout.context,7)
-        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList,date,viewModel,owner,context)
+        val dayListAdapter = CalenderDayAdapter(tmpMonth,dayList,date,viewModel,owner,context,fragment,mainActivity)
 
         holder.layout.findViewById<RecyclerView>(R.id.fragment_calender_dayRv).apply {
             layoutManager = dayListManager
