@@ -82,7 +82,7 @@ public class CalendarController {
             }
             response.setData(data);
             status = HttpStatus.OK;
-            if (data.size() > 0) {
+            if (data.get("schedules").size() > 0) {
                 response.setMessage(datetime+" 일정 조회 성공");
             } else {
                 response.setMessage("해당 날짜의 일정이 없습니다.");
@@ -145,7 +145,7 @@ public class CalendarController {
             }
             response.setData(data);
             status = HttpStatus.OK;
-            if (data.size() > 0) {
+            if (data.get("schedules").size() > 0) {
                 response.setMessage("일주일 일정 조회 성공");
             } else {
                 response.setMessage("최근 1주일간 일정이 없습니다.");
