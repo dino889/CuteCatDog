@@ -79,12 +79,12 @@
                 android:id="@+id/fragment_calendarDetail_memo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="20dp"
                 android:text="@{viewModel.scheduleDetail.schedule.memo}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_petImg"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_petImg" />
+                app:layout_constraintStart_toEndOf="@+id/textView50"
+                app:layout_constraintTop_toTopOf="@+id/textView50" />
 
             <ImageView
                 android:id="@+id/fragment_calendarDetail_petImg"
@@ -93,7 +93,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/consensus"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/kakao_mapView"
                 app:imageUrlCalendarPets= "@{viewModel.scheduleDetail.pet.photoPath}"/>
@@ -115,7 +114,7 @@
                 android:layout_marginTop="8dp"
                 android:text="위치"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_memo"
+                app:layout_constraintStart_toStartOf="@+id/textView50"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_memo" />
 
             <TextView
@@ -137,6 +136,16 @@
                 app:calendarType = "@{viewModel.scheduleDetail.schedule.type}"
                 app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_title"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_title" />
+
+            <TextView
+                android:id="@+id/textView50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="메모"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_petImg"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_petImg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

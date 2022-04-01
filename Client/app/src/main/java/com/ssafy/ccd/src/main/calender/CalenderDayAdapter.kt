@@ -66,7 +66,7 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             var monthOfday = date[i].substring(9,date[i].length-1).trim()
 
             var strMonth = (dayList[position].month+1).toString()
-            var strDay = dayList[position].day.toString()
+            var strDay = day.text.toString()
 
             if(dayList[position].month.toString().length == 1){
                 strMonth = "0${strMonth}"
@@ -77,16 +77,25 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             var strDate = "${strMonth}월 ${strDay}일"
             var comDate = "${month}월 ${monthOfday}일"
             var week = CommonUtils.convertWeek(position%7)
-            if(strDate.equals(comDate)){
-                holder.itemView.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
-                holder.layout.setOnClickListener {
-                    runBlocking {
-                        viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date[i]))
-                    }
-                    showDetailDialog(comDate,week,CommonUtils.makeBirthMilliSecond(date[i]))
-                }
-                break;
+            var checkDay = day.text.toString()
+            if(checkDay.length == 1){
+                checkDay = "0${checkDay}"
             }
+            Log.d("DayAdapter", "onBindViewHolder: $checkDay >> $strDay")
+            if(checkDay.equals(strDay)){
+                Log.d("DayAdapter", "onBindViewHolder: ${monthOfday}")
+                if(strDate.equals(comDate)){
+                    holder.itemView.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
+                    holder.layout.setOnClickListener {
+                        runBlocking {
+                            viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date[i]))
+                        }
+                        Log.d("DayAdapter", "onBindViewHolder: ${strDate}, ${week}, ${date[i]}")
+                        showDetailDialog(strDate,week,CommonUtils.makeBirthMilliSecond(date[i]))
+                    }
+                }
+            }
+
         }
 
 
