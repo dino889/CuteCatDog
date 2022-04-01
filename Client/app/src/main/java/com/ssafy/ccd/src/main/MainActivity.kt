@@ -14,10 +14,16 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
+import android.location.*
+import android.location.LocationListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,21 +50,18 @@ import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.network.api.FCMApi
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
-import java.time.LocalDate
-import android.widget.EditText
-
-import android.view.MotionEvent
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
-import androidx.core.view.marginBottom
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
+import com.google.type.LatLng
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.kakao.sdk.common.KakaoSdk
-import com.ssafy.ccd.src.dto.Board
-import com.ssafy.ccd.src.main.home.Community.LocalCommentFragment
+import java.util.*
 import kotlin.math.round
 
 
@@ -84,6 +87,22 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
     private var mauth = FirebaseAuth.getInstance()
 
+    // 현재 위치 locationManager
+    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
+    lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
+    private lateinit var mLocationRequest: LocationRequest // 위치 정보 요청의 매개변수를 저장하는
+
+    // 위치 권한
+    private val LOCATION = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+    private val LOCATION_CODE = 100
+
+    override fun onRestart() {
+        super.onRestart()
+        if(checkPermissionForLocation(this)) {
+            startLocationUpdates()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         KakaoSdk.init(this,"78b660953c918503e1a723afddb4d6e8")
@@ -93,6 +112,10 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         setListener()
 
         initFcm()
+
+        if(checkPermissionForLocation(this)) {
+            startLocationUpdates()
+        }
     }
 
     /**
@@ -240,7 +263,18 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
             }
+            LOCATION_CODE -> {
+                for(grant in grantResults) {
+                    if(grant != PackageManager.PERMISSION_GRANTED) {
+                        showCustomToast("위치 권한을 승인해 주세요.")
+                        Log.d(TAG, "onRequestPermissionsResult: ")
+                    } else if(grant == PackageManager.PERMISSION_GRANTED) {
+                        startLocationUpdates()
+                    }
+                }
+            }
         }
+
     }
 
     /**
@@ -549,7 +583,71 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
     }
 
+    /**
+     * 위치 권한
+     */
+    private fun checkPermissionForLocation(context: Context): Boolean {
+        // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                true
+            } else {
+                // 권한이 없으므로 권한 요청 알림 보내기
+                ActivityCompat.requestPermissions(this, LOCATION, LOCATION_CODE)
+                false
+            }
+        } else {
+            true
+        }
+    }
 
+    private fun startLocationUpdates() {
+        mLocationRequest =  LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        //FusedLocationProviderClient의 인스턴스를 생성.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+        // 기기의 위치에 관한 정기 업데이트를 요청하는 메서드 실행
+        // 지정한 루퍼 스레드(Looper.myLooper())에서 콜백(mLocationCallback)으로 위치 업데이트를 요청
+        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
+    }
+
+    // 시스템으로 부터 위치 정보를 콜백으로 받음
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            // 시스템에서 받은 location 정보를 onLocationChanged()에 전달
+            locationResult.lastLocation
+            onLocationChanged(locationResult.lastLocation)
+        }
+    }
+
+    // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
+    fun onLocationChanged(location: Location) {
+        mLastLocation = location
+        Log.d(TAG, "onLocationChanged: lat = ${mLastLocation.latitude} / lng = ${mLastLocation.longitude}")
+
+        mainViewModels.setUserLoc(location, getAddress(location))
+    }
+
+    private fun getAddress(position: Location) : String {
+        val geoCoder = Geocoder(this, Locale.getDefault())
+        val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1).first()
+                .getAddressLine(0)
+
+        Log.d(TAG, "Address, $address")
+        return address
+    }
+
+
+
+    /**
+     * firebase storage 익명성
+     */
     override fun onStart() {
         super.onStart()
         var user = mauth.currentUser
