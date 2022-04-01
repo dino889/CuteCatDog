@@ -58,7 +58,6 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         mapViewContainer.addView(mapView)
     }
     fun initButtonClick(){
-
         binding.fragmentCalenderDetailBack.setOnClickListener {
             this@CalendarDetailFragment.findNavController().popBackStack()
         }

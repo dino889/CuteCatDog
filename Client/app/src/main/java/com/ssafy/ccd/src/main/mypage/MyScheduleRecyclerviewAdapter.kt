@@ -29,9 +29,9 @@ class MyScheduleRecyclerviewAdapter() : RecyclerView.Adapter<MyScheduleRecyclerv
         val schedule = list[position]
         holder.apply {
             bind(schedule, position)
-            scheduleLayout.setOnClickListener {
-                itemClickListener.onClick(it, position, schedule.schedule.id)
-            }
+//            scheduleLayout.setOnClickListener {
+//                itemClickListener.onClick(it, position, schedule.schedule.id)
+//            }
         }
     }
 

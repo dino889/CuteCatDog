@@ -164,7 +164,6 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
                         fragment.findNavController().navigate(R.id.calendarDetailFragment,calendarId)
                     }
                     dialog.dismiss()
-//                    fragment.findNavController().navigate(R.id.action_calenderFragment_to_calendarDetailFragment,calendarId)
                 }
             })
 
