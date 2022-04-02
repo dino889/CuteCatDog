@@ -328,7 +328,7 @@ class MainViewModels : ViewModel() {
                         val type = object : TypeToken<MutableList<Board>>() {}.type
                         val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
                         if (typeId == 1) {
-                            setLocPostList(postList)
+//                            setLocPostList(postList)
                         } else if (typeId == 2) {
                             setQnaPostList(postList)
                         } else if (typeId == 3) {
@@ -409,12 +409,29 @@ class MainViewModels : ViewModel() {
         val response = BoardService().selectBoardByUserId(userId)
         viewModelScope.launch {
             if(response.code() == 200){
-                var res = response.body()
+                val res = response.body()
                 if(res!=null){
                     if(res.success){
                         val type = object : TypeToken<MutableList<Board?>?>() {}.type
                         val boards = CommonUtils.parseDto<MutableList<Board>>(res.data.get("boards")!!,type)
                         setBoardListByUser(boards)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getLocPostListByUserLoc(userLoc: Location) {
+        val response = BoardService().selectLocalPostList(userLoc.latitude, userLoc.longitude)
+        viewModelScope.launch {
+            if(response.code() == 200 || response.code() == 500) {
+                val res = response.body()
+                if(res != null) {
+                    if(res.data["boards"] != null && res.success == true) {
+                        val type = object : TypeToken<MutableList<Board>>() {}.type
+                        val postList: MutableList<Board> = CommonUtils.parseDto(res.data["boards"]!!, type)
+                        setLocPostList(postList)
+
                     }
                 }
             }

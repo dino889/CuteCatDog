@@ -49,8 +49,20 @@
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_local_back"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/fragment_local_back"
-                    app:layout_constraintVertical_bias="0.625" />
+                    app:layout_constraintTop_toTopOf="@+id/fragment_local_back" />
+
+                <TextView
+                    android:id="@+id/localBoardFragment_tvUserLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="1dp"
+                    android:text="신당동"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/fragment_local_title"
+                    app:layout_constraintStart_toStartOf="@+id/fragment_local_title"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_local_title" />
 
                 <ImageButton
                     android:id="@+id/fragment_local_search"

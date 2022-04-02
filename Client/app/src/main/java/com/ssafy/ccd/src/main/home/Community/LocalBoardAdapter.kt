@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.home.Community
 
 import android.content.Context
+import android.location.Geocoder
 import android.util.Log
 import android.view.*
 import android.widget.Filter
@@ -19,6 +20,7 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.databinding.ItemLocalListBinding
 import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.dto.User
+import java.util.*
 
 class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoardAdapter.LocalBoardViewHolder>(){
 //class LocalBoardAdapter(val context: Context) : ListAdapter<Board, LocalBoardAdapter.LocalBoardViewHolder>(DiffCallback) {
@@ -50,6 +52,14 @@ class LocalBoardAdapter (val context: Context) : RecyclerView.Adapter<LocalBoard
 
             moreBtn.isVisible = post.userId == ApplicationClass.sharedPreferencesUtil.getUser().id
 
+            if(post.lat.toString() == "null" || post.lat.toString() == "") {
+                binding.fragmentLocalboardLoc.text = ""
+            } else {
+                val geoCoder = Geocoder(context, Locale.getDefault())
+                val address = geoCoder.getFromLocation(post.lat, post.lng, 1).first().getAddressLine(0)
+                val tmp = address.split(" ")
+                binding.fragmentLocalboardLoc.text = tmp[3]
+            }
 
             binding.executePendingBindings()
         }

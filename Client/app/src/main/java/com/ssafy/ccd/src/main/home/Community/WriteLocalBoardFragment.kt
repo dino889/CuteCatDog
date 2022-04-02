@@ -80,6 +80,11 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -138,7 +143,9 @@ class WriteLocalBoardFragment : BaseFragment<FragmentWriteLocalBoardBinding>(Fra
                         title = title,
                         content = content,
                         time = System.currentTimeMillis().toString(),
-                        photoPath = fileName)
+                        photoPath = fileName,
+                        lat = mainViewModel.userLoc!!.latitude,
+                        lng = mainViewModel.userLoc!!.longitude)
 
                     insertPost(post)
                 }

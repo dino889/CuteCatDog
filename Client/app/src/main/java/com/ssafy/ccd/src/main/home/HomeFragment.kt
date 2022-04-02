@@ -102,6 +102,7 @@ class HomeFragment : Fragment() {
 
         setInstance()
         setListener()
+        initLoc()
 
         runBlocking {
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
@@ -114,6 +115,7 @@ class HomeFragment : Fragment() {
             mainViewModel.getAllUserList()
             mainViewModel.getLikePostsByUserId(userId)
             mainViewModel.getCalendarListbyDate(userId, todayMillisecond)
+            mainViewModel.userLoc?.let { mainViewModel.getLocPostListByUserLoc(it) }
         }
 
         mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
@@ -309,11 +311,14 @@ class HomeFragment : Fragment() {
         qnaRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         shareRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        locBoardAdapter = BoardAdapter(mainViewModel.locPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+        mainViewModel.locPostList.observe(viewLifecycleOwner, {
+            locBoardAdapter = BoardAdapter(it, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
+            localRv.adapter = locBoardAdapter
+        })
+
         qnaBoardAdapter = BoardAdapter(mainViewModel.qnaPostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
         shareBoardAdapter = BoardAdapter(mainViewModel.sharePostList.value!!, mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext())
 
-        localRv.adapter = locBoardAdapter
         qnaRv.adapter = qnaBoardAdapter
         shareRv.adapter = shareBoardAdapter
     }
@@ -351,5 +356,13 @@ class HomeFragment : Fragment() {
             }
         }
         mainActivity.registerReceiver(receiver, intentFilter)
+    }
+
+    private fun initLoc() {
+        if(mainActivity.checkPermissionForLocation(requireContext())) {
+            runBlocking {
+                mainActivity.startLocationUpdates()
+            }
+        }
     }
 }

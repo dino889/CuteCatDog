@@ -153,8 +153,7 @@
                         android:id="@+id/constraintLayout9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        app:layout_constraintBottom_toTopOf="@+id/fragment_localboard_date"
+                        app:layout_constraintBottom_toTopOf="@+id/fragment_localboard_loc"
                         app:layout_constraintStart_toEndOf="@+id/fragment_localboard_Img">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -219,6 +218,18 @@
                                 app:layout_constraintTop_toTopOf="@+id/fragment_localboard_chat" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/fragment_localboard_loc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="신당동"
+                        android:textSize="10sp"
+                        android:layout_marginBottom="3dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_marginEnd="10dp"
+                        app:layout_constraintBottom_toTopOf="@+id/fragment_localboard_date"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                     <TextView
                         android:id="@+id/fragment_localboard_date"

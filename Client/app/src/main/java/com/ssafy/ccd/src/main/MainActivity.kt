@@ -586,7 +586,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     /**
      * 위치 권한
      */
-    private fun checkPermissionForLocation(context: Context): Boolean {
+    fun checkPermissionForLocation(context: Context): Boolean {
         // Android 6.0 Marshmallow 이상에서는 위치 권한에 추가 런타임 권한이 필요
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -601,7 +601,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
     }
 
-    private fun startLocationUpdates() {
+    fun startLocationUpdates() {
         mLocationRequest =  LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
@@ -632,9 +632,13 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         Log.d(TAG, "onLocationChanged: lat = ${mLastLocation.latitude} / lng = ${mLastLocation.longitude}")
 
         mainViewModels.setUserLoc(location, getAddress(location))
+
+        runBlocking {
+            mainViewModels.getLocPostListByUserLoc(mainViewModels.userLoc!!)
+        }
     }
 
-    private fun getAddress(position: Location) : String {
+    fun getAddress(position: Location) : String {
         val geoCoder = Geocoder(this, Locale.getDefault())
         val address = geoCoder.getFromLocation(position.latitude, position.longitude, 1).first()
                 .getAddressLine(0)
@@ -650,7 +654,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
      */
     override fun onStart() {
         super.onStart()
-        var user = mauth.currentUser
+        val user = mauth.currentUser
+
         if(user!=null){
 
         }else{

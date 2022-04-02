@@ -42,23 +42,43 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
         super.onCreate(savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.hideBottomNavi(true)
 
         runBlocking {
-            mainViewModel.getPostListByType(1)
+//            mainViewModel.getPostListByType(1)
+
+            mainViewModel.getLocPostListByUserLoc(mainViewModel.userLoc!!)
             mainViewModel.getLikePostsByUserId(ApplicationClass.sharedPreferencesUtil.getUser().id)
         }
 
         binding.mainViewModel = mainViewModel
+
+        setUserAddr()
 
         initRecyclerView()
         backBtnClickEvent()
         writeBtnClickEvent()
         searchBtnClickEvent()
     }
-    /***
+
+    /**
+     * 사용자 위치 정보 세팅
+     */
+    private fun setUserAddr() {
+        val addrAll = mainActivity.getAddress(mainViewModel.userLoc!!)
+        val addr = addrAll.split(" ")
+
+        binding.localBoardFragmentTvUserLoc.text = addr[3]
+    }
+
+    /**
      * 검색버튼 클릭이벤트 ( 제목으로 찾기 )
      */
     private fun searchBtnClickEvent(){
