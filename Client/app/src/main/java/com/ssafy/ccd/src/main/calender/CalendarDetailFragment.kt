@@ -13,6 +13,8 @@ import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentCalendarDetailBinding
 import com.ssafy.ccd.src.main.MainActivity
 import kotlinx.coroutines.runBlocking
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 private const val TAG = "CalendarDetailFragment"
@@ -36,6 +38,7 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getCalendarDetail(calendarId)
+            mainViewModel.recommandWalkSapce(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
         }
         setListener()
     }
@@ -56,7 +59,26 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         var mapView = MapView(requireContext())
         var mapViewContainer = binding.kakaoMapView as ViewGroup
         mapViewContainer.addView(mapView)
+
+        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude),true)
+        mapView.setZoomLevel(7,true)
+
+//        var markerArr = arrayListOf<MapPoint>()
+        var poiItem = arrayListOf<MapPOIItem>()
+        mainViewModel.walk.observe(viewLifecycleOwner, {
+            for(i in 0..it.size-1){
+                var mapPoint = MapPoint.mapPointWithGeoCoord(it[i].lat.toDouble(),it[i].lng.toDouble())
+//                markerArr.add(mapPoint)
+                val marker = MapPOIItem()
+                marker.itemName = it[i].place
+                marker.mapPoint = mapPoint
+            }
+        })
+        mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
+
+
     }
+
     fun initButtonClick(){
         binding.fragmentCalenderDetailBack.setOnClickListener {
             this@CalendarDetailFragment.findNavController().popBackStack()
