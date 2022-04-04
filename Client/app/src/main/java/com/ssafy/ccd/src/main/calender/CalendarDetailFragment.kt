@@ -57,8 +57,9 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
     }
     fun initKaKaoMap(){
         var mapView = MapView(requireContext())
-        var mapViewContainer = binding.kakaoMapView as ViewGroup
-        mapViewContainer.addView(mapView)
+        binding.kakaoMapView.addView(mapView)
+//        var mapViewContainer = binding.kakaoMapView as ViewGroup
+//        mapViewContainer.addView(mapView)
 
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude),true)
         mapView.setZoomLevel(7,true)
