@@ -35,7 +35,7 @@ public class AIServiceImpl implements AIService {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
+    System.out.println("## RESULT : " + line);
     return line;
   }
 }
