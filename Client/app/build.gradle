@@ -137,6 +137,7 @@ dependencies {
     implementation "com.kakao.sdk:v2-talk:2.9.0"
     implementation "com.kakao.sdk:v2-link:2.9.0"
     compile group: 'com.kakao.sdk', name:'kakaolink', version:project.KAKAO_SDK_VERSION
+    compile files('libs/libDaumMapAndroid.jar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
     //KAKAO SDK
