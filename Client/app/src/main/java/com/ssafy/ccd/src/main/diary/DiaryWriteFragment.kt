@@ -93,8 +93,16 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         contentResolver = mainActivity.contentResolver
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         arguments?.apply {
             diaryId = getInt("diaryId")
             if(diaryId > 0){
@@ -113,7 +121,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         mainViewModel.allClearPhotoList()
         mainViewModel.allClearPhotoUriList()

@@ -81,16 +81,13 @@ class CalenderDayAdapter(val tmpMonth:Int, val dayList:MutableList<Date>,val dat
             if(checkDay.length == 1){
                 checkDay = "0${checkDay}"
             }
-            Log.d("DayAdapter", "onBindViewHolder: $checkDay >> $strDay")
             if(checkDay.equals(strDay)){
-                Log.d("DayAdapter", "onBindViewHolder: ${monthOfday}")
                 if(strDate.equals(comDate)){
                     holder.itemView.findViewById<ImageView>(R.id.fragment_calendar_point).visibility = View.VISIBLE
                     holder.layout.setOnClickListener {
                         runBlocking {
                             viewModel.getCalendarListbyDate(ApplicationClass.sharedPreferencesUtil.getUser().id,CommonUtils.makeBirthMilliSecond(date[i]))
                         }
-                        Log.d("DayAdapter", "onBindViewHolder: ${strDate}, ${week}, ${date[i]}")
                         showDetailDialog(strDate,week,CommonUtils.makeBirthMilliSecond(date[i]))
                     }
                 }
