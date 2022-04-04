@@ -235,6 +235,7 @@
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/calender_write_background"
                 android:padding="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/calendarFragment_clMemo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout14">
@@ -267,6 +268,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calendarFragment_clMemo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -274,6 +276,7 @@
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/calender_write_background"
                 android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout15">
@@ -318,6 +321,7 @@
                         android:id="@+id/fragment_calendarWrite_memo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lines="3"
                         android:background="@android:color/transparent" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

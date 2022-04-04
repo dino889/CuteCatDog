@@ -54,16 +54,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     // firebase authentication
     var mGoogleSignInClient: GoogleSignInClient? = null
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.apply {
             petId = getInt("petId")
             Log.d(TAG, "onCreate: ${petId}")
         }
-    }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainActivity = context as MainActivity
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -202,10 +203,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     private fun initTabAdapter() {
         val viewPagerAdapter = MyTabPageAdapter(this)
-        val tabList = listOf("내 일정", "내가 쓴 글")
+        val tabList = listOf("내 일정", "내가 쓴 글", "히스토리")
 
         viewPagerAdapter.addFragment(MyScheduleFragment())
         viewPagerAdapter.addFragment(MyPostFragment())
+        viewPagerAdapter.addFragment(HistoryFragment())
 
         binding.myPageFragmentVp.adapter = viewPagerAdapter
         TabLayoutMediator(binding.myPageFragmentTabLayout, binding.myPageFragmentVp) { tab, position ->

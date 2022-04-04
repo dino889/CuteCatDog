@@ -26,6 +26,7 @@ import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.UserService
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
+import kotlin.math.log
 
 /**
  * @since 03.21.22.
@@ -44,6 +45,7 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
 
     private var timeName = "" // firebase storage upload file name
 
+    private lateinit var beforeUser: User
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -57,13 +59,14 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
-            binding.user = it
-            val arr = it.email.split("@")
-            binding.userProfileFragmentEtEmail.setText(arr[0])
-            binding.userProfileFragmentEtDomain.setText(arr[1])
-            initUserImage(it.profileImage)
-        })
+        val loginUser = mainViewModel.loginUserInfo.value
+        binding.user = loginUser
+        beforeUser = loginUser!!
+        val arr = loginUser.email.split("@")
+        binding.userProfileFragmentEtEmail.setText(arr[0])
+        binding.userProfileFragmentEtDomain.setText(arr[1])
+
+        initUserImage(loginUser.profileImage)
 
 
         // back btn click event
@@ -92,7 +95,7 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
         } else {
             val storage = FirebaseStorage.getInstance("gs://cutecatdog-32527.appspot.com/")
             val storageRef = storage.reference
-            storageRef.child("$imgUrl").downloadUrl.addOnSuccessListener { p0 ->
+            storageRef.child(imgUrl).downloadUrl.addOnSuccessListener { p0 ->
                 Glide.with(this)
                     .load(p0)
                     .into(binding.userProfileFragmentIvUserImage)
@@ -147,7 +150,7 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
                 }
             } else if(it.resultCode == AppCompatActivity.RESULT_CANCELED){
                 showCustomToast("사진 선택 취소")
-                imgUri = Uri.EMPTY
+//                imgUri = Uri.EMPTY
             } else{
                 Log.d(TAG,"filterActivityLauncher 실패")
             }
@@ -161,11 +164,16 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
             // 이미지는 firebase에 업로드
             // 닉네임, 사진 경로는 db에 업로드
             val userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-            val fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
+            var fileName = if(imgUri == null || imgUri.toString() == "" || imgUri == Uri.EMPTY) {
                 ""
             } else{
                 timeName = System.currentTimeMillis().toString()
                 "${userId}/${timeName}."+ fileExtension
+            }
+
+            val beforeFileName = beforeUser.profileImage.substring(beforeUser.profileImage.lastIndexOf("/") + 1, beforeUser.profileImage.length)
+            if(fileName == "" || fileName == beforeFileName) {
+                fileName = beforeUser.profileImage
             }
 
 //            val updateUser = User(id = userId, nickname = binding.userProfileFragmentEtNick.text.toString(), profileImage = fileName, email = "dmg05152@naver.com", password = "K4gUQxGDLVnvE4YAyQvhKoIcfPAancVqkliTMlwK+Z8=", socialType = "none")
@@ -179,10 +187,16 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
      * 사용자 정보 업데이트 서버 통신
      */
     private fun updateUser(user: User) {
+        var pageBack = false
         var response : Response<Message>
         runBlocking {
             response = UserService().updateUser(user)
-            uploadUserImgToFirebase(user)
+            if(user.profileImage != beforeUser.profileImage) {
+                uploadUserImgToFirebase(user)
+                pageBack = false
+            } else {
+                pageBack = true
+            }
         }
 
         if(response.code() == 200 || response.code() == 500) {
@@ -192,6 +206,10 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
                     showCustomToast("회원 정보가 정상적으로 변경되었습니다.")
                     runBlocking {
                         mainViewModel.getUserInfo(user.id, true)
+                    }
+
+                    if(pageBack) {
+                        (requireActivity() as MainActivity).onBackPressed()
                     }
                 } else if(body.data["isModify"] == false) {
                     showCustomToast("회원 정보 수정 실패")
@@ -228,8 +246,8 @@ class UserProfileFragment : BaseFragment<FragmentUserProfileBinding>(FragmentUse
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         mainActivity.hideBottomNavi(false)
     }
     

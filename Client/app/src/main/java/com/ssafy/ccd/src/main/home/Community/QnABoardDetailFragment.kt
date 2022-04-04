@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.home.Community
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -52,8 +53,17 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
     private lateinit var dialogBuilder : AlertDialog.Builder
     private lateinit var dlg : AlertDialog
 
+    private lateinit var mainActivity : MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.hideBottomNavi(true)
+
         setInstance()
         setListner()
         setView()
@@ -227,5 +237,10 @@ class QnABoardDetailFragment : BaseFragment<FragmentQnABoardDetailBinding>(Fragm
             .setNegativeButton("아니요") { _, _ -> dlg.hide() }
 
         dlg = dialogBuilder.create()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.hideBottomNavi(false)
     }
 }

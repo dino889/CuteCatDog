@@ -844,6 +844,7 @@ class MainViewModels : ViewModel() {
         val response = CalendarService().recommandWalkSpacce(lat,lng,3.0)
         viewModelScope.launch {
             val res = response.body()
+            Log.d(TAG, "recommandWalkSapce: ${res}")
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
@@ -999,4 +1000,41 @@ class MainViewModels : ViewModel() {
             }
         }
     }
+
+
+
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    /**
+     * History ViewModel
+     * @author Jiwoo
+     * @since 04.04.22.
+     */
+    private val _historyList = MutableLiveData<MutableList<History>>()
+
+    val historyList : LiveData<MutableList<History>>
+        get() = _historyList
+
+    fun setHistory(list: MutableList<History>) = viewModelScope.launch {
+        _historyList.value = list
+    }
+
+    suspend fun getHistoryList (userId: Int){
+        val response = HistoryService().selectAllHistory(userId)
+        viewModelScope.launch {
+            val res = response.body()
+            if(response.code() == 200 || response.code() == 500) {
+                if(res != null) {
+                    if(res.data["historys"] != null && res.success) {
+                        val type = object : TypeToken<MutableList<History>>() {}.type
+                        val historyList: MutableList<History> = CommonUtils.parseDto(res.data["historys"]!!, type)
+                        setHistory(historyList)
+                    } else {
+                        Log.e(TAG, "getHistoryList: ${res.message}", )
+                    }
+                }
+            }
+        }
+    }
+
 }
