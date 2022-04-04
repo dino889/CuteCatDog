@@ -75,8 +75,6 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
             }
         })
         mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
-
-
     }
 
     fun initButtonClick(){
