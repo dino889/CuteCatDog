@@ -324,8 +324,6 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            showLoadingDialog()
-
             when (requestCode) {
                 CAMERA_CODE -> {
                     if (data?.extras?.get("data") != null) {
@@ -359,7 +357,6 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 //                            .commit()
 
                         checkTheType()
-                        hideLoadingDialog()
                         photoDialog.dismiss()
                     }
                 }
@@ -381,7 +378,6 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         } catch ( e: IOException) {
                             e.printStackTrace();
                         }
-                        hideLoadingDialog()
                     }
                 }
 
@@ -409,13 +405,13 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         } catch ( e: IOException) {
                             e.printStackTrace();
                         }
-                        hideLoadingDialog()
                     }
                 }
             }
         }
     }
-    fun checkTheType(){
+    private fun checkTheType(){
+        showLoadingDialog()
         val file = File(mainViewModels.uploadedImageUri!!.path)
         var fileExtension = contentResolver.getType(mainViewModels.uploadedImageUri!!)
         var inputStream : InputStream? = null
