@@ -90,6 +90,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
+        contentResolver = mainActivity.contentResolver
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
