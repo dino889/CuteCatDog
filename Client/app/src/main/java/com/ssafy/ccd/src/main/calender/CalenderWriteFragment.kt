@@ -39,19 +39,22 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
     var petId = -1
     private lateinit var mainActivity : MainActivity
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
         mainActivity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainActivity.hideBottomNavi(true)
         binding.viewModel = mainViewModel
         runBlocking {
             mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
@@ -181,13 +184,8 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
         })
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CalenderWriteFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivity.hideBottomNavi(false)
     }
 }

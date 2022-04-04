@@ -77,7 +77,7 @@ class ApplicationClass : Application() {
         val kp = kpg.generateKeyPair()
 
         // Kakao SDK 초기화
-        KakaoSdk.init(this, getString(R.string.kakao_nativeapp_key))
+        KakaoSdk.init(this,"78b660953c918503e1a723afddb4d6e8")
     }
 
 }

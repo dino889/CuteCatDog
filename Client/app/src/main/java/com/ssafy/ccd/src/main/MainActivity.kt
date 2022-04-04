@@ -105,7 +105,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        KakaoSdk.init(this,"78b660953c918503e1a723afddb4d6e8")
+
         setInit()
         setNavigation()
         setInstance()

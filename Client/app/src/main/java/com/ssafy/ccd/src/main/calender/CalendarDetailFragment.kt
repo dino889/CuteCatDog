@@ -57,22 +57,32 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
     }
     fun initKaKaoMap(){
         var mapView = MapView(requireContext())
-        binding.kakaoMapView.addView(mapView)
-//        var mapViewContainer = binding.kakaoMapView as ViewGroup
-//        mapViewContainer.addView(mapView)
-
-        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude),true)
-        mapView.setZoomLevel(7,true)
-
+//        binding.kakaoMapView.addView(mapView)
+        if(mapView.parent!=null){
+            (mapView.parent as ViewGroup).removeView(mapView)
+        }
+//        binding.kakaoMapView.addView(mapView)
+        var mapViewContainer = binding.kakaoMapView as ViewGroup
+        mapViewContainer.addView(mapView)
+        val mapPoint = MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
+        mapView.setMapCenterPoint(mapPoint,true)
+        mapView.setZoomLevel(4,true)
+        var marker = MapPOIItem()
+        marker.itemName = "Current MyLocation"
+        marker.mapPoint = mapPoint
+        marker.markerType = MapPOIItem.MarkerType.RedPin
+        mapView.addPOIItem(marker)
 //        var markerArr = arrayListOf<MapPoint>()
         var poiItem = arrayListOf<MapPOIItem>()
         mainViewModel.walk.observe(viewLifecycleOwner, {
+            Log.d(TAG, "initKaKaoMap: ${it}")
             for(i in 0..it.size-1){
                 var mapPoint = MapPoint.mapPointWithGeoCoord(it[i].lat.toDouble(),it[i].lng.toDouble())
 //                markerArr.add(mapPoint)
                 val marker = MapPOIItem()
                 marker.itemName = it[i].place
                 marker.mapPoint = mapPoint
+                marker.markerType = MapPOIItem.MarkerType.BluePin
             }
         })
         mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
@@ -89,5 +99,16 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
             CalendarDetailFragment().apply {
             }
     }
-
+//
+//    override fun onResume() {
+//        super.onResume()
+//        var mapView = MapView(requireContext())
+//        binding.kakaoMapView.addView(mapView)
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        var mapView = MapView(requireContext())
+//        binding.kakaoMapView.removeView(mapView)
+//    }
 }
