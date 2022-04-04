@@ -39,6 +39,7 @@ public class AIController {
 
     if (fileService.saveFile(file)) {
       aiResponse.setSuccess(true);
+      System.out.println(file.getOriginalFilename());
       aiResponse.setKind(aiService.getAnimalKind(file.getOriginalFilename()));
       msg.setData(aiResponse);
       fileService.deleteFile(file);
