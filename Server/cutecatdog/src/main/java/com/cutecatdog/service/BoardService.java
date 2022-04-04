@@ -9,6 +9,8 @@ import com.cutecatdog.model.board.BoardModifyRequestDto;
 import com.cutecatdog.model.board.BoardResponsDto;
 import com.cutecatdog.model.board.BoardWhereDto;
 
+import org.springframework.stereotype.Service;
+@Service
 public interface BoardService {
 
   public List<BoardResponsDto> findBoard() throws Exception;

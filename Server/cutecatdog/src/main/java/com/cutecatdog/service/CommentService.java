@@ -4,7 +4,9 @@ import com.cutecatdog.model.comment.CommentAddShowRequestDto;
 import com.cutecatdog.model.comment.CommentModifyRequestDto;
 import com.cutecatdog.model.comment.CommentRequestDto;
 
+import org.springframework.stereotype.Service;
 
+@Service
 public interface CommentService {
 
   boolean addComment(CommentAddShowRequestDto commentAddShowRequestDto) throws Exception;
