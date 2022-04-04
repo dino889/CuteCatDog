@@ -180,7 +180,7 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
                 if(res.success && res.data["isSuccess"] == true) {
                     showCustomToast("게시글이 삭제되었습니다.")
                     runBlocking {
-                        mainViewModel.getPostListByType(1)
+                        mainViewModel.getLocPostListByUserLoc(mainViewModel.userLoc!!)
                     }
 //                    localBoardAdapter.notifyItemRemoved(position)
                     localBoardAdapter.notifyDataSetChanged()
@@ -212,7 +212,7 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
                         animator.start()
                         runBlocking {
                             mainViewModel.getLikePostsByUserId(likeRequestDto.userId)
-                            mainViewModel.getPostListByType(1)
+                            mainViewModel.getLocPostListByUserLoc(mainViewModel.userLoc!!)
                         }
                         localBoardAdapter.notifyItemChanged(position)
 
@@ -225,7 +225,7 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
                         animator.start()
                         runBlocking {
                             mainViewModel.getLikePostsByUserId(likeRequestDto.userId)
-                            mainViewModel.getPostListByType(1)
+                            mainViewModel.getLocPostListByUserLoc(mainViewModel.userLoc!!)
                         }
                         localBoardAdapter.notifyItemChanged(position)
                     }
