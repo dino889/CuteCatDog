@@ -1,20 +1,35 @@
 package com.ssafy.ccd.src.main.ai
 
-import android.app.ProgressDialog
+import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RadioGroup
+import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentAiSelectBinding
 import com.ssafy.ccd.src.main.MainActivity
+import com.ssafy.ccd.src.network.service.PetService
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 
 class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectBinding::bind,R.layout.fragment_ai_select) {
 
@@ -24,9 +39,11 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
     private lateinit var radioGroup: RadioGroup
     private lateinit var mainActivity:MainActivity
     private lateinit var mainViewModels: MainViewModels
+    private lateinit var contentResolver : ContentResolver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        contentResolver = mainActivity.contentResolver
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -77,6 +94,17 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
         analygyBtn = binding.fragmentAiSelectBtnAnaylsis
         mainViewModels = (requireActivity() as MainActivity).mainViewModels
         backBtn = binding.fragmentAiSelectIvBack
+        if(mainViewModels.aiType == 0){
+            binding.fragmentSelectAiDogCheck.visibility = View.VISIBLE
+            binding.fragmentSelectAiCatCheck.visibility = View.INVISIBLE
+        }else if(mainViewModels.aiType == 1){
+            binding.fragmentSelectAiCatCheck.visibility = View.VISIBLE
+            binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
+        }else{
+            binding.textView33.text = "반려동물의 정보를 찾지못했습니다. \n 다시 선택해주세요!!"
+            binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
+            binding.fragmentSelectAiCatCheck.visibility = View.INVISIBLE
+        }
 //        radioGroup = binding.fragmentAiSelectRg
     }
 

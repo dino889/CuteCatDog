@@ -3,6 +3,7 @@ package com.ssafy.ccd.src.network.service
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
 import com.ssafy.ccd.util.RetrofitUtil
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 class PetService {
@@ -43,5 +44,9 @@ class PetService {
 
     suspend fun kindsById(kindId:Int):Response<Message> {
         return RetrofitUtil.petService.kindsbyId(kindId)
+    }
+
+    suspend fun getAipetType(file: MultipartBody.Part):Response<Message>{
+        return RetrofitUtil.petService.getAipetType(file)
     }
 }

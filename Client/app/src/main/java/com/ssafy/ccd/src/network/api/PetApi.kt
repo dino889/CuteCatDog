@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.network.api
 
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.dto.Pet
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -35,4 +36,8 @@ interface PetApi {
 
     @GET("/kinds/{kind_id}")
     suspend fun kindsbyId(@Path("kind_id")kindId:Int) : Response<Message>
+
+    @Multipart
+    @POST("/ai")
+    suspend fun getAipetType(@Part file: MultipartBody.Part):Response<Message>
 }

@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
@@ -43,8 +44,6 @@ import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
 import com.ssafy.ccd.src.network.viewmodel.MainViewModels
-import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.network.api.FCMApi
@@ -53,6 +52,7 @@ import retrofit2.Response
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.AuthResult
@@ -61,6 +61,13 @@ import com.google.type.LatLng
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.kakao.sdk.common.KakaoSdk
+import com.ssafy.ccd.src.network.service.PetService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.*
 import java.util.*
 import kotlin.math.round
 
@@ -319,7 +326,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 //                            .replace(R.id.activity_main_navHost, aiSelectFragment())
 //                            .addToBackStack(null)
 //                            .commit()
-                        binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
+                        checkTheType()
                         photoDialog.dismiss()
                     }
                 }
@@ -368,6 +375,45 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         } catch ( e: IOException) {
                             e.printStackTrace();
                         }
+                    }
+                }
+            }
+        }
+    }
+    fun checkTheType(){
+        val file = File(mainViewModels.uploadedImageUri!!.path)
+        var fileExtension = contentResolver.getType(mainViewModels.uploadedImageUri!!)
+        var inputStream : InputStream? = null
+        try{
+            inputStream = this.contentResolver.openInputStream(mainViewModels.uploadedImageUri!!)
+        }catch (e:IOException){
+            e.printStackTrace()
+        }
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArrayOutputStream.toByteArray())
+        val uploadFile = MultipartBody.Part.createFormData("file","${file.name}.${fileExtension?.substring(6)}",requestBody)
+
+        GlobalScope.launch {
+            var response = PetService().getAipetType(uploadFile)
+            val res = response.body()
+            Log.d("TAG", "checkTheType: $res ${response.code()}")
+            if(response.code() == 200){
+                if(res!=null){
+                    if(res.success){
+                        var kinds = res.data.get("kind")
+
+                        if(kinds!!.equals("cat")){
+                            mainViewModels.aiType = 1
+                        }else if(kinds!!.equals("dog")){
+                            mainViewModels.aiType = 0
+                        }else{
+                            mainViewModels.aiType = 2
+                        }
+                        runOnUiThread(Runnable {
+                            binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
+                        })
                     }
                 }
             }
