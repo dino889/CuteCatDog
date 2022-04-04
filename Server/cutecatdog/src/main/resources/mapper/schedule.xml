@@ -23,7 +23,7 @@
 	<select id="selectScheduleHour" parameterType="int" resultType="ScheduleDto">
 		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
 		FROM tbl_schedule
-		WHERE datetime like #{datetime}+'%' and is_send = 0 and type = 3
+		WHERE datetime like #{datetime}+'%' and is_noti = 0 and type = 3
 	</select>
 
 	<select id="selectScheduleDetail" parameterType="int" resultType="ScheduleDto">
