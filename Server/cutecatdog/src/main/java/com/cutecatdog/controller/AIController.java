@@ -38,6 +38,7 @@ public class AIController {
     if (fileService.saveFile(file)) {
       aiResponse.setSuccess(true);
       aiResponse.setKind(aiService.getAnimalKind(file.getOriginalFilename()));
+      msg.setData(aiResponse);
       fileService.deleteFile(file);
     } else {
       msg.setMessage("이미지 저장 실패");
@@ -56,6 +57,7 @@ public class AIController {
     msg.setSuccess(true);
 
     aiResponse.setKind(aiService.getAnimalKind("KakaoTalk_20220401_144628666.jpg"));
+    msg.setData(aiResponse);
 
     return new ResponseEntity<Message>(msg, status);
   }

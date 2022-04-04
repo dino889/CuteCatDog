@@ -21,9 +21,7 @@ public class AIServiceImpl implements AIService {
     try {
       String[] cmd = { "/bin/bash", "-c",
           String.format("sudo -S docker exec ai sh -c \"python /ai/prediction.py /image/\"%s", fileName) };
-      // process = Runtime.getRuntime()
-      // .exec(String.format("sudo docker exec ai sh -c \"python /ai/prediction.py
-      // /image/\"", fileName));
+
       process = Runtime.getRuntime()
           .exec(cmd);
 
@@ -31,6 +29,10 @@ public class AIServiceImpl implements AIService {
 
       while ((line = br.readLine()) != null) {
         sb.append(line);
+        sb.append("\n");
+      }
+      if (sb.length() > 0) {
+        sb.delete(sb.length() - 1, sb.length());
       }
       System.out.println("## RESULT : " + sb.toString());
     } catch (IOException e) {
@@ -38,6 +40,8 @@ public class AIServiceImpl implements AIService {
       e.printStackTrace();
     }
 
-    return sb.toString();
+    String[] split = sb.toString().split("\n");
+    String kind = split.length == 0 ? "UNKNOWN" : split[split.length - 1];
+    return kind;
   }
 }
