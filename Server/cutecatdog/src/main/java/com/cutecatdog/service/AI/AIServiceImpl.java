@@ -41,7 +41,7 @@ public class AIServiceImpl implements AIService {
     }
 
     String[] split = sb.toString().split("\n");
-    String kind = split.length == 0 ? "UNKNOWN" : split[split.length - 1];
+    String kind = split.length < 6 ? "UNKNOWN" : split[split.length - 1];
     return kind;
   }
 }
