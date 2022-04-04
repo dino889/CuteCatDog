@@ -12,7 +12,7 @@
   <select id="selectHistoryTime" resultType="HistoryDto">
     SELECT id, emotion, datetime, photo_path
 		FROM tbl_history
-    WHERE datetime &gt;= #{startdate}  AND datetime &lt; #{enddate}
+    WHERE datetime &gt;= #{startdate}  AND datetime &lt; #{enddate} AND user_id = #{userId}
   </select>
 
   <insert id="insertHistory" parameterType="HistoryRequestDto">
