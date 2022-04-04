@@ -91,11 +91,11 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:scaleType="fitXY"
+                app:imageUrlCalendarPets="@{viewModel.scheduleDetail.pet.photoPath}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/kakao_mapView"
-                app:imageUrlCalendarPets= "@{viewModel.scheduleDetail.pet.photoPath}"/>
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_recommandWalk" />
 
             <TextView
                 android:id="@+id/fragment_calendarDetail_petName"
@@ -104,36 +104,28 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@{viewModel.scheduleDetail.pet.name}"
+                android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/fragment_calendarDetail_petImg"
                 app:layout_constraintTop_toTopOf="@+id/fragment_calendarDetail_petImg" />
-
-            <TextView
-                android:id="@+id/textView45"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="위치"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@+id/textView50"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_memo" />
 
             <TextView
                 android:id="@+id/fragment_calendarDetail_place"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:text="@{viewModel.scheduleDetail.schedule.place}"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/textView45"
-                app:layout_constraintStart_toEndOf="@+id/textView45"
-                app:layout_constraintTop_toTopOf="@+id/textView45" />
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_calendarDetail_type"
+                app:layout_constraintStart_toEndOf="@+id/fragment_calendarDetail_type"
+                app:layout_constraintTop_toTopOf="@+id/fragment_calendarDetail_type" />
 
             <TextView
                 android:id="@+id/fragment_calendarDetail_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:calendarType = "@{viewModel.scheduleDetail.schedule.type}"
+                android:textColor="@color/black"
+                app:calendarType="@{viewModel.scheduleDetail.schedule.type}"
                 app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_title"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_title" />
 
@@ -146,6 +138,16 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_petImg"
                 app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_petImg" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_recommandWalk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/kakao_mapView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

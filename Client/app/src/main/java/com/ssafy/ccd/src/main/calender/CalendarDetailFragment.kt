@@ -57,11 +57,10 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
     }
     fun initKaKaoMap(){
         var mapView = MapView(requireContext())
-//        binding.kakaoMapView.addView(mapView)
         if(mapView.parent!=null){
             (mapView.parent as ViewGroup).removeView(mapView)
         }
-//        binding.kakaoMapView.addView(mapView)
+
         var mapViewContainer = binding.kakaoMapView as ViewGroup
         mapViewContainer.addView(mapView)
         val mapPoint = MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
@@ -72,20 +71,26 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         marker.mapPoint = mapPoint
         marker.markerType = MapPOIItem.MarkerType.RedPin
         mapView.addPOIItem(marker)
-//        var markerArr = arrayListOf<MapPoint>()
         var poiItem = arrayListOf<MapPOIItem>()
-        mainViewModel.walk.observe(viewLifecycleOwner, {
-            Log.d(TAG, "initKaKaoMap: ${it}")
-            for(i in 0..it.size-1){
-                var mapPoint = MapPoint.mapPointWithGeoCoord(it[i].lat.toDouble(),it[i].lng.toDouble())
-//                markerArr.add(mapPoint)
-                val marker = MapPOIItem()
-                marker.itemName = it[i].place
-                marker.mapPoint = mapPoint
-                marker.markerType = MapPOIItem.MarkerType.BluePin
-            }
-        })
-        mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
+        binding.fragmentCalendarDetailRecommandWalk.visibility = View.GONE
+        if(mainViewModel.walk.value!!.isEmpty()){
+            binding.fragmentCalendarDetailRecommandWalk.visibility = View.VISIBLE
+            binding.fragmentCalendarDetailRecommandWalk.text = " 주변에 추천할 산책장소가 없습니다 :( "
+        }else{
+            binding.fragmentCalendarDetailRecommandWalk.visibility = View.GONE
+            mainViewModel.walk.observe(viewLifecycleOwner, {
+                Log.d(TAG, "initKaKaoMap: ${it}")
+                for(i in 0..it.size-1){
+                    var mapPoint = MapPoint.mapPointWithGeoCoord(it[i].lat.toDouble(),it[i].lng.toDouble())
+                    val marker = MapPOIItem()
+                    marker.itemName = it[i].place
+                    marker.mapPoint = mapPoint
+                    marker.markerType = MapPOIItem.MarkerType.BluePin
+                }
+            })
+            mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
+        }
+
     }
 
     fun initButtonClick(){
