@@ -841,7 +841,7 @@ class MainViewModels : ViewModel() {
         }
     }
     suspend fun recommandWalkSapce(lat:Double, lng:Double){
-        val response = CalendarService().recommandWalkSpacce(lat,lng,1.0)
+        val response = CalendarService().recommandWalkSpacce(lat,lng,3.0)
         viewModelScope.launch {
             val res = response.body()
             if(response.code() == 200){
