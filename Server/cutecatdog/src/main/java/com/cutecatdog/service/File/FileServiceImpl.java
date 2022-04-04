@@ -18,7 +18,7 @@ public class FileServiceImpl implements FileService {
 
   @Override
   public boolean saveFile(MultipartFile file) {
-    Path path = Paths.get("targetDir/" + file.getOriginalFilename());
+    Path path = Paths.get(targetDir + file.getOriginalFilename());
     try {
       Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
       System.out.println("저장 성공");
@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileService {
 
   @Override
   public boolean deleteFile(MultipartFile file) {
-    Path path = Paths.get("targetDir/" + file.getOriginalFilename());
+    Path path = Paths.get(targetDir + file.getOriginalFilename());
     try {
       Files.delete(path);
       return true;
