@@ -47,7 +47,6 @@ import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import java.text.SimpleDateFormat
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.network.api.FCMApi
-import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import android.view.ViewGroup
 import android.widget.Toast
@@ -62,12 +61,13 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.ccd.src.network.service.PetService
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.ssafy.ccd.util.LoadingDialog
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.*
+import java.lang.Runnable
 import java.util.*
 import kotlin.math.round
 
@@ -103,6 +103,9 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     private val LOCATION = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     private val LOCATION_CODE = 100
 
+    // 로딩창
+    lateinit var loadingDialog: LoadingDialog
+
     override fun onRestart() {
         super.onRestart()
         if(checkPermissionForLocation(this)) {
@@ -123,6 +126,30 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         if(checkPermissionForLocation(this)) {
             startLocationUpdates()
         }
+    }
+
+    /**
+     * @author Jueun
+     * 로딩 다이얼로그를 10초간 띄운다
+     */
+    fun showLoadingDialog(){
+        if(loadingDialog.isShowing) return
+
+        CoroutineScope(Dispatchers.Main).async {
+            loadingDialog.setCancelable(false)
+            loadingDialog.show()
+
+            delay(15000)
+            if(loadingDialog.isShowing) {
+                showCustomToast("조금 뒤에 다시 시도해주세요.")
+                hideLoadingDialog()
+            }
+        }
+
+    }
+
+    fun hideLoadingDialog(){
+        loadingDialog.dismiss()
     }
 
     /**
@@ -178,6 +205,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         photoDialog = Dialog(this)
         photoDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         photoDialog.setContentView(photoDialogView)
+        loadingDialog = LoadingDialog(this)
 
         // mainViewModel
         mainViewModels = ViewModelProvider(this).get(MainViewModels::class.java)
@@ -307,7 +335,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                         else {
                             // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
                             photoDialog.dismiss()
-                            binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
+//                            binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
+                            checkTheType()
                         }
                     }
                 }
@@ -326,6 +355,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 //                            .replace(R.id.activity_main_navHost, aiSelectFragment())
 //                            .addToBackStack(null)
 //                            .commit()
+
                         checkTheType()
                         photoDialog.dismiss()
                     }
@@ -380,7 +410,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             }
         }
     }
-    fun checkTheType(){
+    private fun checkTheType(){
+        showLoadingDialog()
         val file = File(mainViewModels.uploadedImageUri!!.path)
         var fileExtension = contentResolver.getType(mainViewModels.uploadedImageUri!!)
         var inputStream : InputStream? = null
@@ -402,16 +433,17 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             if(response.code() == 200){
                 if(res!=null){
                     if(res.success){
-                        var kinds = res.data.get("kind")
+                        var kinds = res.data["kind"]
 
-                        if(kinds!!.equals("cat")){
+                        if(kinds!! == "cat"){
                             mainViewModels.aiType = 1
-                        }else if(kinds!!.equals("dog")){
+                        }else if(kinds == "dog"){
                             mainViewModels.aiType = 0
                         }else{
                             mainViewModels.aiType = 2
                         }
                         runOnUiThread(Runnable {
+                            hideLoadingDialog()
                             binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
                         })
                     }
