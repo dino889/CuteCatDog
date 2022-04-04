@@ -46,7 +46,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -68,7 +68,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -90,7 +90,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -112,7 +112,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -134,7 +134,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -156,7 +156,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -178,7 +178,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -200,7 +200,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -222,7 +222,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -244,7 +244,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -266,7 +266,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -288,7 +288,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -310,7 +310,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -332,7 +332,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -353,7 +353,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -375,7 +375,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -397,7 +397,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -419,7 +419,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -441,7 +441,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -463,7 +463,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -485,7 +485,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -507,7 +507,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -529,7 +529,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
@@ -551,7 +551,7 @@ public class Scheduler {
                 fcmParamDto.setDatetime(tmp.getDatetime());
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
-                tmp.setIsSend(1);
+                tmp.setIsNoti(1);
                 scheduleService.modifySchedule(tmp);
             }
         }
