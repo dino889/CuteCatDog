@@ -24,5 +24,7 @@ public class ScheduleDto {
     private String datetime;
     @ApiModelProperty(value = "장소")
     private String place;
+    @ApiModelProperty(value = "알림 전송 여부")
+    private int isSend;
     
 }
