@@ -19,7 +19,7 @@ public class AIServiceImpl implements AIService {
     String line = "";
     try {
       String[] cmd = { "/bin/bash", "-c",
-          String.format("sudo -S docker exec ai sh -c \"python /ai/prediction.py /image/\"", fileName) };
+          String.format("sudo -S docker exec ai sh -c \"python /ai/prediction.py /image/\"%s", fileName) };
       // process = Runtime.getRuntime()
       // .exec(String.format("sudo docker exec ai sh -c \"python /ai/prediction.py
       // /image/\"", fileName));
