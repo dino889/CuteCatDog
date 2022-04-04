@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.google.android.youtube.player.internal.o
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentCalendarDetailBinding
@@ -39,6 +40,7 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         runBlocking {
             mainViewModel.getCalendarDetail(calendarId)
             mainViewModel.recommandWalkSapce(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
+//            mainViewModel.recommandWalkSapce(35.84569559, 128.5925713)
         }
         setListener()
     }
@@ -64,6 +66,7 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         var mapViewContainer = binding.kakaoMapView as ViewGroup
         mapViewContainer.addView(mapView)
         val mapPoint = MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
+//        val mapPoint = MapPoint.mapPointWithGeoCoord(35.84569559, 128.5925713)
         mapView.setMapCenterPoint(mapPoint,true)
         mapView.setZoomLevel(4,true)
         var marker = MapPOIItem()
@@ -72,22 +75,29 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         marker.markerType = MapPOIItem.MarkerType.RedPin
         mapView.addPOIItem(marker)
         var poiItem = arrayListOf<MapPOIItem>()
+        var markerArr = arrayListOf<MapPoint>()
+
         binding.fragmentCalendarDetailRecommandWalk.visibility = View.GONE
         if(mainViewModel.walk.value!!.isEmpty()){
             binding.fragmentCalendarDetailRecommandWalk.visibility = View.VISIBLE
             binding.fragmentCalendarDetailRecommandWalk.text = " 주변에 추천할 산책장소가 없습니다 :( "
         }else{
             binding.fragmentCalendarDetailRecommandWalk.visibility = View.GONE
-            mainViewModel.walk.observe(viewLifecycleOwner, {
-                Log.d(TAG, "initKaKaoMap: ${it}")
-                for(i in 0..it.size-1){
-                    var mapPoint = MapPoint.mapPointWithGeoCoord(it[i].lat.toDouble(),it[i].lng.toDouble())
-                    val marker = MapPOIItem()
-                    marker.itemName = it[i].place
-                    marker.mapPoint = mapPoint
-                    marker.markerType = MapPOIItem.MarkerType.BluePin
-                }
-            })
+
+            for (item in mainViewModel.walk.value!!) {
+                val lat = item.lat
+                val lng = item.lng
+                var mapPoint = MapPoint.mapPointWithGeoCoord(lat,lng)
+                markerArr.add(mapPoint)
+            }
+
+            for(i in 0..markerArr.size-1){
+                val marker = MapPOIItem()
+                marker.itemName = mainViewModel.walk.value!![i].place
+                marker.mapPoint = markerArr[i]
+                marker.markerType = MapPOIItem.MarkerType.BluePin
+                poiItem.add(marker)
+            }
             mapView.addPOIItems(poiItem.toArray(arrayOfNulls(poiItem.size)))
         }
 
