@@ -17,6 +17,7 @@ public class AIServiceImpl implements AIService {
   public String getAnimalKind(String fileName) {
     Process process;
     String line = "";
+    StringBuilder sb = new StringBuilder();
     try {
       String[] cmd = { "/bin/bash", "-c",
           String.format("sudo -S docker exec ai sh -c \"python /ai/prediction.py /image/\"%s", fileName) };
@@ -26,16 +27,17 @@ public class AIServiceImpl implements AIService {
       process = Runtime.getRuntime()
           .exec(cmd);
 
-      StringBuilder sb = new StringBuilder();
       BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
       while ((line = br.readLine()) != null) {
         sb.append(line);
       }
+      System.out.println("## RESULT : " + sb.toString());
     } catch (IOException e) {
+      System.out.println(e.getMessage());
       e.printStackTrace();
     }
-    System.out.println("## RESULT : " + line);
-    return line;
+
+    return sb.toString();
   }
 }
