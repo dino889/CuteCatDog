@@ -23,7 +23,7 @@
 	<select id="selectScheduleHour" resultType="ScheduleDto">
 		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
 		FROM tbl_schedule
-		WHERE datetime = UNIX_TIMESTAMP(CURDATE())
+		WHERE datetime = UNIX_TIMESTAMP(date_sub(CURDATE(), INTERVAL 9 HOUR))
 		AND is_noti = 0
 	</select>
 
