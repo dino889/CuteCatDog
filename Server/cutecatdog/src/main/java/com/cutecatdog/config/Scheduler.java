@@ -152,7 +152,7 @@ public class Scheduler {
     }
 
     public void alert() throws Exception{
-        // long UnixTime = System.currentTimeMillis();
+        long UnixTime = System.currentTimeMillis();
         List<ScheduleDto> list = scheduleService.findScheduleHour();
 
         for (ScheduleDto tmp : list) {
@@ -164,7 +164,7 @@ public class Scheduler {
                 fcmParamDto.setToken(user.getDeviceToken());
                 fcmParamDto.setTitle(tmp.getTitle());
                 fcmParamDto.setContent(tmp.getMemo());
-                fcmParamDto.setDatetime(tmp.getDatetime());
+                fcmParamDto.setDatetime(String.valueOf(UnixTime));
                 fcmParamDto.setType(3);
                 fcmService.sendMessageTo(fcmParamDto);
             }
