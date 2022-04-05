@@ -64,6 +64,7 @@ import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.provider.CalendarContract
 import android.widget.EditText
+import com.google.android.youtube.player.internal.i
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -87,6 +88,8 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     var flag = 1;   // 1 = insert / 2 = update / 3 = 분석 결과로 일기 업로드
     var diaryId = -1
     private lateinit var editTextSubscription: Disposable
+    private lateinit var beforeHashtag: List<Hashtag>
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -169,10 +172,10 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
 
             if(flag == 1 || flag == 3){
                 //insert
-                convertFileName()
-                getFilterHashTag()
-                Log.d(TAG, "onViewCreated: ${hashs}")
                 if(inputValueChk()) {
+                    convertFileName()
+                    getFilterHashTag()
+                    Log.d(TAG, "onViewCreated: ${hashs}")
                     var diary = Diary(
                         content = content,
                         datetime = CommonUtils.makeBirthMilliSecond(date),
@@ -189,10 +192,11 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
             if(flag == 2){
                 //update
-                convertFileName()
-                getFilterHashTag()
-                Log.d(TAG, "onViewCreated: ${hashs}")
                 if(inputValueChk()) {
+                    convertFileName()
+                    hashTagUpdate()
+//                    getFilterHashTag()
+                    Log.d(TAG, "onViewCreated: ${hashs}")
                     var diary = Diary(
                         content = content,
                         datetime = CommonUtils.makeBirthMilliSecond(date),
@@ -221,6 +225,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 mainViewModel.getDiaryDetail(diaryId)
             }
             var diary = mainViewModel.diary.value!!
+            beforeHashtag = diary.hashtag
             binding.fragmentDiaryWriteTitle.setText(diary.title)
             binding.fragmentDiaryWriteDate.setText(CommonUtils.makeBirthString(diary.datetime))
             binding.fragmentDiaryWriteContent.setText(diary.content)
@@ -316,13 +321,13 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             childFragmentManager.popBackStack()
         }
 
-        for(i in 0 until fileNames.size){
+        for(i in 0 until mainViewModel.photoUriList.value!!.size){
             val storageReferenceChild = FirebaseStorage.getInstance().getReference("${ApplicationClass.sharedPreferencesUtil.getUser().id}").child(fileNames[i])
             storageReferenceChild.putFile(mainViewModel.photoUriList.value!![i])
                 .addOnSuccessListener {
                     storageReferenceChild.downloadUrl
                         .addOnSuccessListener {
-                            if(i == fileNames.size - 1) {
+                            if(i == mainViewModel.photoUriList.value!!.size - 1) {
                               this@DiaryWriteFragment.findNavController().popBackStack()
 //                                (requireActivity() as MainActivity).onBackPressed()
                             }
@@ -369,6 +374,9 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 if(res.success){
                     Log.d(TAG, "updateDiary2: ${res}")
                     addFireBase()
+                    if(mainViewModel.photoUriList.value?.size == 0) {
+                        (requireActivity() as MainActivity).onBackPressed()
+                    }
 //                    mainActivity.runOnUiThread(Runnable {
 //                        this@DiaryWriteFragment.findNavController().navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
 //                    })
@@ -407,8 +415,54 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         var fullText = binding.fragmentDiaryWriteHashTag.text.toString()
         var text = fullText.split(" ")
         for(i in 0..text.size-1){
-            hashs.add(Hashtag(text[i].trim(),i))
+            if(text[i].contains("#")) {
+                hashs.add(Hashtag(text[i].trim(), i))
+            }
         }
+        Log.d(TAG, "getFilterHashTag: $hashs")
+    }
+
+    private fun hashTagUpdate() {
+        val tag = mutableSetOf<Hashtag>()
+
+        val fullText = binding.fragmentDiaryWriteHashTag.text.toString()
+        val text = fullText.split(" ")
+
+        if(beforeHashtag.size == 0) {
+            for (i in 0..text.size - 1) {
+                if(text[i].contains("#")) {
+                    hashs.add(Hashtag(text[i].trim(), i))
+                }
+            }
+        } else {
+            for(hashtag in beforeHashtag) {
+                for(txt in text) {
+                    if(hashtag.hashtag != txt && txt.contains("#")) {
+                        tag.add(Hashtag(txt, 0))
+                    }
+                }
+            }
+            hashs = tag.toList() as ArrayList<Hashtag>
+            Log.d(TAG, "hashTagUpdate: $tag /////// $hashs")
+        }
+//
+//        for(i in 0..text.size - 1){
+//            if(beforeHashtag.size != 0) {
+//                for(hashtag in beforeHashtag) {
+//                    Log.d(TAG, "hashTagUpdate2: ${text[i]} / ${hashtag.hashtag}")
+//                    if(text[i].contains("#")) {
+//                        if(text[i] != hashtag.hashtag) {
+//                            Log.d(TAG, "해시태그: ${text[i]}")
+//
+//                            hashs.add(Hashtag(text[i].trim(), i))
+//                        }
+//                    }
+//                }
+//            } else {
+//
+//            }
+//        }
+        Log.d(TAG, "hashTagUpdate3333: $hashs")
     }
 
     private fun initHashs(){

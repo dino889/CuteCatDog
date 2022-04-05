@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/fragmentDiary_img_item"
-            android:layout_width="370dp"
+            android:layout_width="400dp"
             android:layout_height="200dp"
             android:scaleType="fitXY"
             app:imageUrlDiary="@{photo.photo}"
