@@ -81,6 +81,11 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,7 +111,6 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
         }
 
         backBtnClickEvent()
-//        imgDeleteBtnEvent()
         selectImgBtnEvent()
 
     }
@@ -327,18 +331,6 @@ class WriteShareBoardFragment : BaseFragment<FragmentWriteShareBoardBinding>(Fra
                 Log.d(TAG,"filterActivityLauncher 실패")
             }
         }
-
-
-//    /**
-//     * 사진 삭제 버튼 클릭 이벤트
-//     */
-//    private fun imgDeleteBtnEvent() {
-//        binding.fragmentBoardWriteIbDeletedImg.setOnClickListener {
-//            imgUri = Uri.EMPTY
-//            imgSelectedChk = true
-//            binding.fragmentBoardWriteLLSetImg.visibility = View.GONE
-//        }
-//    }
 
     /**
      * title 길이 체크

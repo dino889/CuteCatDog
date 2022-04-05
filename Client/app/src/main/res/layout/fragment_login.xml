@@ -48,7 +48,7 @@
             android:background="@drawable/et_background_normal"
             android:ems="10"
             android:hint="PW"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             app:layout_constraintBottom_toTopOf="@+id/loginFragment_clAutoAndForgotPW"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

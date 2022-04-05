@@ -206,12 +206,13 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
      */
     private fun inputObservable() {
 
-        binding.fragmentJoinEtNick.setQueryDebounce {
-            validatedNickname(it)
-        }
 
         binding.fragmentJoinEtPw.setQueryDebounce {
             validatedPw(it)
+        }
+
+        binding.fragmentJoinEtNick.setQueryDebounce {
+            validatedNickname(it)
         }
 
         binding.fragmentJoinEtEmail.setQueryDebounce {

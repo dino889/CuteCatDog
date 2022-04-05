@@ -47,8 +47,9 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         mainActivity = context as MainActivity
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideBottomNavi(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

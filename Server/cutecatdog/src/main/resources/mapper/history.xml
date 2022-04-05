@@ -7,6 +7,7 @@
 		SELECT id,user_id, emotion, datetime, photo_path
 		FROM tbl_history
     WHERE user_id = #{userId}
+    ORDER BY datetime desc
 	</select>
 
   <select id="selectHistoryTime" resultType="HistoryDto">
