@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentQnaBoardBinding
+import com.ssafy.ccd.src.main.MainActivity
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -57,6 +58,15 @@ class QnABoardFragment : BaseFragment<FragmentQnaBoardBinding>(FragmentQnaBoardB
         qnaBoardAdapter = QnABoardAdapter(mutableListOf(), mainViewModel.allUserList.value!!, mainViewModel.likePostsByUserId.value!!, requireContext(), this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideBottomNavi(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (requireActivity() as MainActivity).showBottomAppBar()
+    }
 
     /**
      * @author Jiwoo
