@@ -24,7 +24,7 @@
 
     <update id="updateDiary" parameterType="DiaryDto">
         UPDATE tbl_diary
-        SET title = #{title}, content = #{content}
+        SET title = #{title}, content = #{content}, datetime=#{datetime}
         WHERE id = #{id}
     </update>
 
