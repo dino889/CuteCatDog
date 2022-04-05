@@ -140,6 +140,7 @@ dependencies {
     compile group: 'com.kakao.sdk', name:'kakaolink', version:project.KAKAO_SDK_VERSION
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/libDaumMapAndroid.jar')
+
     //KAKAO SDK
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     // facebook 로그인
@@ -171,16 +172,6 @@ dependencies {
     // Google Material Component Binding
     implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.1.0'
 
-    // AndroidX
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-core:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-appcompat:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-drawerlayout:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-leanback:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-recyclerview:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-slidingpanelayout:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-viewpager:4.0.0'
-//    implementation 'com.jakewharton.rxbinding4:rxbinding-viewpager2:4.0.0'
 
     // Youtube
     implementation 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'

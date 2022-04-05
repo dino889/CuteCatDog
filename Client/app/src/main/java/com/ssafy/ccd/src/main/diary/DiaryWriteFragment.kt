@@ -84,7 +84,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     private lateinit var contentResolver : ContentResolver
     var timeName = ""
     private var hashs = arrayListOf<Hashtag>()
-    var flag = 1;
+    var flag = 1;   // 1 = insert / 2 = update / 3 = 분석 결과로 일기 업로드
     var diaryId = -1
     private lateinit var editTextSubscription: Disposable
     override fun onAttach(context: Context) {
@@ -172,34 +172,41 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 convertFileName()
                 getFilterHashTag()
                 Log.d(TAG, "onViewCreated: ${hashs}")
-                var diary = Diary(
-                    content = content,
-                    datetime = CommonUtils.makeBirthMilliSecond(date),
-                    hashtag = hashs,
-                    id = 0,
-                    photo = photos,
-                    title = title,
-                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                )
-                insertDiary(diary)
+                if(inputValueChk()) {
+                    var diary = Diary(
+                        content = content,
+                        datetime = CommonUtils.makeBirthMilliSecond(date),
+                        hashtag = hashs,
+                        id = 0,
+                        photo = photos,
+                        title = title,
+                        userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+                    )
+                    insertDiary(diary)
+                } else {
+                    showCustomToast("입력 값을 확인해 주세요.")
+                }
             }
             if(flag == 2){
                 //update
                 convertFileName()
                 getFilterHashTag()
                 Log.d(TAG, "onViewCreated: ${hashs}")
-                var diary = Diary(
-                    content = content,
-                    datetime = CommonUtils.makeBirthMilliSecond(date),
-                    hashtag = hashs,
-                    id = diaryId,
-                    photo = photos,
-                    title = title,
-                    userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                )
-                updateDiary(diary)
+                if(inputValueChk()) {
+                    var diary = Diary(
+                        content = content,
+                        datetime = CommonUtils.makeBirthMilliSecond(date),
+                        hashtag = hashs,
+                        id = diaryId,
+                        photo = photos,
+                        title = title,
+                        userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+                    )
+                    updateDiary(diary)
+                } else {
+                    showCustomToast("입력 값을 확인해 주세요.")
+                }
             }
-
         }
 
         binding.fragmentDiaryWriteBack.setOnClickListener {
@@ -217,7 +224,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             binding.fragmentDiaryWriteTitle.setText(diary.title)
             binding.fragmentDiaryWriteDate.setText(CommonUtils.makeBirthString(diary.datetime))
             binding.fragmentDiaryWriteContent.setText(diary.content)
-            Log.d(TAG, "initData: ${diary.photo.size}")
             binding.photosize.text = CommonUtils.converPhotoSize(diary.photo.size)
             
             var hashs = ""
@@ -303,8 +309,9 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     }
 
     fun addFireBase(){
+        Log.d(TAG, "addFireBase: ${mainViewModel.photoUriList.value?.size} / ${fileNames.size}")
         if(mainViewModel.photoUriList.value?.size == null){
-            Log.e("ERROR", "이미지 Uri에서 문제가 발생하였습니다.")
+            Log.e(TAG, "이미지 Uri에서 문제가 발생하였습니다.")
             showCustomToast("이미지 Uri에서 문제가 발생하였습니다.")
             childFragmentManager.popBackStack()
         }
@@ -316,15 +323,15 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                     storageReferenceChild.downloadUrl
                         .addOnSuccessListener {
                             if(i == fileNames.size - 1) {
-//                              this@DiaryWriteFragment.findNavController().popBackStack()
-                                (requireActivity() as MainActivity).onBackPressed()
+                              this@DiaryWriteFragment.findNavController().popBackStack()
+//                                (requireActivity() as MainActivity).onBackPressed()
                             }
                             Log.d(TAG, "addFireBase: $it")
                         }
                 }
-
         }
     }
+
     fun insertDiary(diary:Diary) {
         var response : Response<Message>
         runBlocking {
@@ -358,7 +365,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         }
         val res = response.body()
         if(response.code() == 200){
-            Log.d(TAG, "updateDiary1: ${res}")
             if(res!=null){
                 if(res.success){
                     Log.d(TAG, "updateDiary2: ${res}")
@@ -411,7 +417,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             var name = mainViewModel.hashList.value!![item].hashtag
             hashs.add(name)
         }
-        Log.d(TAG, "initHashs: ${hashs}")
         var adapter = ArrayAdapter<String>(requireContext(),android.R.layout.simple_dropdown_item_1line,hashs)
 
         binding.fragmentDiaryWriteHashTag.setTokenizer(SpaceTokenizer())
@@ -517,8 +522,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                         }
                     }
 
-
-
                     mainViewModel.photoUriList.observe(viewLifecycleOwner, {
                         Log.d(TAG, "loadImage: ${it}")
                         photoAdapter = DiaryPhotoAdapter()
@@ -569,6 +572,16 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
         }
     }
+
+    private fun inputValueChk() : Boolean {
+        val title = binding.fragmentDiaryWriteTitle.text
+        val content = binding.fragmentDiaryWriteContent.text.toString()
+        val date = binding.fragmentDiaryWriteDate.text.toString()
+        Log.d(TAG, "inputValueChk: $title $content $date")
+        return title.isNotEmpty() && content.isNotEmpty() && date.contains("년")
+
+    }
+
     private fun contentLenChk(input:String):Boolean{
         binding.fragmentDiaryWriteContentLength.text = "(${input.length} / 500)"
         if(input.trim().isEmpty()){
@@ -584,11 +597,13 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             return true
         }
     }
+
     private fun inputObservable(){
         binding.fragmentDiaryWriteContent.setQueryDebounce{
             contentLenChk(it)
         }
     }
+
     private fun EditText.setQueryDebounce(queryFunction: (String) -> Unit): Disposable {
         val editTextChangeObservable = this.textChanges()
         editTextSubscription = editTextChangeObservable
@@ -610,6 +625,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             )
         return editTextSubscription  // Disposable 반환
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mainActivity.hideBottomNavi(false)
