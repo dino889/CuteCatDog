@@ -28,7 +28,7 @@ public interface ScheduleMapper {
 
     List<ScheduleDto> selectScheduleDate(ScheduleDto scheduleDto) throws SQLException;
 
-    List<ScheduleDto> selectScheduleHour(String datetime) throws SQLException;
+    List<ScheduleDto> selectScheduleHour() throws SQLException;
 
     List<ScheduleDto> selectScheduleWeek(int userId) throws SQLException;
     

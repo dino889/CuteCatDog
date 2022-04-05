@@ -20,7 +20,7 @@
 		WHERE user_id = #{userId} and datetime=#{datetime}
 	</select>
 
-	<select id="selectScheduleHour" parameterType="int" resultType="ScheduleDto">
+	<select id="selectScheduleHour" resultType="ScheduleDto">
 		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
 		FROM tbl_schedule
 		WHERE datetime between UNIX_TIMESTAMP(CURDATE()) and UNIX_TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL 1 DAY))
