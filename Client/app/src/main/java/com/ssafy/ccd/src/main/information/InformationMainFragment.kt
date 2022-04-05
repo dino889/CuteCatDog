@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentInformationMainBinding
+import com.ssafy.ccd.src.main.MainActivity
 
 class InformationMainFragment : BaseFragment<FragmentInformationMainBinding>(FragmentInformationMainBinding::bind, R.layout.fragment_information_main) {
 
@@ -48,6 +49,16 @@ class InformationMainFragment : BaseFragment<FragmentInformationMainBinding>(Fra
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).hideBottomNavi(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (requireActivity() as MainActivity).showBottomAppBar()
     }
 
     private fun setInstance() {
