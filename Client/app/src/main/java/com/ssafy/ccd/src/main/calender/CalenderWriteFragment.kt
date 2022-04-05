@@ -9,7 +9,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,17 +17,20 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentCalenderWriteBinding
+import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.CalendarService
 import com.ssafy.ccd.util.CommonUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import retrofit2.Response
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.properties.Delegates
 
 private const val TAG = "CalenderWriteFragment"
 class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(FragmentCalenderWriteBinding::bind, R.layout.fragment_calender_write) {
@@ -38,6 +40,7 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
     val dataFormat: SimpleDateFormat = SimpleDateFormat("yyyy년 MM월 dd일")
     var petId = -1
     private lateinit var mainActivity : MainActivity
+    private var scheduleId by Delegates.notNull<Int>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,6 +52,14 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
     override fun onResume() {
         super.onResume()
         mainActivity.hideBottomNavi(true)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.apply {
+            scheduleId = getInt("scheduleId")
+            Log.d(TAG, "onCreate 스케줄 id: $scheduleId")
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -88,7 +99,11 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             this@CalenderWriteFragment.findNavController().popBackStack()
         }
         setLinstener()
+
+        updateInit()
     }
+
+
     fun insertCalendar(calendar:com.ssafy.ccd.src.dto.Calendar){
         GlobalScope.launch { 
             var response = CalendarService().insertCalendar(calendar)
@@ -182,6 +197,75 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
 
             })
         })
+    }
+
+
+    // 일정 수정
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateInit() {
+        if(scheduleId > 0) {
+            binding.fragmentCalenderWriteSuccessBtn.text = "수정"
+            binding.calendarWriteFragmentClPetList.visibility = View.GONE
+            runBlocking {
+                mainViewModel.getCalendarDetail(scheduleId)
+            }
+            val schedule = mainViewModel.scheduleDetail.value!!
+            binding.fragmentCalendarWriteTitle.setText(schedule.schedule.title)
+            binding.fragmentCalendarWritePlace.setText(schedule.schedule.place)
+            binding.fragmentCalendarWriteDate.text = CommonUtils.makeBirthString(schedule.schedule.datetime)
+            binding.fragmentCalendarWriteType.setSelection(schedule.schedule.type)
+            binding.fragmentCalendarWriteMemo.setText(schedule.schedule.memo)
+
+            petId = schedule.pet.id
+            type = schedule.schedule.type
+
+
+
+            modifyBtnClickEvent()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun modifyBtnClickEvent() {
+        binding.fragmentCalenderWriteSuccessBtn.setOnClickListener {
+
+            val updateSchedule = com.ssafy.ccd.src.dto.Calendar(
+                id = scheduleId,
+                title = binding.fragmentCalendarWriteTitle.text.toString(),
+                place = binding.fragmentCalendarWritePlace.text.toString(),
+                datetime = CommonUtils.makeBirthMilliSecond(binding.fragmentCalendarWriteDate.text.toString()),
+                memo = binding.fragmentCalendarWriteMemo.text.toString(),
+                type = type,
+                petId = 0,
+                userId = 0)
+
+            updateSchedule(updateSchedule)
+        }
+    }
+
+    private fun updateSchedule(schedule : com.ssafy.ccd.src.dto.Calendar) {
+        var response : Response<Message>
+        runBlocking {
+            response = CalendarService().updateCalendar(schedule)
+        }
+        if(response.code() == 200) {
+            val res = response.body()
+            if(res != null) {
+                if(res.data["isSuccess"] == true) {
+                    showCustomToast("일정이 수정되었습니다.")
+                    runBlocking { 
+                        mainViewModel.getCalendarDetail(scheduleId)
+                    }
+                    (requireActivity() as MainActivity).onBackPressed()
+                } else {
+                    showCustomToast("일정 수정 실패")
+                    Log.e(TAG, "updateSchedule: ${res.message}", )
+                }
+            }
+        } else {
+            showCustomToast("서버 통신 실패")
+            Log.e(TAG, "updateSchedule: ${response.body()!!.message}", )
+        }
     }
 
     override fun onDestroyView() {

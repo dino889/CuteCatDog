@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.google.android.youtube.player.internal.o
 import com.ssafy.ccd.R
@@ -43,11 +44,12 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
             mainViewModel.recommandWalkSapce(35.931075, 128.573721)
         }
         setListener()
+
     }
     fun setListener(){
         initButtonClick()
-
         checkType()
+        modifyBtnClickEvent()
     }
     fun checkType(){
         var type = mainViewModel.scheduleDetail.value!!.schedule.type
@@ -108,6 +110,14 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
             this@CalendarDetailFragment.findNavController().popBackStack()
         }
     }
+
+    private fun modifyBtnClickEvent() {
+        binding.calendarDetailFragmentTvModify.setOnClickListener {
+            this@CalendarDetailFragment.findNavController().navigate(R.id.action_calendarDetailFragment_to_calendarWriteFragment, bundleOf("scheduleId" to calendarId))
+            Log.d(TAG, "modifyBtnClickEvent: $calendarId")
+        }
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
