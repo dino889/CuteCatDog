@@ -138,12 +138,16 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             setBirth()
         }
         inputObservable()
-        mainViewModel.photoUriList.observe(viewLifecycleOwner, {
-            if(it.size == 10){
-                binding.fragmentDiaryWriteAddCameraBtn.setBackgroundColor(Color.parseColor("#FFAD88"))
-            }
-            binding.photosize.setText(CommonUtils.converPhotoSize(it.size))
-        })
+        if(flag!=2){
+            mainViewModel.photoUriList.observe(viewLifecycleOwner, {
+                if(it.size == 10){
+                    binding.fragmentDiaryWriteAddCameraBtn.setBackgroundColor(Color.parseColor("#FFAD88"))
+                }
+                binding.photosize.setText(CommonUtils.converPhotoSize(it.size))
+
+            })
+        }
+
 
         binding.fragmentDiaryWriteAddCameraBtn.setOnClickListener{
             if(mainViewModel.photoUriList.value!!.size < 10){
@@ -155,7 +159,6 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }else{
                 showCustomToast("사진을 추가하실 수 없습니다.")
             }
-
         }
 
         binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
@@ -214,6 +217,9 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             binding.fragmentDiaryWriteTitle.setText(diary.title)
             binding.fragmentDiaryWriteDate.setText(CommonUtils.makeBirthString(diary.datetime))
             binding.fragmentDiaryWriteContent.setText(diary.content)
+            Log.d(TAG, "initData: ${diary.photo.size}")
+            binding.photosize.text = CommonUtils.converPhotoSize(diary.photo.size)
+            
             var hashs = ""
             for(hash in 0..diary.hashtag.size-1){
                 hashs += diary.hashtag[hash].hashtag+" "
@@ -231,6 +237,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                 adapter = photoUpdateAdapter
                 adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
+            
             binding.fragmentDiaryWriteHashTag.setText(hashs)
             binding.fragmentDiaryWriteSuccessBtn.setText("수정")
         }else if(flag == 3){
@@ -394,7 +401,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
         var fullText = binding.fragmentDiaryWriteHashTag.text.toString()
         var text = fullText.split(" ")
         for(i in 0..text.size-1){
-            hashs.add(Hashtag(text[i],i))
+            hashs.add(Hashtag(text[i].trim(),i))
         }
     }
 
