@@ -40,7 +40,7 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
         runBlocking {
             mainViewModel.getCalendarDetail(calendarId)
             mainViewModel.recommandWalkSapce(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
-//            mainViewModel.recommandWalkSapce(35.84569559, 128.5925713)
+            mainViewModel.recommandWalkSapce(35.931075, 128.573721)
         }
         setListener()
     }
@@ -65,8 +65,8 @@ class CalendarDetailFragment : BaseFragment<FragmentCalendarDetailBinding>(Fragm
 
         var mapViewContainer = binding.kakaoMapView as ViewGroup
         mapViewContainer.addView(mapView)
-        val mapPoint = MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
-//        val mapPoint = MapPoint.mapPointWithGeoCoord(35.84569559, 128.5925713)
+        var mapPoint = MapPoint.mapPointWithGeoCoord(mainViewModel.userLoc!!.latitude, mainViewModel.userLoc!!.longitude)
+        mapPoint = MapPoint.mapPointWithGeoCoord(35.931075, 128.573721)
         mapView.setMapCenterPoint(mapPoint,true)
         mapView.setZoomLevel(4,true)
         var marker = MapPOIItem()
