@@ -18,7 +18,7 @@ public interface ScheduleService {
 
     List<ScheduleDto> findScheduleDate(ScheduleDto scheduleDto) throws Exception;
 
-    List<ScheduleDto> findScheduleHour(String datetime) throws Exception;
+    List<ScheduleDto> findScheduleHour() throws Exception;
 
     ScheduleDto findScheduleDetail(int id) throws Exception;
 

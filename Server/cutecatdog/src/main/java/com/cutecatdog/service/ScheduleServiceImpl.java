@@ -66,8 +66,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public List<ScheduleDto> findScheduleHour(String datetime) throws Exception {
-        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleHour(datetime);
+    public List<ScheduleDto> findScheduleHour() throws Exception {
+        return sqlSession.getMapper(ScheduleMapper.class).selectScheduleHour();
     }
     
 }
