@@ -257,7 +257,7 @@ public class BoardController {
       fcmParamDto.setContent("\""+title+"\" 게시글에 대댓글이 달렸습니다.");
       fcmParamDto.setTitle("ㅋㅋㄷ 대댓글 알림");
       fcmParamDto.setType(3);
-      long UnixTime = System.currentTimeMillis()/1000;
+      long UnixTime = System.currentTimeMillis();
       fcmParamDto.setDatetime(String.valueOf(UnixTime));
       UserDto user = userService.findUser(boardDetailDto.getUserId());
       fcmParamDto.setToken(user.getDeviceToken());
@@ -295,7 +295,7 @@ public class BoardController {
       fcmParamDto.setContent("\""+title+"\" 게시글에 댓글이 달렸습니다.");
       fcmParamDto.setTitle("ㅋㅋㄷ 댓글 알림");
       fcmParamDto.setType(3);
-      long UnixTime = System.currentTimeMillis()/1000;
+      long UnixTime = System.currentTimeMillis();
       fcmParamDto.setDatetime(String.valueOf(UnixTime));
       UserDto user = userService.findUser(boardDetailDto.getUserId());
       fcmParamDto.setToken(user.getDeviceToken());
