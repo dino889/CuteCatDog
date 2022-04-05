@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -22,13 +23,23 @@ public class FcmConfig {
 
     @PostConstruct
     public void initialize() {
+        FirebaseApp firebaseApp = null;
         try {
-            ClassPathResource resource = new ClassPathResource(firebaseSdkPath);
-            InputStream serviceAccount = resource.getInputStream();
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .build();
-            FirebaseApp.initializeApp(options);
+            List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
+            if (firebaseApps != null && !firebaseApps.isEmpty()) {
+                for (FirebaseApp app : firebaseApps) {
+                    if (app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)) {
+                        firebaseApp = app;
+                    }
+                }
+            } else {
+                ClassPathResource resource = new ClassPathResource(firebaseSdkPath);
+                InputStream serviceAccount = resource.getInputStream();
+                FirebaseOptions options = FirebaseOptions.builder()
+                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                        .build();
+                firebaseApp = FirebaseApp.initializeApp(options);
+            }
 
         } catch (FileNotFoundException e) {
             log.error("Firebase ServiceAccountKey FileNotFoundException" + e.getMessage());
