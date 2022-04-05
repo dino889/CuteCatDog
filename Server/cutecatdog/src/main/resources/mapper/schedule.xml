@@ -24,7 +24,7 @@
 		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
 		FROM tbl_schedule
 		WHERE datetime between UNIX_TIMESTAMP(CURDATE()) and UNIX_TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL 1 DAY))
-		and is_noti = 0
+		AND is_noti = 0
 	</select>
 
 	<select id="selectScheduleDetail" parameterType="int" resultType="ScheduleDto">
@@ -60,7 +60,7 @@
 	
 	<update id= "updateSchedule" parameterType="ScheduleDto">
 		update tbl_schedule
-		set type = #{type}, title=#{title}, memo=#{memo}, datetime=#{datetime}, place=#{place}
+		set type = #{type}, title=#{title}, memo=#{memo}, datetime=#{datetime}, place=#{place}, is_noti=#{isNoti}
 		where id = #{id}
 	</update>
 	
