@@ -52,5 +52,11 @@ public class CommentServiceImpl implements CommentService{
   public boolean addRealComment(CommentRequestDto commentRequestDto) throws Exception {
     return sqlSession.getMapper(CommentMapper.class).insertRealComment(commentRequestDto);
   }
+
+
+  @Override
+  public int findUser(int id) throws Exception {
+    return sqlSession.getMapper(CommentMapper.class).selectUser(id);
+  }
   
 }

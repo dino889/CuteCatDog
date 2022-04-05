@@ -16,5 +16,7 @@ public interface CommentService {
   boolean removeComment(int id) throws Exception;
 
   boolean addRealComment(CommentRequestDto commentRequestDto) throws Exception;
+
+  int findUser(int id) throws Exception;
   
 }

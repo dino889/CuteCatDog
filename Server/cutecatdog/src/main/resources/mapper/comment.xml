@@ -32,4 +32,8 @@
     SELECT id FROM tbl_comment WHERE parent = #{id}
   </select>
 
+  <select id="selectUser" parameterType="int" resultType="int">
+    SELECT user_id FROM tbl_comment WHERE id = #{id}
+  </select>
+
 </mapper>

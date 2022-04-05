@@ -21,5 +21,7 @@ public interface CommentMapper {
   List<Integer> selectCommentUnder(int id) throws SQLException;
 
   boolean insertRealComment(CommentRequestDto commentRequestDto) throws SQLException;
+
+  int selectUser(int id) throws SQLException;
   
 }
