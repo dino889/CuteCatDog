@@ -67,7 +67,9 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
 
     private fun setListener() {
         backBtn.setOnClickListener{
-            this@aiSelectFragment.findNavController().navigate(R.id.homeFragment)
+            (requireActivity() as MainActivity).onBackPressed()
+
+//            this@aiSelectFragment.findNavController().navigate(R.id.homeFragment)
         }
 
         analygyBtn.setOnClickListener {
