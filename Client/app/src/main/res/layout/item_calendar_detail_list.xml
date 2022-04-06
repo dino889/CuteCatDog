@@ -38,14 +38,15 @@
                     android:id="@+id/item_swipe_delete_tv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/red"
+                    android:gravity="end|center_vertical"
+                    android:includeFontPadding="false"
                     android:paddingRight="20dp"
                     android:text="삭제"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:background="@color/red"
-                    android:gravity="end|center_vertical"
-                    android:includeFontPadding="false"
-                    android:layout_weight="3" />
+                    android:visibility="gone" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +76,8 @@
                     android:text="@{schedules.schedule.title}"
                     android:textColor="@color/black"
                     app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg"
-                    app:layout_constraintTop_toTopOf="@+id/fragment_calendar_dialog_petImg" />
+                    app:layout_constraintTop_toTopOf="@+id/fragment_calendar_dialog_petImg"
+                    tools:text="타이틀" />
 
                 <TextView
                     android:id="@+id/fragment_calendar_dialog_type"
@@ -83,10 +85,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginBottom="8dp"
-                    app:calendarType="@{schedules.schedule.type}"
                     android:textColor="@color/black"
+                    app:calendarType="@{schedules.schedule.type}"
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_petImg"
-                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg" />
+                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg"
+                    tools:text="타입" />
 
 
                 <TextView
@@ -94,10 +97,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:singleLine="true"
                     android:text="@{schedules.schedule.memo}"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_type"
-                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_type" />
+                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_type"
+                    tools:text="내용" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>

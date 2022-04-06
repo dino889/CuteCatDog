@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.main.calender
 
 import android.graphics.Canvas
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,9 @@ class CalendarHelperCallback(private val recyclerViewAdapter: CalendarDetailAdap
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         currentDx = 0f                                      // 현재 x 위치 초기화
         previousPosition = viewHolder.adapterPosition       // 드래그 또는 스와이프 동작이 끝난 view의 position 기억하기
+        recyclerViewAdapter.vHolder[previousPosition].apply {
+            this!!.itemView.findViewById<TextView>(R.id.item_swipe_delete_tv).visibility = View.GONE
+        }
         getDefaultUIUtil().clearView(getView(viewHolder))
     }
 
@@ -50,6 +54,9 @@ class CalendarHelperCallback(private val recyclerViewAdapter: CalendarDetailAdap
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
             currentPosition = viewHolder.adapterPosition
+            recyclerViewAdapter.vHolder[currentPosition].apply {
+                this!!.itemView.findViewById<TextView>(R.id.item_swipe_delete_tv).visibility = View.VISIBLE
+            }
             getDefaultUIUtil().onSelected(getView(it))
         }
     }
@@ -72,6 +79,9 @@ class CalendarHelperCallback(private val recyclerViewAdapter: CalendarDetailAdap
             // 고정시킬 시 애니메이션 추가
             if (newX == -clamp) {
                 getView(viewHolder).animate().translationX(-clamp).setDuration(100L).start()
+                recyclerViewAdapter.vHolder[currentPosition].apply {
+                    this!!.itemView.findViewById<TextView>(R.id.item_swipe_delete_tv).visibility = View.VISIBLE
+                }
                 return
             }
 
@@ -131,6 +141,7 @@ class CalendarHelperCallback(private val recyclerViewAdapter: CalendarDetailAdap
     // 다른 View가 swipe 되거나 터치되면 고정 해제
     fun removePreviousClamp(recyclerView: RecyclerView) {
         if (currentPosition == previousPosition) return
+
 
         // 이전에 선택한 위치의 view 고정 해제
         previousPosition?.let {
