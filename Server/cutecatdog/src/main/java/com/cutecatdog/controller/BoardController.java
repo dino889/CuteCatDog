@@ -252,7 +252,7 @@ public class BoardController {
       int pId = commentAddShowRequestDto.getParent();
       int userId = commentService.findUser(pId);
       UserDto user = userService.findUser(userId);
-      fcmParamDto.setContent(user.getNickname()+" 님의 댓글에 대댓글이 달렸습니다");
+      fcmParamDto.setContent(user.getNickname()+"님의 댓글에 대댓글이 달렸습니다");
       fcmParamDto.setTitle("ㅋㅋㄷ 대댓글 알림");
       fcmParamDto.setType(3);
       long UnixTime = System.currentTimeMillis();
@@ -288,11 +288,15 @@ public class BoardController {
       String title = boardDetailDto.getTitle();
       UserDto user = userService.findUser(boardDetailDto.getUserId());
       String[] bType = {"", "울동네", "궁금해", "공유해"};
-      String board = bType[boardDetailDto.getTypeId()] + " 게시판의";
+      String board = bType[boardDetailDto.getTypeId()];
       if (title.length()>7) {
         title = " \""+title.substring(0, 7) + "...\"";
+      }else if(title == null || title.length() == 0){
+        title = "\""+boardDetailDto.getContent().substring(0, 7)+"...\"";
+      }else{
+        title = "\""+title+"\"";
       }
-      fcmParamDto.setContent(user.getNickname()+"님의 "+board+title+" 게시글에 댓글이 달렸습니다");
+      fcmParamDto.setContent(user.getNickname()+"님의 "+board+" "+title+" 게시글에 댓글이 달렸습니다");
       fcmParamDto.setTitle("ㅋㅋㄷ 댓글 알림");
       fcmParamDto.setType(3);
       long UnixTime = System.currentTimeMillis();
