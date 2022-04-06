@@ -15,11 +15,12 @@ import com.ssafy.ccd.src.dto.Schedule
 private const val TAG = "CalendarDetailAdapter"
 class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailViewHolder>(){
     var list = mutableListOf<Schedule>()
+    val vHolder = HashMap<Int, DetailViewHolder>()
+
     inner class DetailViewHolder(private val binding:ItemCalendarDetailListBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(data : Schedule){
             binding.schedules = data
             binding.executePendingBindings()
-
         }
     }
 
@@ -28,6 +29,8 @@ class CalendarDetailAdapter : RecyclerView.Adapter<CalendarDetailAdapter.DetailV
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
+        vHolder[position] = holder
+
         holder.apply {
             bind(list[position])
             holder.itemView.findViewById<TextView>(R.id.item_swipe_delete_tv).setOnClickListener {
