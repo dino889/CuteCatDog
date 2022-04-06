@@ -159,7 +159,9 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         setFabClickEvent()
         // 뒤로가기 버튼
         ivBack.setOnClickListener {
-            this@aiFragment.findNavController().navigate(R.id.homeFragment)
+            (requireActivity() as MainActivity).onBackPressed()
+
+//            this@aiFragment.findNavController().navigate(R.id.homeFragment)
         }
 
         clTrain.setOnClickListener {
@@ -559,6 +561,10 @@ open class aiFragment : BaseFragment<FragmentAiBinding>(FragmentAiBinding::bind,
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!))
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mainActivity.hideBottomNavi(false)
+    }
 
 
     companion object {

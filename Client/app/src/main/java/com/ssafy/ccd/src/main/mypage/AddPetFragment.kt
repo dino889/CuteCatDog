@@ -192,6 +192,7 @@ class AddPetFragment : BaseFragment<FragmentAddPetBinding>(FragmentAddPetBinding
 
 
     fun initData(){
+        binding.fragmentAddPetTitle.text = "반려동물 수정"
         binding.fragmentAddPetSuccessBtn.setText("수정")
 
         mainViewModel.pet.observe(viewLifecycleOwner, {
