@@ -177,7 +177,7 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="*유의사항 \n본문의 최소 내용은 30자~100자 내외입니다."
+                    android:text="*유의사항 \n본문의 최소 내용은 10자~100자 내외입니다."
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

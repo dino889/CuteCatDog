@@ -169,6 +169,10 @@
         android:name="com.ssafy.ccd.src.main.calender.CalenderWriteFragment"
         android:label="fragment_calender_write"
         tools:layout="@layout/fragment_calender_write" >
+        <argument
+            android:name="scheduleId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_calenderWriteFragment_to_calenderFragment"
             app:destination="@id/calenderFragment" />
@@ -279,6 +283,10 @@
         android:id="@+id/calendarDetailFragment"
         android:name="com.ssafy.ccd.src.main.calender.CalendarDetailFragment"
         android:label="CalendarDetailFragment">
+        <action
+            android:id="@+id/action_calendarDetailFragment_to_calendarWriteFragment"
+            app:destination="@+id/calenderWriteFragment" />
+
         <argument
             android:name="calendarId"
             app:argType="integer"
