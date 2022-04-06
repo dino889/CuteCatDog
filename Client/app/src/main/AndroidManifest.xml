@@ -80,16 +80,16 @@
         </activity>
 
 
-<!--        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-<!--                <data-->
-<!--                    android:host="oauth"-->
-<!--                    android:scheme="kakao78b660953c918503e1a723afddb4d6e8" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao78b660953c918503e1a723afddb4d6e8" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name="com.ssafy.ccd.src.network.service.FirebaseMessageService"
