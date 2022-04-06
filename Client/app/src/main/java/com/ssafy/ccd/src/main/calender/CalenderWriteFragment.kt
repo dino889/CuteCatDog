@@ -42,6 +42,8 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
     private lateinit var mainActivity : MainActivity
     private var scheduleId by Delegates.notNull<Int>()
 
+    private var dupChk = true
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -78,17 +80,21 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             if(type == -1 || type == 0){
                 showCustomToast("다시 선택해주세요!")
             }else{
-                var calendar = com.ssafy.ccd.src.dto.Calendar(
-                    CommonUtils.makeBirthMilliSecond(date),
-                    0,
-                    content,
-                    petId,
-                    title,
-                    type,
-                    ApplicationClass.sharedPreferencesUtil.getUser().id,
-                    place
-                )
-                insertCalendar(calendar)
+                if(inputChk() && petId > 0 && type > 0) {
+                    val calendar = com.ssafy.ccd.src.dto.Calendar(
+                        CommonUtils.makeBirthMilliSecond(date),
+                        0,
+                        content,
+                        petId,
+                        title,
+                        type,
+                        ApplicationClass.sharedPreferencesUtil.getUser().id,
+                        place
+                    )
+                    insertCalendar(calendar)
+                } else {
+                    showCustomToast("입력 값을 확인해 주세요.")
+                }
             }
 
         }
@@ -219,27 +225,30 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             petId = schedule.pet.id
             type = schedule.schedule.type
 
-
-
             modifyBtnClickEvent()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun modifyBtnClickEvent() {
+
         binding.fragmentCalenderWriteSuccessBtn.setOnClickListener {
 
-            val updateSchedule = com.ssafy.ccd.src.dto.Calendar(
-                id = scheduleId,
-                title = binding.fragmentCalendarWriteTitle.text.toString(),
-                place = binding.fragmentCalendarWritePlace.text.toString(),
-                datetime = CommonUtils.makeBirthMilliSecond(binding.fragmentCalendarWriteDate.text.toString()),
-                memo = binding.fragmentCalendarWriteMemo.text.toString(),
-                type = type,
-                petId = 0,
-                userId = 0)
+            if(inputChk() && type > 0) {
+                val updateSchedule = com.ssafy.ccd.src.dto.Calendar(
+                    id = scheduleId,
+                    title = binding.fragmentCalendarWriteTitle.text.toString(),
+                    place = binding.fragmentCalendarWritePlace.text.toString(),
+                    datetime = CommonUtils.makeBirthMilliSecond(binding.fragmentCalendarWriteDate.text.toString()),
+                    memo = binding.fragmentCalendarWriteMemo.text.toString(),
+                    type = type,
+                    petId = 0,
+                    userId = 0)
 
-            updateSchedule(updateSchedule)
+                updateSchedule(updateSchedule)
+            } else {
+                showCustomToast("입력 값을 확인해 주세요.")
+            }
         }
     }
 
@@ -266,6 +275,18 @@ class CalenderWriteFragment : BaseFragment<FragmentCalenderWriteBinding>(Fragmen
             showCustomToast("서버 통신 실패")
             Log.e(TAG, "updateSchedule: ${response.body()!!.message}", )
         }
+    }
+
+    /**
+     * 일정 수정, 등록
+     */
+    private fun inputChk() : Boolean {
+        val title = binding.fragmentCalendarWriteTitle.text
+        val place = binding.fragmentCalendarWritePlace.text
+        val date = binding.fragmentCalendarWriteDate.text
+        val memo = binding.fragmentCalendarWriteMemo.text.toString()
+        return title.isNotEmpty() && place.isNotEmpty() && date.contains("년") && memo.isNotEmpty()
+
     }
 
     override fun onDestroyView() {
