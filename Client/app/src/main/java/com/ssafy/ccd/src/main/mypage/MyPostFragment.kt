@@ -36,11 +36,11 @@ class MyPostFragment : BaseFragment<FragmentMyPostBinding>(FragmentMyPostBinding
             myPostRecyclerviewAdapter = MyPostRecyclerviewAdapter()
             myPostRecyclerviewAdapter.list = it
             Log.d(TAG, "initRecyclerviewAdapter: ${it}")
-            myPostRecyclerviewAdapter.setItemClickListener(object : MyPostRecyclerviewAdapter.ItemClickListener {
-                override fun onClick(view: View, position: Int, id: Int) {
-                    showCustomToast(id.toString())
-                }
-            })
+//            myPostRecyclerviewAdapter.setItemClickListener(object : MyPostRecyclerviewAdapter.ItemClickListener {
+//                override fun onClick(view: View, position: Int, id: Int) {
+//                    showCustomToast(id.toString())
+//                }
+//            })
             binding.myPostFragmentRv.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = myPostRecyclerviewAdapter
