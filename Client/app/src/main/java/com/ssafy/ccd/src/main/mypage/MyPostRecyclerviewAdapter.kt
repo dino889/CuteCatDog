@@ -29,9 +29,9 @@ class MyPostRecyclerviewAdapter(): RecyclerView.Adapter<MyPostRecyclerviewAdapte
         val post = list[position]
         holder.apply {
             bind(post, position)
-            postLayout.setOnClickListener {
-                itemClickListener.onClick(it, position, post.id)
-            }
+//            postLayout.setOnClickListener {
+//                itemClickListener.onClick(it, position, post.id)
+//            }
         }
     }
 

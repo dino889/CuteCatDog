@@ -90,6 +90,8 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     private lateinit var editTextSubscription: Disposable
     private lateinit var beforeHashtag: List<Hashtag>
 
+    private var dupChk = true
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -124,6 +126,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dupChk = true
 
         mainViewModel.allClearPhotoList()
         mainViewModel.allClearPhotoUriList()
@@ -164,57 +167,65 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
             }
         }
 
-        binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
-            var title = binding.fragmentDiaryWriteTitle.text.toString()
-            var date = binding.fragmentDiaryWriteDate.text.toString()
-            var content = binding.fragmentDiaryWriteContent.text.toString()
-            var photos = mainViewModel.photoList.value!!
 
-            if(flag == 1 || flag == 3){
-                //insert
-                if(inputValueChk()) {
-                    convertFileName()
-                    getFilterHashTag()
-                    Log.d(TAG, "onViewCreated: ${hashs}")
-                    var diary = Diary(
-                        content = content,
-                        datetime = CommonUtils.makeBirthMilliSecond(date),
-                        hashtag = hashs,
-                        id = 0,
-                        photo = photos,
-                        title = title,
-                        userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                    )
-                    insertDiary(diary)
-                } else {
-                    showCustomToast("입력 값을 확인해 주세요.")
+
+        binding.fragmentDiaryWriteSuccessBtn.setOnClickListener {
+            if(dupChk) {
+                dupChk = false
+                var title = binding.fragmentDiaryWriteTitle.text.toString()
+                var date = binding.fragmentDiaryWriteDate.text.toString()
+                var content = binding.fragmentDiaryWriteContent.text.toString()
+                var photos = mainViewModel.photoList.value!!
+
+                if(flag == 1 || flag == 3){
+                    //insert
+                    if(inputValueChk()) {
+                        convertFileName()
+                        getFilterHashTag()
+                        Log.d(TAG, "onViewCreated: ${hashs}")
+                        var diary = Diary(
+                            content = content,
+                            datetime = CommonUtils.makeBirthMilliSecond(date),
+                            hashtag = hashs,
+                            id = 0,
+                            photo = photos,
+                            title = title,
+                            userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+                        )
+                        insertDiary(diary)
+                    } else {
+                        showCustomToast("입력 값을 확인해 주세요.")
+                        dupChk = true
+                    }
                 }
-            }
-            if(flag == 2){
-                //update
-                if(inputValueChk()) {
-                    convertFileName()
-                    hashTagUpdate()
-//                    getFilterHashTag()
-                    Log.d(TAG, "onViewCreated: ${hashs}")
-                    var diary = Diary(
-                        content = content,
-                        datetime = CommonUtils.makeBirthMilliSecond(date),
-                        hashtag = hashs,
-                        id = diaryId,
-                        photo = photos,
-                        title = title,
-                        userId = ApplicationClass.sharedPreferencesUtil.getUser().id
-                    )
-                    updateDiary(diary)
-                } else {
-                    showCustomToast("입력 값을 확인해 주세요.")
+                if(flag == 2){
+                    //update
+                    if(inputValueChk()) {
+                        convertFileName()
+                        hashTagUpdate()
+    //                    getFilterHashTag()
+                        Log.d(TAG, "onViewCreated: ${hashs}")
+                        var diary = Diary(
+                            content = content,
+                            datetime = CommonUtils.makeBirthMilliSecond(date),
+                            hashtag = hashs,
+                            id = diaryId,
+                            photo = photos,
+                            title = title,
+                            userId = ApplicationClass.sharedPreferencesUtil.getUser().id
+                        )
+                        updateDiary(diary)
+                    } else {
+                        showCustomToast("입력 값을 확인해 주세요.")
+                        dupChk = true
+                    }
                 }
             }
         }
 
         binding.fragmentDiaryWriteBack.setOnClickListener {
             this@DiaryWriteFragment.findNavController().popBackStack()
+            dupChk = true
         }
     }
 
@@ -328,7 +339,8 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                     storageReferenceChild.downloadUrl
                         .addOnSuccessListener {
                             if(i == mainViewModel.photoUriList.value!!.size - 1) {
-                              this@DiaryWriteFragment.findNavController().popBackStack()
+                                this@DiaryWriteFragment.findNavController().popBackStack()
+                                dupChk = true
 //                                (requireActivity() as MainActivity).onBackPressed()
                             }
                             Log.d(TAG, "addFireBase: $it")
@@ -376,6 +388,7 @@ class DiaryWriteFragment : BaseFragment<FragmentDiaryWriteBinding>(FragmentDiary
                     addFireBase()
                     if(mainViewModel.photoUriList.value?.size == 0) {
                         (requireActivity() as MainActivity).onBackPressed()
+                        dupChk = true
                     }
 //                    mainActivity.runOnUiThread(Runnable {
 //                        this@DiaryWriteFragment.findNavController().navigate(R.id.action_diaryWriteFragment_to_diaryFragment)
