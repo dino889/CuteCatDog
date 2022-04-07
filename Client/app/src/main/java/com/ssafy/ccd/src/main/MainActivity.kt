@@ -437,7 +437,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
         val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArrayOutputStream.toByteArray())
-        val uploadFile = MultipartBody.Part.createFormData("file","${file.name}.${fileExtension?.substring(6)}",requestBody)
+        val uploadFile = MultipartBody.Part.createFormData("file","${file.name}.${fileExtension?.substring(6)?:"jpeg"}",requestBody)
         Log.d(TAG, "checkTheType: $uploadFile")
         
         GlobalScope.launch {
@@ -511,7 +511,9 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            CV.put(MediaStore.Images.Media.IS_PENDING, 1)
+            CV.put(MediaStore.Downloads.DISPLAY_NAME, FileName)
+            CV.put(MediaStore.Downloads.MIME_TYPE, mimeType)
+            CV.put(MediaStore.Downloads.IS_PENDING, 1)
         }
 
         try {
@@ -527,7 +529,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     fos.close()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         CV.clear()
-                        CV.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        CV.put(MediaStore.Downloads.IS_PENDING, 0)
                         contentResolver.update(uri, CV, null, null)
                     }
                 }
