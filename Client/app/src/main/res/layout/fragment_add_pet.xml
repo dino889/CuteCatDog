@@ -129,7 +129,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:background="@color/main_30p"
-                            android:scaleType="fitCenter" />
+                            android:scaleType="fitXY" />
                         <!--                    app:imageUrlDiary="@{pet.photoPath}"/>-->
 
 
