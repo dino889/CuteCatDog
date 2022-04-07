@@ -337,15 +337,17 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                 CAMERA_CODE -> {
                     if (data?.extras?.get("data") != null) {
                         mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
-                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
+//                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
+                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/*", mainViewModels.uploadedImage)
 
                         // 이미지 검사
                         if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
                         else {
                             // 이미지를 정상적으로 불러들였다면, AI fragment 페이지로 이동한다.
-                            photoDialog.dismiss()
+                                checkTheType()
+                                if(photoDialog.isShowing) photoDialog.dismiss()
 //                            binding.activityMainNavHost.findNavController().navigate(R.id.aiSelectFragment)
-                            checkTheType()
+
                         }
                     }
                 }
@@ -419,10 +421,12 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             }
         }
     }
+    @OptIn(DelicateCoroutinesApi::class)
     private fun checkTheType(){
         showLoadingDialog()
+        Log.d(TAG, "checkTheType: ${mainViewModels.uploadedImageUri!!}")
         val file = File(mainViewModels.uploadedImageUri!!.path)
-        var fileExtension = contentResolver.getType(mainViewModels.uploadedImageUri!!)
+        val fileExtension = contentResolver.getType(mainViewModels.uploadedImageUri!!)
         var inputStream : InputStream? = null
         try{
             inputStream = this.contentResolver.openInputStream(mainViewModels.uploadedImageUri!!)
@@ -434,9 +438,10 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
         val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArrayOutputStream.toByteArray())
         val uploadFile = MultipartBody.Part.createFormData("file","${file.name}.${fileExtension?.substring(6)}",requestBody)
-
+        Log.d(TAG, "checkTheType: $uploadFile")
+        
         GlobalScope.launch {
-            var response = PetService().getAipetType(uploadFile)
+            val response = PetService().getAipetType(uploadFile)
             val res = response.body()
             Log.d("TAG", "checkTheType: $res ${response.code()}")
             if(response.code() == 200){
