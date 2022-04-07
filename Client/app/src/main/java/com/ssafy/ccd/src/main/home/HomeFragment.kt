@@ -331,17 +331,17 @@ class HomeFragment : Fragment() {
     private fun moveBoardDetailClickEvent() {
         binding.fragmentHomeCommuLocalBtnBack.setOnClickListener {
             mainViewModel.boardId = 0
-            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_LocalBoardFragment)
+            this@HomeFragment.findNavController().navigate(R.id.localBoardFragment)
         }
 
         binding.fragmentHomeCommuQnABtnBack.setOnClickListener {
             mainViewModel.boardId = 0
-            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_QnABoardFragment)
+            this@HomeFragment.findNavController().navigate(R.id.qnaBoardFragment)
         }
 
         binding.fragmentHomeCommuShareBtnBack.setOnClickListener {
             mainViewModel.boardId = 0
-            this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_ShareBoardFragment)
+            this@HomeFragment.findNavController().navigate(R.id.shareBoardFragment)
         }
     }
 
