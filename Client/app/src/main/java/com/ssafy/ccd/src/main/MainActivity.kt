@@ -510,8 +510,11 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
         CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             CV.put(MediaStore.Images.Media.IS_PENDING, 1)
+            CV.put(MediaStore.Downloads.DISPLAY_NAME, "$FileName.JPG")
+            CV.put(MediaStore.Downloads.MIME_TYPE, mimeType)
         }
 
         try {
