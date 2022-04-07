@@ -94,6 +94,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
         runBlocking {
             result = mainViewModel.login(User(email, loginActivity.sha256(password)))
+            Log.d(TAG, "login: ${loginActivity.sha256(password)}")
         }
 
         if(result.data.get("user") != null && result.message == "로그인 성공") {
@@ -371,7 +372,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::b
 
                         val newUser = User(email = email, nickname = nickname, password = uid, profileImage = image, "facebook")
                         existEmailChk(newUser)
-                        Log.d(TAG, "signInWithCredential:success $newUser")
+                        Log.d(TAG, "signInWithCredential:success $newUser $uid")
                     }
 
                 } else {
