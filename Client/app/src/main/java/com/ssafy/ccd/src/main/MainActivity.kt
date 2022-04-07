@@ -509,9 +509,9 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         val CV = ContentValues()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            CV.put(MediaStore.Downloads.DISPLAY_NAME, FileName)
-            CV.put(MediaStore.Downloads.MIME_TYPE, mimeType)
-            CV.put(MediaStore.Downloads.IS_PENDING, 1)
+            CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
+            CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            CV.put(MediaStore.Images.Media.IS_PENDING, 1)
         }else{
             CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
             CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
@@ -519,7 +519,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
         try {
             val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, CV)
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
             }else contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
 
             if (uri != null) {
@@ -530,7 +530,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     fos.close()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         CV.clear()
-                        CV.put(MediaStore.Downloads.IS_PENDING, 0)
+                        CV.put(MediaStore.Images.Media.IS_PENDING, 0)
                         contentResolver.update(uri, CV, null, null)
                     }
                 }
