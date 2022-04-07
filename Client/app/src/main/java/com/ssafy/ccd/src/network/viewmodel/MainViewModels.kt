@@ -33,7 +33,7 @@ class MainViewModels : ViewModel() {
     private val _allUserList = MutableLiveData<MutableList<User>>()
     private val _loginUserInfo = MutableLiveData<User>()
     private val _userInfo = MutableLiveData<User>()
-
+    var userId = 0
     private var _userLoc : Location? = null
     private var _userAddr : String? = null
 

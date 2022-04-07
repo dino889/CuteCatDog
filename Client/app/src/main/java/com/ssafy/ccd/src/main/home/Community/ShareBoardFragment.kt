@@ -28,8 +28,8 @@ import com.ssafy.ccd.src.network.service.BoardService
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 import androidx.recyclerview.widget.SimpleItemAnimator
-
-
+import com.ssafy.ccd.src.dto.Board
+import com.ssafy.ccd.src.dto.User
 
 
 /**
@@ -69,6 +69,10 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         runBlocking {
             mainViewModel.getPostListByType(3)
             mainViewModel.getLikePostsByUserId(userId)
+//            if(mainViewModel.boardId > 0){
+//                Log.d(TAG, "initRecyclerView: ")
+//                mainViewModel.getUserInfo(mainViewModel.userId,false)
+//            }
         }
 
         binding.shareBoardFragmentRvPostList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -79,8 +83,22 @@ class ShareBoardFragment : BaseFragment<FragmentShareBoardBinding>(FragmentShare
         })
 
         mainViewModel.sharePostList.observe(viewLifecycleOwner, {
+            if(mainViewModel.boardId > 0){
+                Log.d(TAG, "initRecyclerView: ${mainViewModel.boardId}")
+                var array = mutableListOf<Board>()
 
-            shareBoardAdapter.postList = it
+                for( i in 0..it.size-1){
+                    if(it[i].id == mainViewModel.boardId){
+                        Log.d(TAG, "initRecyclerView: ${it[i].id}")
+                        array.add(it[i])
+                    }
+                }
+                Log.d(TAG, "initRecyclerView: ${array}")
+                shareBoardAdapter.postList = array
+//                shareBoardAdapter.userList = users
+            }else{
+                shareBoardAdapter.postList = it
+            }
             shareBoardAdapter.userList = mainViewModel.allUserList.value!!
         })
 

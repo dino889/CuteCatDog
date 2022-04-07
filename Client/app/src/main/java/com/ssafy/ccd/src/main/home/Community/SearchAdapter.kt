@@ -40,7 +40,8 @@ class SearchAdapter(var list: List<Board>) : RecyclerView.Adapter<SearchAdapter.
             Log.d("Filter", "${filteredList[position]}")
             bind(filteredList[position])
             itemView.setOnClickListener {
-                itemClickListener.onClick(it, position,filteredList[position].typeId, filteredList[position].id)
+                itemClickListener.onClick(it, position,filteredList[position].typeId, filteredList[position].id, filteredList[position].userId)
+
             }
         }
     }
@@ -79,7 +80,7 @@ class SearchAdapter(var list: List<Board>) : RecyclerView.Adapter<SearchAdapter.
         }
     }
     interface ItemClickListener {
-        fun onClick(view: View, position: Int, typeId: Int, boardId:Int)
+        fun onClick(view: View, position: Int, typeId: Int, boardId:Int, userId:Int)
     }
     private lateinit var itemClickListener : ItemClickListener
     fun setOnItemClickListener(itemClickListener: ItemClickListener){

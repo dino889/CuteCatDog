@@ -66,11 +66,13 @@
             android:id="@+id/fragment_search_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="16dp"
-            app:boardType = "@{board.typeId}"
             android:textSize="12sp"
+            app:boardType="@{board.typeId}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/fragment_search_content" />
+            app:layout_constraintStart_toStartOf="@+id/fragment_search_content"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_search_content" />
 
         <TextView
             android:id="@+id/fragment_search_date"

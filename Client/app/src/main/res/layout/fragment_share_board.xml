@@ -87,8 +87,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/shareFragment_clAppbar"
-                tools:listitem="@layout/item_share_list"
-                app:sharePostListData="@{mainViewModel.sharePostList}"/>
+                tools:listitem="@layout/item_share_list"/>
+<!--                app:sharePostListData="@{mainViewModel.sharePostList}"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

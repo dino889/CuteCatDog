@@ -1,6 +1,7 @@
 package com.ssafy.ccd.src.main.home.Community
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentQnaBoardBinding
+import com.ssafy.ccd.src.dto.Board
 import com.ssafy.ccd.src.main.MainActivity
 import kotlinx.coroutines.runBlocking
 
@@ -83,7 +85,19 @@ class QnABoardFragment : BaseFragment<FragmentQnaBoardBinding>(FragmentQnaBoardB
         }
 
         mainViewModel.qnaPostList.observe(viewLifecycleOwner) {
-            qnaBoardAdapter.updateData(it)
+            if(mainViewModel.boardId > 0){
+                var array = mutableListOf<Board>()
+
+                for( i in 0..it.size-1){
+                    if(it[i].id == mainViewModel.boardId){
+                        array.add(it[i])
+                    }
+                }
+                qnaBoardAdapter.updateData(array)
+            }else{
+                qnaBoardAdapter.updateData(it)
+            }
+
         }
 
         qnaBoardAdapter.setItemClickListener(object : QnABoardAdapter.ItemClickListener{

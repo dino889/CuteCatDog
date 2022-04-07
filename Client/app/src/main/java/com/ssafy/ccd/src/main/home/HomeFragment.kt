@@ -330,14 +330,17 @@ class HomeFragment : Fragment() {
      */
     private fun moveBoardDetailClickEvent() {
         binding.fragmentHomeCommuLocalBtnBack.setOnClickListener {
+            mainViewModel.boardId = 0
             this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_LocalBoardFragment)
         }
 
         binding.fragmentHomeCommuQnABtnBack.setOnClickListener {
+            mainViewModel.boardId = 0
             this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_QnABoardFragment)
         }
 
         binding.fragmentHomeCommuShareBtnBack.setOnClickListener {
+            mainViewModel.boardId = 0
             this@HomeFragment.findNavController().navigate(R.id.action_homeFragment_to_ShareBoardFragment)
         }
     }

@@ -2,6 +2,7 @@ package com.ssafy.ccd.src.main.home.Community
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -64,8 +65,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 searchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
             searchAdapter.setOnItemClickListener(object: SearchAdapter.ItemClickListener {
-                override fun onClick(view: View, position: Int, typeId: Int, boardId: Int) {
+                override fun onClick(view: View, position: Int, typeId: Int, boardId: Int, userId:Int) {
+                    Log.d("TAG", "onClick: $boardId")
                     mainViewModel.boardId = boardId
+                    mainViewModel.userId = userId
                     if(typeId == 1){
                         //울동네
                         this@SearchFragment.findNavController().navigate(R.id.action_searchFragment_to_localBoardFragment)

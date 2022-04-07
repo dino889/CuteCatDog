@@ -125,19 +125,20 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
 
         mainViewModel.locPostList.observe(viewLifecycleOwner) {
             if(mainViewModel.boardId > 0){
+                Log.d(TAG, "initRecyclerView: ${mainViewModel.boardId}")
                 var array = mutableListOf<Board>()
-                for(item in 0..it.size-1){
-                    if(it[item].id == mainViewModel.boardId){
-                        Log.d(TAG, "initRecyclerView: ${it[item]}")
-                        array.add(it[item])
+
+                for( i in 0..it.size-1){
+                    if(it[i].id == mainViewModel.boardId){
+                        array.add(it[i])
                     }
                 }
-                Log.d(TAG, "initRecyclerView: ${array}")
                 localBoardAdapter.postList = array
             }else{
                 localBoardAdapter.postList = it
-                localBoardAdapter.userList = mainViewModel.allUserList.value!!
             }
+
+            localBoardAdapter.userList = mainViewModel.allUserList.value!!
         }
 
         binding.localBoardFragmentRvPostList.adapter = localBoardAdapter
