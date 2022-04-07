@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -73,7 +74,11 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
         }
 
         analygyBtn.setOnClickListener {
-            this@aiSelectFragment.findNavController().navigate(R.id.aiFragment)
+            if(mainViewModel.aiType == 2){
+                showCustomToast("이 사진으로는 검사하실 수 없어요 :(")
+            }else{
+                this@aiSelectFragment.findNavController().navigate(R.id.aiFragment)
+            }
         }
         binding.fragmentSelectAiDog.setOnClickListener {
             binding.fragmentSelectAiDogCheck.visibility = View.VISIBLE
@@ -103,9 +108,11 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
             binding.fragmentSelectAiCatCheck.visibility = View.VISIBLE
             binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
         }else{
-            binding.textView33.text = "반려동물의 정보를 찾지못했습니다. \n 다시 선택해주세요!!"
-            binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
-            binding.fragmentSelectAiCatCheck.visibility = View.INVISIBLE
+            binding.textView33.text = "반려동물이 고양이나 강아지가 아닌 것 같습니다 :( 다시 시도해주세요"
+            binding.selectType.visibility = View.INVISIBLE
+            binding.fragmentAiSelectBtnAnaylsis.setBackgroundColor(Color.GRAY)
+//            binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
+//            binding.fragmentSelectAiCatCheck.visibility = View.INVISIBLE
         }
 //        radioGroup = binding.fragmentAiSelectRg
     }
