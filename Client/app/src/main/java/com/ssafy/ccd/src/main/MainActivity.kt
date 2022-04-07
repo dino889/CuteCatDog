@@ -337,6 +337,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                 CAMERA_CODE -> {
                     if (data?.extras?.get("data") != null) {
                         mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
+                        Log.d(TAG, "onActivityResult: ${(data.extras?.get("data") as Bitmap)}")
                         mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
 
                         // 이미지 검사
@@ -521,9 +522,11 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
             if (uri != null) {
                 val scriptor = contentResolver.openFileDescriptor(uri, "w")
+                Log.d(TAG, "saveFile: ${scriptor}")
 
                 if (scriptor != null) {
                     val fos = FileOutputStream(scriptor.fileDescriptor)
+                    Log.d(TAG, "saveFile: ${fos}")
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
                     fos.close()
 
