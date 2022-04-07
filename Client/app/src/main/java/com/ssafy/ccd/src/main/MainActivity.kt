@@ -337,8 +337,8 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                 CAMERA_CODE -> {
                     if (data?.extras?.get("data") != null) {
                         mainViewModels.uploadedImage = data.extras?.get("data") as Bitmap
-//                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
-                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/*", mainViewModels.uploadedImage)
+                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/jpg", mainViewModels.uploadedImage)
+//                        mainViewModels.uploadedImageUri = saveFile(randomFileName(), "image/*", mainViewModels.uploadedImage)
 
                         // 이미지 검사
                         if(mainViewModels.uploadedImageUri == null) showCustomToast("이미지가 정상적으로 로드 되지 않았습니다.")
