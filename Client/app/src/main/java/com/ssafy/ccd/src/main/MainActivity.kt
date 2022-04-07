@@ -1,11 +1,13 @@
 package com.ssafy.ccd.src.main
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -22,6 +24,7 @@ import android.location.LocationListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.FileUtils
 import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings
@@ -54,8 +57,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.youtube.player.internal.e
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.FileUtils.copyFile
 import com.google.type.LatLng
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -70,6 +75,10 @@ import java.io.*
 import java.lang.Runnable
 import java.util.*
 import kotlin.math.round
+import android.R.attr.mimeType
+
+
+
 
 
 private const val TAG = "MainActivity_ccd"
@@ -500,26 +509,30 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             CV.put(MediaStore.Images.Media.IS_PENDING, 1)
         }
 
-
-        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
-
-        if (uri != null) {
-            val scriptor = contentResolver.openFileDescriptor(uri, "w")
-
-            if (scriptor != null) {
-                val fos = FileOutputStream(scriptor.fileDescriptor)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                fos.close()
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    CV.clear()
-                    CV.put(MediaStore.Images.Media.IS_PENDING, 0)
-                    contentResolver.update(uri, CV, null, null)
+        try {
+            var uri : Uri? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, CV)
+            }else uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+            if (uri != null) {
+                val scriptor = contentResolver.openFileDescriptor(uri, "w")
+                if (scriptor != null) {
+                    val fos = FileOutputStream(scriptor.fileDescriptor)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    fos.close()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        CV.clear()
+                        CV.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        contentResolver.update(uri, CV, null, null)
+                    }
                 }
+                return uri
             }
+        }catch (e : Exception){
+            Log.d(TAG, "saveFile: ${e.printStackTrace()}")
         }
 
-        return uri
+        return null
     }
 
     /**
@@ -656,7 +669,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     }
                 }
             } else {
-                Log.e(TAG, "uploadToken: 토큰 정보 등록 중 통신 오류", )
+                Log.e(TAG, "uploadToken: 토큰 정보 등록 중 통신 오류")
             }
         }
     }
