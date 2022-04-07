@@ -1,13 +1,11 @@
 package com.ssafy.ccd.src.main
 
 import android.Manifest
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -17,21 +15,18 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
 import android.location.*
-import android.location.LocationListener
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.FileUtils
 import android.os.Looper
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -40,45 +35,31 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseActivity
 import com.ssafy.ccd.databinding.ActivityMainBinding
-import com.ssafy.ccd.src.network.viewmodel.MainViewModels
-import java.text.SimpleDateFormat
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.network.api.FCMApi
-import retrofit2.Response
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.*
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.youtube.player.internal.e
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.FileUtils.copyFile
-import com.google.type.LatLng
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
-import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.ccd.src.network.service.PetService
+import com.ssafy.ccd.src.network.viewmodel.MainViewModels
 import com.ssafy.ccd.util.LoadingDialog
 import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import java.io.*
 import java.lang.Runnable
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
-import android.R.attr.mimeType
-
-
-
 
 
 private const val TAG = "MainActivity_ccd"
@@ -496,6 +477,30 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         }
     }
 
+    /* 파일을 바이트배열로 변환해주는 메소드 */
+    private fun convertFileToByteArray(file: File): ByteArray {
+        var fis: FileInputStream? = null
+        // Creating bytearray of same length as file
+        val bArray = ByteArray(file.length().toInt())
+        try {
+            fis = FileInputStream(file)
+            // Reading file content to byte array
+            fis.read(bArray)
+            fis.close()
+        } catch (ioExp: IOException) {
+            ioExp.printStackTrace()
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return bArray
+    }
+
     /**
      * @author Jueun
      * @param FileName 저장할 파일 이름
@@ -512,6 +517,9 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
             CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
             CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
             CV.put(MediaStore.Images.Media.IS_PENDING, 1)
+            CV.put(MediaStore.Downloads.DISPLAY_NAME, FileName)
+            CV.put(MediaStore.Downloads.MIME_TYPE, mimeType)
+            CV.put(MediaStore.Downloads.IS_PENDING, 1)
         }else{
             CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
             CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
@@ -519,8 +527,30 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
 
         try {
             val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+                contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, CV)
             }else contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+
+            if (uri != null) {
+                contentResolver.openOutputStream(uri).use { stream ->
+                    if (stream == null) {
+                        throw IOException("Failed to open output stream.")
+                    }
+                    // 파일을 바이트배열로 변환 후, 파일에 저장
+                    val file = File(mainViewModels.uploadedImageUri!!.path)
+                    val bArray: ByteArray = convertFileToByteArray(file)
+                    stream.write(bArray)
+                    stream.flush()
+                    stream.close()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        CV.clear()
+                        // 파일 저장이 완료되었으니, IS_PENDING을 다시 0으로 설정한다.
+                        CV.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        // 파일을 업데이트하면, 파일이 보인다.
+                        contentResolver.update(uri, CV, null, null)
+                        Toast.makeText(this, "사진이 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
 
             if (uri != null) {
                 val scriptor = contentResolver.openFileDescriptor(uri, "w")
@@ -531,6 +561,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         CV.clear()
                         CV.put(MediaStore.Images.Media.IS_PENDING, 0)
+                        CV.put(MediaStore.Downloads.IS_PENDING, 0)
                         contentResolver.update(uri, CV, null, null)
                     }
                 }
