@@ -51,7 +51,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private lateinit var mainActivity : MainActivity
     private var petId = -1
 
-    // firebase authentication
+    // firebase authenticationg
     var mGoogleSignInClient: GoogleSignInClient? = null
 
     override fun onAttach(context: Context) {
@@ -126,16 +126,20 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
 
     private fun deletePets(petId:Int){
-        GlobalScope.launch {
-            var response = PetService().petsDeleteService(petId)
-            val res = response.body()
-            Log.d(TAG, "DeletePets: ${res}")
-            if(response.code()==200){
-                if(res!=null){
-                    if(res.success){
-                        runBlocking {
-                            mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
-                        }
+        var response : Response<Message>
+        runBlocking {
+            response = PetService().petsDeleteService(petId)
+        }
+        val res = response.body()
+        if(response.code() == 200){
+            if(res!=null){
+                if(res.success){
+                    runBlocking {
+                        mainViewModel.getMyPetsAllList(ApplicationClass.sharedPreferencesUtil.getUser().id)
+                    }
+                    petAdapter.notifyDataSetChanged()
+                    binding.myPageFragmentCvPetImage.visibility = View.INVISIBLE
+                    binding.myPageFragmentCvUserInfo.visibility = View.VISIBLE
 //                        val myPetsList = mainViewModel.myPetsList.value
 //                        if(myPetsList?.size!! > 0){
 //
@@ -149,13 +153,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 //                            binding.myPageFragmentCvPetImage.visibility = View.INVISIBLE
 ////                            binding.myPageFragmentCvPetEmpty.visibility = View.VISIBLE
 //                        }
-                    }else{
-                        Log.d(TAG, "DeletePets: ")
-                    }
+                }else{
+                    Log.d(TAG, "DeletePets: ")
                 }
-            }else{
-                Log.d(TAG, "DeletePets: ")
             }
+        }else{
+            Log.d(TAG, "DeletePets: ")
         }
     }
 
