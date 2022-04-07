@@ -183,7 +183,7 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(FragmentJoinBinding::bind
         val encPw = loginActivity.sha256(password)
 
         runBlocking {
-            result = mainViewModel.join(User(email, nickname, encPw, "default.png", socialType))
+            result = mainViewModel.join(User(email, nickname, encPw, "", socialType))
         }
         return result
     }

@@ -127,7 +127,7 @@ fun bindImagePets(imgView: ImageView, imgUrl:String?){
 fun bindImageUser(imgView: ImageView, imgUrl: String?) {
     if(imgUrl == null || imgUrl == ""){
         Glide.with(imgView.context)
-            .load(R.drawable.defaultimg)
+            .load(R.drawable.logo)
             .circleCrop()
             .into(imgView)
 
