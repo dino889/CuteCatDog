@@ -507,20 +507,21 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
     private fun saveFile(FileName: String, mimeType: String, bitmap: Bitmap): Uri?
     {
         val CV = ContentValues()
-        CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
-        CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             CV.put(MediaStore.Downloads.DISPLAY_NAME, FileName)
             CV.put(MediaStore.Downloads.MIME_TYPE, mimeType)
             CV.put(MediaStore.Downloads.IS_PENDING, 1)
+        }else{
+            CV.put(MediaStore.Images.Media.DISPLAY_NAME, FileName)
+            CV.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
         }
 
         try {
-            var uri : Uri? = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, CV)
-            }else uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+            val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, CV)
+            }else contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, CV)
+
             if (uri != null) {
                 val scriptor = contentResolver.openFileDescriptor(uri, "w")
                 if (scriptor != null) {
