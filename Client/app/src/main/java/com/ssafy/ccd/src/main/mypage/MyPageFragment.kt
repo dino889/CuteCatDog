@@ -77,9 +77,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         }
 
         binding.viewModel = mainViewModel
-        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
+        mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
             binding.user = it
-        })
+        }
         if(petId > 0){
             runBlocking {
                 mainViewModel.getPetDetailList(petId)
@@ -160,17 +160,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
 
     private fun initPetAdapter(){
-        mainViewModel.myPetsList.observe(viewLifecycleOwner, {
+        mainViewModel.myPetsList.observe(viewLifecycleOwner) {
             petAdapter = PetListRecyclerviewAdapter(mainViewModel.loginUserInfo.value!!)
             petAdapter.petList = it
 
             binding.myPageFragmentRvPetList.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = petAdapter
                 adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
 
-            petAdapter.setAddClickListener(object: PetListRecyclerviewAdapter.AddClickListener {
+            petAdapter.setAddClickListener(object : PetListRecyclerviewAdapter.AddClickListener {
                 override fun onClick(view: View, position: Int) {
                     //AddPetFragment로 넘기기
                     this@MyPageFragment.findNavController().navigate(R.id.action_myPageFragment_to_addPetFragment, bundleOf("postId" to -1))
@@ -180,7 +180,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             petAdapter.setItemClickListener(object : PetListRecyclerviewAdapter.ItemClickListener {
                 override fun onClick(view: View, position: Int, pet: Pet) {
                     //해당 반려동물 정보 불러오기
-                    runBlocking{
+                    runBlocking {
                         mainViewModel.getPetDetailList(pet.id)
                         petId = pet.id
                         binding.viewModel = mainViewModel
@@ -197,7 +197,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     binding.myPageFragmentCvPetImage.visibility = View.INVISIBLE
                 }
             })
-        })
+        }
     }
 
 
@@ -234,12 +234,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
      */
     private fun logout(){
 
-        mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
+        mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
             val type = it.socialType
-            if(type == "google" || type == "facebook") {
+            if (type == "google" || type == "facebook") {
                 // google, facebook Logout
                 FirebaseAuth.getInstance().signOut()
-            } else if(type == "kakao") {
+            } else if (type == "kakao") {
                 // kakao Logout
                 val disposables = CompositeDisposable()
 
@@ -252,7 +252,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제 됨", error)
                     }).addTo(disposables)
             }
-        })
+        }
 
         ApplicationClass.sharedPreferencesUtil.deleteUser()
         ApplicationClass.sharedPreferencesUtil.deleteUserCookie()
@@ -275,9 +275,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             .setMessage("정말로 탈퇴하시겠습니까?")
             .setPositiveButton("YES", DialogInterface.OnClickListener{ dialogInterface, id ->
                 // 탈퇴기능구현
-                mainViewModel.loginUserInfo.observe(viewLifecycleOwner, {
+                mainViewModel.loginUserInfo.observe(viewLifecycleOwner) {
                     val type = it.socialType
-                    if(type == "kakao") {
+                    if (type == "kakao") {
                         val disposables = CompositeDisposable()
                         // 연결 끊기
                         UserApiClient.rx.unlink()
@@ -288,7 +288,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                             }, { error ->
                                 Log.e(TAG, "연결 끊기 실패", error)
                             }).addTo(disposables)
-                    } else if(type == "google" || type == "facebook") {
+                    } else if (type == "google" || type == "facebook") {
                         FirebaseAuth.getInstance().currentUser?.delete()!!.addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 //로그아웃처리
@@ -301,21 +301,21 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         }
                     }
 
-                    var res : Response<Message>
+                    var res: Response<Message>
                     runBlocking {
                         res = UserService().deleteUser(ApplicationClass.sharedPreferencesUtil.getUser().id)
                     }
-                    if(res.code() == 200 || res.code() == 500) {
+                    if (res.code() == 200 || res.code() == 500) {
                         val rbody = res.body()
-                        if(rbody != null) {
-                            if(rbody.data["isDelete"] == true && rbody.message == "회원 탈퇴 성공") {
+                        if (rbody != null) {
+                            if (rbody.data["isDelete"] == true && rbody.message == "회원 탈퇴 성공") {
                                 showCustomToast("회원 탈퇴가 완료되었습니다.")
                                 logout()
 
-                            } else if(rbody.data["isDelete"] == false) {
+                            } else if (rbody.data["isDelete"] == false) {
                                 showCustomToast("회원 탈퇴 실패")
                             }
-                            if(rbody.success == false) {
+                            if (rbody.success == false) {
                                 showCustomToast("서버 통신 실패")
                                 Log.d(TAG, "changePwBtnClickEvent: ${rbody.message}")
                             }
@@ -324,7 +324,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     ApplicationClass.sharedPreferencesUtil.deleteUser()
                     ApplicationClass.sharedPreferencesUtil.deleteUserCookie()
                     ApplicationClass.sharedPreferencesUtil.deleteAutoLogin()
-                })
+                }
             })
             .setNeutralButton("NO", null)
             .create()
