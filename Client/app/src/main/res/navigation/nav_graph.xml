@@ -278,7 +278,17 @@
         android:id="@+id/searchFragment"
         android:name="com.ssafy.ccd.src.main.home.Community.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_localBoardFragment"
+            app:destination="@id/localBoardFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_shareBoardFragment"
+            app:destination="@id/shareBoardFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_qnaBoardFragment"
+            app:destination="@id/qnaBoardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/calendarDetailFragment"
         android:name="com.ssafy.ccd.src.main.calender.CalendarDetailFragment"

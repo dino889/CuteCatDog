@@ -204,7 +204,7 @@ class MainViewModels : ViewModel() {
     private val _postDetail = MutableLiveData<Board>()
     private val _commentAllList = MutableLiveData<MutableList<Comment>>()
     private val _commentListWoParents = MutableLiveData<MutableList<Comment>>()
-
+    var boardId = 0
 
     val postAllList : LiveData<MutableList<Board>>
         get() = _postAllList

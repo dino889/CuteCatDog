@@ -437,8 +437,7 @@ class MainActivity :BaseActivity<ActivityMainBinding>(ActivityMainBinding::infla
         bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream)
         val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArrayOutputStream.toByteArray())
         val uploadFile = MultipartBody.Part.createFormData("file","${file.name}.${fileExtension?.substring(6)}",requestBody)
-        Log.d(TAG, "checkTheType: $uploadFile")
-        
+
         GlobalScope.launch {
             val response = PetService().getAipetType(uploadFile)
             val res = response.body()

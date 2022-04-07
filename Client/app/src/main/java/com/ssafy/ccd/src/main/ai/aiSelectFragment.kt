@@ -108,7 +108,7 @@ class aiSelectFragment : BaseFragment<FragmentAiSelectBinding>(FragmentAiSelectB
             binding.fragmentSelectAiCatCheck.visibility = View.VISIBLE
             binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE
         }else{
-            binding.textView33.text = "반려동물이 고양이나 강아지가 아닌 것 같습니다 :( 다시 시도해주세요"
+            binding.textView33.text = "반려동물이 고양이나 강아지가 아닌 것 같습니다 :(\n 다시 시도해주세요"
             binding.selectType.visibility = View.INVISIBLE
             binding.fragmentAiSelectBtnAnaylsis.setBackgroundColor(Color.GRAY)
 //            binding.fragmentSelectAiDogCheck.visibility = View.INVISIBLE

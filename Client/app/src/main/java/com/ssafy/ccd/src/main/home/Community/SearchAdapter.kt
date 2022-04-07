@@ -2,9 +2,11 @@ package com.ssafy.ccd.src.main.home.Community
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.ccd.R
@@ -37,6 +39,9 @@ class SearchAdapter(var list: List<Board>) : RecyclerView.Adapter<SearchAdapter.
         holder.apply {
             Log.d("Filter", "${filteredList[position]}")
             bind(filteredList[position])
+            itemView.setOnClickListener {
+                itemClickListener.onClick(it, position,filteredList[position].typeId, filteredList[position].id)
+            }
         }
     }
 
@@ -72,5 +77,12 @@ class SearchAdapter(var list: List<Board>) : RecyclerView.Adapter<SearchAdapter.
             }
 
         }
+    }
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int, typeId: Int, boardId:Int)
+    }
+    private lateinit var itemClickListener : ItemClickListener
+    fun setOnItemClickListener(itemClickListener: ItemClickListener){
+        this.itemClickListener = itemClickListener
     }
 }

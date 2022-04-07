@@ -63,6 +63,22 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 adapter = searchAdapter
                 searchAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
+            searchAdapter.setOnItemClickListener(object: SearchAdapter.ItemClickListener {
+                override fun onClick(view: View, position: Int, typeId: Int, boardId: Int) {
+                    mainViewModel.boardId = boardId
+                    if(typeId == 1){
+                        //울동네
+                        this@SearchFragment.findNavController().navigate(R.id.action_searchFragment_to_localBoardFragment)
+                    }else if( typeId == 2){
+                        //궁금해
+                        this@SearchFragment.findNavController().navigate(R.id.action_searchFragment_to_qnaBoardFragment)
+                    }else if(typeId == 3){
+                        //공유해
+                        this@SearchFragment.findNavController().navigate(R.id.action_searchFragment_to_shareBoardFragment)
+                    }
+                }
+
+            })
         })
 
     }

@@ -15,7 +15,8 @@ import com.ssafy.ccd.R
 import com.ssafy.ccd.config.ApplicationClass
 import com.ssafy.ccd.config.BaseFragment
 import com.ssafy.ccd.databinding.FragmentLocalBoardBinding
-import com.ssafy.ccd.src.dto.LikeRequestDto
+    import com.ssafy.ccd.src.dto.Board
+    import com.ssafy.ccd.src.dto.LikeRequestDto
 import com.ssafy.ccd.src.dto.Message
 import com.ssafy.ccd.src.main.MainActivity
 import com.ssafy.ccd.src.network.service.BoardService
@@ -123,8 +124,20 @@ class LocalBoardFragment : BaseFragment<FragmentLocalBoardBinding>(FragmentLocal
 //        localBoardAdapter.userList = mainViewModel.allUserList.value!!
 
         mainViewModel.locPostList.observe(viewLifecycleOwner) {
-            localBoardAdapter.postList = it
-            localBoardAdapter.userList = mainViewModel.allUserList.value!!
+            if(mainViewModel.boardId > 0){
+                var array = mutableListOf<Board>()
+                for(item in 0..it.size-1){
+                    if(it[item].id == mainViewModel.boardId){
+                        Log.d(TAG, "initRecyclerView: ${it[item]}")
+                        array.add(it[item])
+                    }
+                }
+                Log.d(TAG, "initRecyclerView: ${array}")
+                localBoardAdapter.postList = array
+            }else{
+                localBoardAdapter.postList = it
+                localBoardAdapter.userList = mainViewModel.allUserList.value!!
+            }
         }
 
         binding.localBoardFragmentRvPostList.adapter = localBoardAdapter

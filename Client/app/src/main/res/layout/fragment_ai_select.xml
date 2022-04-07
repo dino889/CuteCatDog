@@ -84,6 +84,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/fontn"
+            android:gravity="center"
             android:text="선택하신 반려동물의 정보가 맞는지 확인해주세요!"
             android:textColor="@color/black"
             android:textSize="16sp"
