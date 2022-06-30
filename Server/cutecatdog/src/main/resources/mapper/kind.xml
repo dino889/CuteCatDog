@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.KindMapper">
+	
+	<select id="selectKind" resultType="KindResponseDto">
+		SELECT k.id,k.name,t.type  
+		FROM tbl_kind AS k 
+		LEFT OUTER JOIN tbl_type AS t 
+		ON k.type_id = t.id 
+	</select>
+
+  <select id="selectKindName" resultType="int">
+		SELECT *
+		FROM tbl_kind
+    WHERE name = #{name}
+	</select>
+
+  <insert id="insertKind" parameterType="KindAddRequestDto">
+		INSERT INTO tbl_kind (name,type_id)
+		VALUES (#{name},#{typeId})
+  </insert>
+
+  <update id="updateKind" parameterType="KindDto">
+    UPDATE tbl_kind
+    SET name = #{name} , type_id = #{typeId}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteKind" parameterType="int">
+		DELETE FROM tbl_kind WHERE id = #{id}
+	</delete>
+
+	<select id="selectKindId" resultType="KindDetailResponseDto" parameterType="int">
+		SELECT k.name,t.type  
+		FROM tbl_kind AS k 
+		LEFT OUTER JOIN tbl_type AS t 
+		ON k.type_id = t.id 
+		WHERE k.id = #{kindId}
+	</select>
+</mapper>

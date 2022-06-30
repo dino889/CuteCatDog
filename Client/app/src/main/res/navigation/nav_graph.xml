@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ssafy.ccd.src.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_addPetFragment"
+            app:destination="@id/addPetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" >
+            <argument
+                android:name="petId"
+                app:argType="integer"
+                android:defaultValue="0"/>
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_LocalBoardFragment"
+            app:destination="@+id/localBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_QnABoardFragment"
+            app:destination="@+id/qnaBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ShareBoardFragment"
+            app:destination="@+id/shareBoardFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment">
+            <argument
+                android:name="calendarId"
+                app:argType="integer"
+                android:defaultValue="0"/>
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aiFragment"
+        android:name="com.ssafy.ccd.src.main.ai.aiFragment"
+        android:label="fragment_ai"
+        tools:layout="@layout/fragment_ai" >
+
+        <action
+            android:id="@+id/action_aiFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment">
+        </action>
+        <argument
+            android:name="flag"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/diaryFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryFragment"
+        android:label="fragment_diary"
+        tools:layout="@layout/fragment_diary">
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
+        <action
+            android:id="@+id/action_diaryFragment_to_diaryDetailFragment"
+            app:destination="@id/diaryDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderFragment"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender">
+    </fragment>
+
+    <fragment
+        android:id="@+id/calenderFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderFragment"
+        android:label="fragment_calender"
+        tools:layout="@layout/fragment_calender">
+        <action
+            android:id="@+id/action_calenderFragment_to_calenderWriteFragment"
+            app:destination="@id/calenderWriteFragment" />
+        <action
+            android:id="@+id/action_calenderFragment_to_addPetFragment"
+            app:destination="@id/addPetFragment" />
+        <action
+            android:id="@+id/action_calenderFragment_to_calendarDetailFragment"
+            app:destination="@id/calendarDetailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.MyPageFragment"
+        android:label="fragment_mypage"
+        tools:layout="@layout/fragment_my_page">
+        <action
+            android:id="@+id/action_homeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_addPetFragment"
+            app:destination="@id/addPetFragment" />
+        <argument
+            android:name="petId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/addPetFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.AddPetFragment"
+        android:label="fragment_mypage_addPet"
+        tools:layout="@layout/fragment_add_pet">
+        <action
+            android:id="@+id/action_addPetFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/diaryWriteFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryWriteFragment"
+        android:label="fragment_diary_write"
+        tools:layout="@layout/fragment_diary_write" >
+        <action
+            android:id="@+id/action_diaryWriteFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.ssafy.ccd.src.main.mypage.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/diaryDetailFragment"
+        android:name="com.ssafy.ccd.src.main.diary.DiaryDetailFragment"
+        android:label="DiaryDetailFragment" >
+        <action
+            android:id="@+id/action_diaryDetailFragment_to_diaryFragment"
+            app:destination="@id/diaryFragment" />
+        <argument
+            android:name="diaryId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_diaryDetailFragment_to_diaryWriteFragment"
+            app:destination="@id/diaryWriteFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/informationMainFragment"
+        android:name="com.ssafy.ccd.src.main.information.InformationMainFragment"
+        android:label="fragment_information_main"
+        tools:layout="@layout/fragment_information_main" />
+    <fragment
+        android:id="@+id/aiSelectFragment"
+        android:name="com.ssafy.ccd.src.main.ai.aiSelectFragment"
+        android:label="fragment_ai_select"
+        tools:layout="@layout/fragment_ai_select" />
+    <fragment
+        android:id="@+id/calenderWriteFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalenderWriteFragment"
+        android:label="fragment_calender_write"
+        tools:layout="@layout/fragment_calender_write" >
+        <argument
+            android:name="scheduleId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_calenderWriteFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/localBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.LocalBoardFragment"
+        android:label="LocalBoardFragment"
+        tools:layout="@layout/fragment_local_board">
+        <action
+            android:id="@+id/action_localBoardFragment_to_writeLocalBoardFragment"
+            app:destination="@+id/writeLocalBoardFragment" />
+        <action
+            android:id="@+id/action_localBoardFragment_to_localCommentFragment"
+            app:destination="@+id/localCommentFragment"/>
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_localBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/qnaBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.QnABoardFragment"
+        android:label="QnABoardFragment"
+        tools:layout="@layout/fragment_qna_board">
+        <action
+            android:id="@+id/action_qnaBoardFragment_to_writeBoardFragment"
+            app:destination="@+id/writeBoardFragment" />
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_qnaBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/shareBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.ShareBoardFragment"
+        android:label="ShareBoardFragment"
+        tools:layout="@layout/fragment_share_board">
+        <action
+            android:id="@+id/action_shareBoardFragment_to_writeShareBoardFragment"
+            app:destination="@+id/writeShareBoardFragment" />
+        <action
+            android:id="@+id/action_shareBoardFragment_to_localCommentFragment"
+            app:destination="@+id/localCommentFragment"/>
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_shareBoardFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/writeBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteBoardFragment"
+        android:label="WriteBoardFragment"
+        tools:layout="@layout/fragment_write_board" />
+
+    <fragment
+        android:id="@+id/writeLocalBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteLocalBoardFragment"
+        android:label="WriteLocalBoardFragment"
+        tools:layout="@layout/fragment_write_local_board" />
+
+    <fragment
+        android:id="@+id/qnABoardDetailFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.QnABoardDetailFragment"
+        android:label="fragment_qn_a_board_detail"
+        tools:layout="@layout/fragment_qn_a_board_detail" />
+    <fragment
+        android:id="@+id/writeQnaFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteQnaFragment"
+        android:label="fragment_write_question"
+        tools:layout="@layout/fragment_write_qna" />
+
+    <fragment
+        android:id="@+id/localCommentFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.LocalCommentFragment"
+        android:label="LocalCommentFragment"
+        tools:layout="@layout/fragment_local_comment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.ssafy.ccd.src.main.home.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/writeShareBoardFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.WriteShareBoardFragment"
+        android:label="WriteShareBoardFragment"
+        tools:layout="@layout/fragment_write_share_board" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.ssafy.ccd.src.main.home.Community.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_localBoardFragment"
+            app:destination="@id/localBoardFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_shareBoardFragment"
+            app:destination="@id/shareBoardFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_qnaBoardFragment"
+            app:destination="@id/qnaBoardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarDetailFragment"
+        android:name="com.ssafy.ccd.src.main.calender.CalendarDetailFragment"
+        android:label="CalendarDetailFragment">
+        <action
+            android:id="@+id/action_calendarDetailFragment_to_calendarWriteFragment"
+            app:destination="@+id/calenderWriteFragment" />
+
+        <argument
+            android:name="calendarId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
+</navigation>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.PetMapper">
+	
+	<select id="selectPet" resultType="PetDto">
+		SELECT id, user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+	</select>
+
+	<select id="selectPetDetail" parameterType="int" resultType="PetWithKind">
+		<!-- SELECT id,user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+    WHERE id = #{id} -->
+		SELECT p.id, p.user_id, k.name AS kind, p.name, p.birth, p.photo_path, p.gender, p.is_neutered
+		FROM tbl_pet p LEFT OUTER JOIN tbl_kind k
+		ON p.kind_id = k.id
+		WHERE p.id = #{id}
+	</select>
+
+  <insert id="insertPet" parameterType="PetDto">
+		INSERT INTO tbl_pet (user_id, kind_id, name, birth, photo_path,gender,is_neutered)
+		VALUES (#{userId},#{kindId},#{name},#{birth},#{photoPath},#{gender},#{isNeutered})
+	</insert>
+
+  <update id="updatePet" parameterType="PetDto">
+    UPDATE tbl_pet
+    SET kind_id = #{kindId}, name = #{name}, birth = #{birth}, photo_path = #{photoPath}, gender = #{gender}, is_neutered = #{isNeutered}
+    WHERE id = #{id}
+  </update>
+
+	<delete id="deletePet" parameterType="int">
+		DELETE FROM tbl_pet WHERE id = #{id}
+	</delete>
+
+	<select id="selectMyPetDetail" parameterType="int" resultType="PetDto">
+		SELECT id, user_id, kind_id, name, birth, photo_path,gender,is_neutered
+		FROM tbl_pet
+    WHERE user_id = #{userId}
+	</select>
+
+</mapper>

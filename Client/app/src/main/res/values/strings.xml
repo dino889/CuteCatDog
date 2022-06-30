@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">CuteCatDog</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="google_login_key">437810809249-5cfg3fpnjsmktlda6s2b9tce8a3iasr2.apps.googleusercontent.com</string>
+    <string name="kakao_nativeapp_key">78b660953c918503e1a723afddb4d6e8</string>
+
+    <string name="facebook_app_id">1094525324426176</string>
+    <string name="fb_login_protocol_scheme">fb1094525324426176</string>
+    <string name="facebook_client_token">ac713efe1c0f758c47a2dfc9d698b074</string>
+
+    <string name="kakao_scheme">kakao78b660953c918503e1a723afddb4d6e8</string>
+    <string name="kakaolink_host">kakaolink</string>
 </resources>

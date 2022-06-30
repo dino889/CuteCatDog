@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="writer"
+            type="com.ssafy.ccd.src.dto.User" />
+        <variable
+            name="post"
+            type="com.ssafy.ccd.src.dto.Board" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".src.main.home.Community.QnABoardDetailFragment">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/fragment_qna_appbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageButton
+                        android:id="@+id/fragmentQnaBoardDetail_ibBack"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginBottom="13dp"
+                        android:background="@android:color/transparent"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/backleft"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                    <TextView
+                        android:id="@+id/fragment_qna_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="궁금해"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/fragmentQnaBoardDetail_ibBack"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/fragmentQnaBoardDetail_ibBack"
+                        app:layout_constraintVertical_bias="0.625" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="10dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/fragment_qnaBoard_Q"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="13dp"
+                            android:layout_marginTop="13dp"
+                            android:text="Q"
+                            android:textColor="@color/main"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/fragmentQnaBoardDetail_tvTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:singleLine="true"
+                            android:text="@{post.title}"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/fragment_qnaBoard_Q"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/fragment_qnaBoard_Q"
+                            app:layout_constraintTop_toTopOf="@+id/fragment_qnaBoard_Q"
+                            tools:text="제가 묻고 싶은 건요.." />
+
+                        <TextView
+                            android:id="@+id/fragmentQnaBoardDetail_tvUserName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/fragmentQnaBoardDetail_tvTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/fragmentQnaBoardDetail_tvTitle"
+                            android:text="@{post.author+`님의 질문`}"
+                            tools:text="최주은님의 질문" />
+
+                        <TextView
+                            android:id="@+id/fragmentQnaBoardDetail_tvContent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:lineSpacingExtra="8sp"
+                            app:layout_constraintBottom_toTopOf="@+id/fragmentQnaBoardDetail_tvDate"
+                            app:layout_constraintEnd_toEndOf="@+id/fragmentQnaBoardDetail_tvUserName"
+                            app:layout_constraintStart_toStartOf="@+id/fragment_qnaBoard_Q"
+                            app:layout_constraintTop_toBottomOf="@+id/fragmentQnaBoardDetail_tvUserName"
+                            tools:text="제가 키우는 강아지가 자꾸 낑낑 거리면서 울고있는데 왜그런걸까요? 뭔가 건강 상태에 문제가 생긴걸까요? 잘 아는 분 답변 남겨주시면 감사하겠습니다."
+                            android:text="@{post.content}"/>
+
+                        <TextView
+                            android:id="@+id/fragmentQnaBoardDetail_tvDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                            app:layout_constraintStart_toStartOf="@+id/fragmentQnaBoardDetail_tvContent"
+                            app:layout_constraintTop_toBottomOf="@+id/fragmentQnaBoardDetail_tvContent"
+                            tools:text="2020.10.04." />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="24dp"
+                            android:orientation="horizontal"
+                            android:visibility="@{ post.userId == writer.id ? View.VISIBLE : View.INVISIBLE}"
+                            app:layout_constraintBottom_toBottomOf="@+id/fragmentQnaBoardDetail_tvDate"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/fragmentQnaBoardDetail_tvDate">
+
+                            <TextView
+                                android:id="@+id/fragmentQnaBoardDetail_tvRewrite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="수정"
+                                android:textColor="#454B67"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textView21"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" / "/>
+
+                            <TextView
+                                android:id="@+id/fragmentQnaBoardDetail_tvDelete"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="삭제"
+                                android:textColor="#7E332E"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/fragmentQnaBoardDetail_clAnswerBtn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/qna_item_buttonbackground_left">
+
+                                <TextView
+                                    android:id="@+id/textView12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginEnd="1dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:text="답변하기"
+                                    android:textColor="@color/black"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/fragmentQnaBoardDetail_clLikeBtn"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/qna_item_buttonbackground_right">
+
+                                <TextView
+                                    android:id="@+id/textView14"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="1dp"
+                                    android:text="궁금해요"
+                                    android:textColor="@color/black"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/fragmentQnaBoardDetail_tvLikeCnt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="13dp"
+                                    android:layout_marginStart="5dp"
+                                    android:text="@{String.valueOf(post.count)}"
+                                    android:textColor="@color/main"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toEndOf="@+id/textView14"
+                                    app:layout_constraintTop_toTopOf="@+id/textView14"
+                                    tools:text="12" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="답변 : "
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/fragmentQnaBoardDetail_tvAnswerCnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold"
+                        android:text="@{post.commentList == null ? `0` : post.commentList.size()}"
+                        tools:text="0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="개" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view7"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="#7C939393" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/fragmentQnaBoardDetail_rvAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    tools:listitem="@layout/item_answer" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

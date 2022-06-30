@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="schedules"
+            type="com.ssafy.ccd.src.dto.Schedule" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:id="@+id/item_swipe_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="4"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1">
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/item_swipe_delete_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/red"
+                    android:gravity="end|center_vertical"
+                    android:includeFontPadding="false"
+                    android:paddingRight="20dp"
+                    android:text="삭제"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_board_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/fragment_calendar_dialog_petImg"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:imageUrlCalendarPets = "@{schedules.pet.photoPath}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/fragment_calendar_dialog_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@{schedules.schedule.title}"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_calendar_dialog_petImg"
+                    tools:text="타이틀" />
+
+                <TextView
+                    android:id="@+id/fragment_calendar_dialog_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/black"
+                    app:calendarType="@{schedules.schedule.type}"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_petImg"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_petImg"
+                    tools:text="타입" />
+
+
+                <TextView
+                    android:id="@+id/fragment_calendar_dialog_memo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:singleLine="true"
+                    android:text="@{schedules.schedule.memo}"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_calendar_dialog_type"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_calendar_dialog_type"
+                    tools:text="내용" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+            
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

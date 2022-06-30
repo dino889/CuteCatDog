@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.WalkMapper">
+	
+	<insert id="insertWalk" parameterType="WalkInsertRequestDto">
+		INSERT INTO tbl_walk (lat, lng, place)
+		VALUES (#{lat}, #{lng}, #{place})
+	</insert>
+
+
+<select id="selectWalk" parameterType="WalkRequestDto" resultType="WalkResponseDto">
+		SELECT
+		lat,lng,place, (
+			6371 * acos (
+			cos ( RADIANS(#{lat}) )
+			* cos( RADIANS(lat))
+			* cos( RADIANS((lng)) - RADIANS(#{lng}) )
+			+ sin ( RADIANS(#{lat}) )
+			* sin( RADIANS(lat))
+		)
+	) AS distance ,lat,lng
+	FROM tbl_walk
+	HAVING distance &lt; #{range}
+	ORDER BY distance
+</select>
+	
+</mapper>

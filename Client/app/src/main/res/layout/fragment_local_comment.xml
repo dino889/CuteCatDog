@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".src.main.home.Community.LocalCommentFragment">
+    <data>
+        <variable
+            name="loginUser"
+            type="com.ssafy.ccd.src.dto.User" />
+        <variable
+            name="mainViewModel"
+            type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/localCommentFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<!--        android:onClick="hideKeyboard">-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/localCmtFragment_clAppbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/localCmtFragment_ibBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="13dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/backleft"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/localCmtFragment_tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="댓글"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/localCmtFragment_ibBack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/localCmtFragment_ibBack" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_clInsertCmt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/localCmtFragment_rvComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_clAppbar"
+                app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_clInsertCmt"
+                app:localCommentListData="@{mainViewModel.commentListWoParents}"
+                tools:listitem="@layout/item_local_comment_list" />
+    <!--            app:layout_constrainedHeight="true"-->
+            </LinearLayout>
+        </ScrollView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/localCmtFragment_clInsertCmt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="0.6dp"
+                android:background="#d1d1d1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/localCmtFragment_ivLoginUserImg"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:imageUrlUser="@{loginUser.profileImage}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view" />
+<!--                app:layout_constraintEnd_toStartOf="@+id/localCmtFragment_tvWriterNick"-->
+
+            <TextView
+                android:id="@+id/localCmtFragment_tvWriterNick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="65dp"
+                android:paddingStart="10dp"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/localCmtFragment_etComment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/localCmtFragment_ivLoginUserImg"
+                app:layout_constraintTop_toTopOf="@id/view" />
+
+            <EditText
+                android:id="@+id/localCmtFragment_etComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:hint="댓글 달기..."
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:maxLines="3"
+                android:minLines="1"
+                android:paddingStart="10dp"
+                android:scrollbars="vertical"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/localCmtFragment_tvConfirm"
+                app:layout_constraintStart_toEndOf="@+id/localCmtFragment_ivLoginUserImg"
+                app:layout_constraintTop_toBottomOf="@+id/localCmtFragment_tvWriterNick" />
+
+            <TextView
+                android:id="@+id/localCmtFragment_tvConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="게시"
+                android:textColor="@color/main_700"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.UserMapper">
+	
+	<select id="selectUserAll" resultType="UserResponseDto">
+		SELECT id,profile_image,nickname
+		FROM tbl_user
+		WHERE is_withdrawal = 0
+	</select>
+
+
+	<insert id="insertUser" parameterType="userDto">
+		INSERT INTO tbl_user (email, password, nickname, profile_image, social_type)
+		VALUES (#{email}, #{password}, #{nickname}, #{profileImage}, #{socialType})
+	</insert>
+
+	<select id="selectUser" parameterType="int" resultType="userDto">
+		SELECT id, email, password, nickname, profile_image, social_type, device_token
+		FROM tbl_user
+		WHERE id = #{userid} AND is_withdrawal = 0
+	</select>
+	
+	<update id= "updateUser" parameterType="userDto">
+		update tbl_user
+		set nickname = #{nickname}, profile_image=#{profileImage}
+		where id = #{id}
+	</update>
+	
+	<update id="deleteUser" parameterType="int">
+		update tbl_user
+		set is_withdrawal = 1
+		where id = #{userid}
+	</update>
+
+    <select id="checkEmail" parameterType="String" resultType="userDto">
+        select email,social_type
+        from tbl_user
+        where email=#{email} and is_withdrawal = 0
+    </select>
+
+    <!-- <select id="checkNickname" parameterType="String" resultType="userDto">
+        select nickname
+        from tbl_user
+        where nickname=#{nickname}
+    </select> -->
+
+	<select id="loginUser" parameterType="accountDto" resultType="userDto">
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
+		FROM tbl_user
+		WHERE email = #{email} AND password = #{password} AND is_withdrawal = 0
+	</select>
+
+	<update id="resetPassword" parameterType="accountDto">
+		UPDATE tbl_user
+		SET password = #{password}
+		WHERE email = #{email} AND is_withdrawal = 0
+	</update>
+
+	<select id="selectUserbyToken" parameterType="String" resultType="userDto">
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
+		FROM tbl_user
+		WHERE device_token = #{deviceToken} AND is_withdrawal = 0
+	</select>
+
+	<select id="selectAllUser" resultType="userDto">
+		SELECT id, email, nickname, profile_image, SNS_token, device_token, social_type
+		FROM tbl_user
+	</select>
+
+	<update id="updateTokenByUserId" parameterType="userDto">
+		UPDATE tbl_user
+		SET device_token = #{deviceToken}
+		WHERE id = #{id} AND is_withdrawal = 0
+	</update>
+	
+</mapper>

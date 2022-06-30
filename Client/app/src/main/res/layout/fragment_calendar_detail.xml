@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ssafy.ccd.src.network.viewmodel.MainViewModels" />
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".src.main.calender.CalendarDetailFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_calenderDetail_appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/fragment_calenderDetail_back"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/backleft"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/fragment_calenderDetail_Apptitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:myPageConvertBirth="@{viewModel.scheduleDetail.schedule.datetime}"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_calenderDetail_back"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_calenderDetail_back"
+                    app:layout_constraintVertical_bias="0.625" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <RelativeLayout
+                android:id="@+id/kakao_mapView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calenderDetail_appbar" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.scheduleDetail.schedule.title}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_petName"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_petName" />
+
+            <TextView
+                android:id="@+id/calendarDetailFragment_tvModify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="수정"
+                android:textColor="@color/main_700"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_calendarDetail_petName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fragment_calendarDetail_petName" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_memo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="20dp"
+                android:text="@{viewModel.scheduleDetail.schedule.memo}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView50"
+                app:layout_constraintTop_toTopOf="@+id/textView50" />
+
+            <ImageView
+                android:id="@+id/fragment_calendarDetail_petImg"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
+                app:imageUrlCalendarPets="@{viewModel.scheduleDetail.pet.photoPath}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_recommandWalk" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_petName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.scheduleDetail.pet.name}"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/fragment_calendarDetail_petImg"
+                app:layout_constraintTop_toTopOf="@+id/fragment_calendarDetail_petImg" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{viewModel.scheduleDetail.schedule.place}"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_calendarDetail_type"
+                app:layout_constraintStart_toEndOf="@+id/fragment_calendarDetail_type"
+                app:layout_constraintTop_toTopOf="@+id/fragment_calendarDetail_type" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                app:calendarType="@{viewModel.scheduleDetail.schedule.type}"
+                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_title"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_title" />
+
+            <TextView
+                android:id="@+id/textView50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="메모"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/fragment_calendarDetail_petImg"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_calendarDetail_petImg" />
+
+            <TextView
+                android:id="@+id/fragment_calendarDetail_recommandWalk"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@+id/calendarDetailFragment_tvModify"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/kakao_mapView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="커뮤니티"
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home">
+    </item>
+
+    <item android:title="일기"
+        android:id="@+id/diaryFragment"
+        android:icon="@drawable/diary">
+    </item>
+
+    <item android:title=""
+        android:id="@+id/cameraFragment"
+        android:enabled="false">
+    </item>
+
+    <item android:title="캘린더"
+        android:id="@+id/calenderFragment"
+        android:icon="@drawable/calendar">
+    </item>
+
+    <item android:title="마이페이지"
+        android:id="@+id/myPageFragment"
+        android:icon="@drawable/user">
+    </item>
+</menu>

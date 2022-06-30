@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.DiaryMapper">
+	
+	<select id="selectDiaryAsc" parameterType="int" resultType="DiaryDto">
+		SELECT id, title, content, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId}
+        order by datetime
+	</select>
+
+	<select id="selectDiaryDesc" parameterType="int" resultType="DiaryDto">
+		SELECT id, user_id, title, content, datetime
+		FROM tbl_diary
+        WHERE user_id = #{userId}
+        order by datetime desc
+	</select>
+
+    <insert id="insertDiary" parameterType="DiaryDto" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tbl_diary (user_id, title, content, datetime)
+		VALUES (#{userId},#{title},#{content},#{datetime})
+	</insert>
+
+    <update id="updateDiary" parameterType="DiaryDto">
+        UPDATE tbl_diary
+        SET title = #{title}, content = #{content}, datetime=#{datetime}
+        WHERE id = #{id}
+    </update>
+
+	<delete id="deleteDiary" parameterType="int">
+		DELETE FROM tbl_diary WHERE id = #{id}
+	</delete>
+
+	<delete id="deletePhoto" parameterType="int">
+		DELETE FROM tbl_diary_photo WHERE diary_id = #{id}
+	</delete>
+
+	<delete id="deleteHashtag" parameterType="int">
+		DELETE FROM tbl_hashtag_in_diary WHERE diary_id = #{id}
+	</delete>
+
+	<select id="selectDiaryByDate" parameterType="DiaryParamDto" resultType="DiaryDto">
+		SELECT id, user_id, title, content, datetime
+		FROM tbl_diary
+		<if test="end_date != null and end_date != ''">
+			WHERE user_id = #{userId} and (datetime between #{start_date} and #{end_date})
+			order by datetime desc
+		</if>
+		<if test="end_date == null or end_date == ''">
+        	WHERE user_id = #{userId} and datetime = #{start_date}
+		</if>
+	</select>
+
+	<select id="selectDiaryDetali" parameterType="int" resultType="DiaryDto">
+		SELECT id, user_id, title, content, datetime
+		FROM tbl_diary
+        WHERE id = #{id}
+	</select>
+
+</mapper>

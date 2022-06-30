@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.ScheduleMapper">
+
+    <insert id="insertSchedule" parameterType="ScheduleDto">
+		INSERT INTO tbl_schedule (user_id, pet_id, type, title, memo, datetime, place)
+		VALUES (#{userId}, #{petId}, #{type}, #{title}, #{memo}, #{datetime}, #{place})
+	</insert>
+
+	<select id="selectSchedule" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE user_id = #{userId}
+	</select>
+
+	<select id="selectScheduleDate" parameterType="ScheduleDto" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE user_id = #{userId} and datetime=#{datetime}
+	</select>
+
+	<select id="selectScheduleHour" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE datetime = UNIX_TIMESTAMP(date_sub(CURDATE(), INTERVAL 9 HOUR))
+		AND is_noti = 0
+	</select>
+
+	<select id="selectScheduleDetail" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE id = #{id}
+	</select>
+
+    <select id="selectSchedulePet" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE pet_id = #{petId}
+	</select>
+
+    <select id="selectScheduleIno" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, title, memo, datetime, place
+		FROM tbl_schedule
+		WHERE pet_id = #{petId} AND type = 1
+	</select>
+
+    <select id="selectScheduleWalk" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, title, memo, datetime, place
+        from tbl_schedule
+		WHERE pet_id = #{petId} AND type = 2
+	</select>
+
+	<select id="selectScheduleWeek" parameterType="int" resultType="ScheduleDto">
+		SELECT id, user_id, pet_id, type, title, memo, datetime, place
+        from tbl_schedule
+		WHERE user_id = #{userId}
+		AND DATETIME BETWEEN UNIX_TIMESTAMP(NOW()) AND UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL 7 DAY))
+	</select>
+	
+	<update id= "updateSchedule" parameterType="ScheduleDto">
+		update tbl_schedule
+		set type = #{type}, title=#{title}, memo=#{memo}, datetime=#{datetime}, place=#{place}, is_noti=#{isNoti}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="int">
+		delete from tbl_schedule
+		where id = #{id}
+	</delete>
+    
+</mapper>

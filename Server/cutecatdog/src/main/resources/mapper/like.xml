@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.LikeMapper">
+	
+  <select id="selectLike" parameterType="int" resultType="Integer">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE user_id = #{userId}
+  </select>
+
+  <insert id="insertLike" parameterType="LikeRequestDto">
+    INSERT INTO tbl_like_management (board_id,user_id,like_id) VALUES(#{boardId},#{userId},2)
+  </insert>
+
+  <delete id="deleteLike" parameterType="int">
+    DELETE FROM tbl_like_management
+    WHERE board_id = #{boardId} AND user_id = #{userId}
+  </delete>
+	
+  <select id="selectBoardLike" parameterType="LikeRequestDto" resultType="Integer">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE user_id = #{userId} AND board_id = #{boardId}
+  </select>
+  
+  <select id="selectUserBoard" parameterType="int" resultType="Integer">
+    SELECT board_id 
+    FROM tbl_like_management
+    WHERE user_id = #{userId}
+  </select>
+
+</mapper>

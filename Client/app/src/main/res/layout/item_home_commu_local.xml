@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="writer"
+            type="com.ssafy.ccd.src.dto.User" />
+        <variable
+            name="post"
+            type="com.ssafy.ccd.src.dto.Board" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/fragment_home_commuLocalIvImg"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:scaleType="centerCrop"
+            app:imageUrlDiary="@{post.photoPath}"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_home_commuLocalTvContent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/defaultimg" />
+
+        <TextView
+            android:id="@+id/fragment_home_commuLocalTvContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{post.content.length() > 20 ? post.content.substring(0, 20) : post.content}"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_home_commuLocalIvImg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

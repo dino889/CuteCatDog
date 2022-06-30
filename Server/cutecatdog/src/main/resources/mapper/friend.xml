@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.FriendMapper">
+	
+  <insert id="insertFriend" parameterType="FriendDto">
+    INSERT INTO tbl_friend (user_id,friend_email) VALUES (#{userId},#{friendEmail})
+  </insert>
+  <select id="selectOverlabFriend" resultType="Integer" parameterType="FriendDto">
+    SELECT *
+    FROM tbl_friend
+    WHERE user_id = #{userId} AND friend_email = #{friendEmail}
+  </select>
+  <select id="selectMyFriend" resultType="Integer" parameterType="FriendDto">
+    SELECT *
+    FROM tbl_user
+    WHERE id = #{userId} AND email = #{friendEmail}
+  </select>
+  <delete id="deleteFriend" parameterType="FriendDto">
+    DELETE
+    FROM tbl_friend
+    WHERE user_id = #{userId} AND friend_email = #{friendEmail}
+  </delete>
+  <select id="selectFriendList" resultType="FriendResponseDto" parameterType="int">
+    SELECT f.friend_email,u.profile_image
+    FROM tbl_friend f LEFT OUTER JOIN tbl_user u
+    ON f.friend_email = u.email
+    WHERE f.user_id = #{userId}
+  </select>
+  <select id="selectFriendByEmail" resultType="FriendResponseDto" parameterType="String">
+    SELECT email as friendEmail,profile_image
+    FROM tbl_user 
+    WHERE email = #{email}
+  </select>
+
+  
+</mapper>

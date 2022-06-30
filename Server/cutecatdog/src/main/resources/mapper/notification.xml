@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.NotificationMapper">
+
+    <select id="selectNotificationList" parameterType="int" resultType="NotificationDto">
+		SELECT id, user_id, type, title, content, datetime
+		FROM tbl_notification
+        WHERE user_id = #{userId}
+        order by datetime desc
+	</select>
+
+    <select id="selectNotificationN" parameterType="int" resultType="NotificationDto">
+		SELECT id, user_id, type, title, content, datetime
+		FROM tbl_notification
+        WHERE user_id = #{userId} and type = 1
+        order by datetime desc
+	</select>
+
+    <select id="selectNotificationE" parameterType="int" resultType="NotificationDto">
+		SELECT id, user_id, type, title, content, datetime
+		FROM tbl_notification
+        WHERE user_id = #{userId} and type = 2
+        order by datetime desc
+	</select>
+
+    <select id="selectNotificationP" parameterType="int" resultType="NotificationDto">
+		SELECT id, user_id, type, title, content, datetime
+		FROM tbl_notification
+        WHERE user_id = #{userId} and type = 3
+        order by datetime desc
+	</select>
+
+    <insert id="insertNotification" parameterType="NotificationDto">
+        INSERT INTO tbl_notification (user_id, type, title, content, datetime)
+        VALUES (#{userId},#{type}, #{title},#{content},#{datetime})
+	</insert>
+
+    <!-- <update id="updateNotification" parameterType="NotificationDto">
+        UPDATE tbl_notification
+        SET type = #{type}, title = #{title}, content = #{content}, datetime = #{datetime}
+        WHERE id = #{id}
+    </update> -->
+
+	<delete id="deleteNotification" parameterType="int">
+		DELETE FROM tbl_notification WHERE id = #{id}
+	</delete>
+
+</mapper>

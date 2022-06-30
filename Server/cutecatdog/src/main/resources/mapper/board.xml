@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cutecatdog.mapper.BoardMapper">
+	
+	<select id="selectBoard" resultType="BoardResponsDto">
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt
+    FROM tbl_board b 
+    ORDER BY b.time desc
+	</select>
+
+	<select id="selectDongBoard" resultType="BoardResponsDto" parameterType="BoardWhereDto">
+    SELECT b.lat,b.lng,b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt,(
+      6371 * acos (
+      cos ( RADIANS(#{lat}) )
+      * cos( RADIANS(lat) )
+      * cos( RADIANS(lng) - RADIANS(#{lng}))
+      + sin ( RADIANS(#{lat}) )
+      * sin( RADIANS(lat) )
+    )
+) AS distance
+    FROM tbl_board b 
+    HAVING distance &lt; 10
+    ORDER BY b.time desc
+	</select>
+  
+
+  <select id="selectUserBoard" resultType="BoardDto" parameterType="int">
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time ,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt
+    FROM tbl_board b 
+    WHERE user_id = #{userId}
+    ORDER BY b.time desc
+ 
+  </select>
+
+  <select id="selectTypeBoard" resultType="BoardDto" parameterType="int">
+    SELECT b.id,b.user_id,b.title,b.content,b.author,b.type_id,(SELECT COUNT(id) as count FROM tbl_like_management WHERE board_id = b.id) as count, b.photo_path, b.time ,(SELECT COUNT(id) as count FROM tbl_comment WHERE board_id = b.id) as commentCnt
+    FROM tbl_board b 
+    WHERE type_id = #{typeId}
+    ORDER BY b.time desc
+	</select>
+
+  <insert id="insertBoard" parameterType="BoardAddRequestDto">
+    INSERT INTO tbl_board (user_id,lat,lng,title,content,author,type_id,photo_path,time) VALUES(#{userId},#{lat},#{lng},#{title},#{content},#{author},#{typeId},#{photoPath},#{time})
+  </insert>
+
+  <update id="updateBoard" parameterType="BoardModifyRequestDto">
+    UPDATE tbl_board
+    SET title = #{title} , content = #{content}  , type_id = #{typeId}, photo_path = #{photoPath}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteBoard" parameterType="int">
+    DELETE
+    FROM tbl_board
+    WHERE id = #{id}
+  </delete>
+
+	<select id="selectComment" parameterType="int" resultType="commentDto">
+    SELECT c.id,c.board_id,c.user_id,c.parent,c.comment,c.dept,c.seq,u.nickname
+    FROM tbl_comment c LEFT OUTER JOIN tbl_user u
+    ON c.user_id = u.id
+    WHERE c.board_id = #{id}
+    ORDER BY IF(ISNULL(c.parent), c.id, c.parent), c.seq
+	</select>
+
+  <select id="selectLike" parameterType="int" resultType="LikeUserResponsDto">
+    SELECT * 
+    FROM tbl_like_management
+    WHERE board_id = #{boardId}
+  </select>
+
+
+  <select id="selectDetailBoard" parameterType="int" resultType="BoardDetailDto">
+    SELECT  *
+    FROM tbl_board
+    WHERE id = #{id}
+  </select>
+</mapper>

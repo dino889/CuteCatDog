@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="board"
+            type="com.ssafy.ccd.src.dto.Board" />
+        <variable
+            name="user"
+            type="com.ssafy.ccd.src.dto.User" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/fragment_search_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:imageUrlDiary="@{board.photoPath}"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/defaultimg" />
+
+        <ImageView
+            android:id="@+id/fragment_search_userImg"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:imageUrlUser="@{user.profileImage}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/fragment_search_userNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{user.nickname}"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_search_userImg"
+            app:layout_constraintStart_toEndOf="@+id/fragment_search_userImg"
+            app:layout_constraintTop_toTopOf="@+id/fragment_search_userImg" />
+
+        <TextView
+            android:id="@+id/fragment_search_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{board.content}"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_search_img"
+            app:layout_constraintStart_toStartOf="@+id/fragment_search_userImg"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_search_userImg" />
+
+        <TextView
+            android:id="@+id/fragment_search_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="16dp"
+            android:textSize="12sp"
+            app:boardType="@{board.typeId}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fragment_search_content"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_search_content" />
+
+        <TextView
+            android:id="@+id/fragment_search_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:unixToDateTime= "@{board.time}"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_search_type"
+            app:layout_constraintStart_toEndOf="@+id/fragment_search_type"
+            app:layout_constraintTop_toTopOf="@+id/fragment_search_type" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

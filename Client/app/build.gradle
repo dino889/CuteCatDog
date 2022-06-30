@@ -1,15 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
-    compileSdk 32
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.ssafy.ccd"
-        minSdk 21
-        targetSdk 32
+        minSdkVersion 24
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -22,22 +25,165 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'mozilla/public-suffix-list.txt'
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a', 'x86_64'
+            universalApk true
+        }
+    }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    viewBinding {
+        enabled = true
+    }
+    dataBinding {
+        enabled= true
     }
 }
 
 dependencies {
+    // 외브라이브러리
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.0.2'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.4'
+    implementation files('libs/libDaumMapAndroid.jar')
     testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // ktx
+    implementation 'androidx.activity:activity-ktx:1.2.0'
+    implementation "androidx.fragment:fragment-ktx:1.3.6"
+
+    //LiveData, ViewModel
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    // viewpager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // Jetpack Navigation Kotlin
+    def nav_version = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // dotsindicator
+    implementation 'com.tbuonomo:dotsindicator:4.2'
+
+    // DrawerLayout
+    implementation "androidx.drawerlayout:drawerlayout:1.1.1"
+
+    // Lottie
+    implementation 'com.airbnb.android:lottie:4.2.1'
+
+    // Glide 사용
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+
+    // Material
+    implementation 'com.google.android.material:material:1.4.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
+
+    def lifecycle_version = "2.3.0"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+    // Firebase
+    // Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
+    implementation 'com.google.firebase:firebase-ml-modeldownloader-ktx'
+    implementation 'com.google.firebase:firebase-storage'
+
+    // google login
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+//    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-auth'
+
+    // 카카오
+    implementation "com.kakao.sdk:v2-user-rx:2.9.0" // 카카오 로그인
+    implementation "com.kakao.sdk:v2-talk:2.9.0"
+    implementation "com.kakao.sdk:v2-link:2.9.0"
+//    compile group: 'com.kakao.sdk', name:'kakaolink', version:project.KAKAO_SDK_VERSION
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile files('libs/libDaumMapAndroid.jar')
+//
+//    //KAKAO SDK
+//    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+
+    // facebook 로그인
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
+
+    // TedPermission
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.2.3'
+
+    // volley
+    implementation 'com.android.volley:volley:1.2.1'
+
+    // picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    
+    // tensorflow
+    implementation 'org.tensorflow:tensorflow-lite:2.7.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.3.0'
+
+    // https://github.com/ybq/Android-SpinKit
+//    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    // rxAndroid, rxKotlin
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
+    // rxBinding
+    implementation "com.jakewharton.rxbinding3:rxbinding:3.1.0"
+
+    // Google Material Component Binding
+    implementation 'com.jakewharton.rxbinding3:rxbinding-material:3.1.0'
+
+
+    // Youtube
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev183-1.22.0'
+    implementation 'com.google.http-client:google-http-client-android:1.38.1'
+    implementation 'com.google.api-client:google-api-client-android:1.31.2'
+    implementation 'com.google.api-client:google-api-client-gson:1.31.2'
+
+    //coroutine
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+    implementation 'com.google.guava:guava:27.0.1-android'
+
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 }
